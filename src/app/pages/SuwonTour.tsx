@@ -58,7 +58,7 @@ const spots = [
     tag: "드라마 스팟 1",
     category: "drama",
     title: "솔이네 & 선재네 집 골목",
-    scene: "선재가 매일 밤 솔이네 집 파란 대문 앞을 서성이던 풋풋한 등하굣길 골목 ☂️",
+    scene: "선재가 솔이에게 우산을 씌워주던 파란 대문 앞 소나기 우산 씬 ☂️",
     reality: "실제로는 예쁜 카페와 주택이 마주한 한적한 골목. 대문 앞에 서면 OST가 자동 재생돼요!",
     coord: "수원시 팔달구 화서문로48번길 일대 (화성행궁 도보 5분)",
     photoTip: "대문 정면보다 골목 아래에서 위로 올려다보듯 (0.5배 광각) 찍어야 드라마 포스터 구도가 나와요!",
@@ -72,7 +72,7 @@ const spots = [
     tag: "드라마 스팟 2",
     category: "drama",
     title: "화홍문 & 방화수류정 돌다리",
-    scene: "19살 솔과 선재가 자전거를 끌고 나란히 하교하며 수줍게 고백하던 그 돌다리 징검다리 🚲",
+    scene: "솔과 선재가 자전거를 끌고 건너던 화홍문 징검다리 고백 씬 🚲",
     reality: "시원한 수원천 물소리와 휘날리는 버드나무가 매력적인 곳. 이어폰 꽂고 '소나기' 재생 필수!",
     coord: "수원시 팔달구 매향동 수원천로392번길 44-6",
     photoTip: "다리 정면 말고, 수원천 건너편 둔치로 내려가서 다리 건너는 내 뒷모습과 화홍문 누각을 한 앵글에 담아보세요.",
@@ -86,7 +86,7 @@ const spots = [
     tag: "로컬 힐링 스팟",
     category: "local",
     title: "방화수류정 피크닉",
-    scene: "솔선 골목에서 걸어서 7분! 연못(용연) 잔디밭에 돗자리 깔고 멍 때리기 좋은 로컬들의 안식처 🧺",
+    scene: "용연 연못가에 돗자리를 펴고 아름다운 성곽 정자를 바라보는 힐링 피크닉 🧺",
     reality: "낮에는 청량한 피크닉, 밤에는 환상적인 성곽 라이트업으로 180도 반전 매력을 선사해요.",
     coord: "수원시 팔달구 수원천로 392",
     photoTip: "연못 건너편에서 정자 전체가 물속에 거울처럼 완벽하게 비치는 데칼코마니 각도가 정석!",
@@ -100,7 +100,7 @@ const spots = [
     tag: "드라마 스팟 3",
     category: "drama",
     title: "행궁동 벽화골목 & 행리단길",
-    scene: "과몰입 끝났으면 현실 감성 채울 시간! 성곽길 따라 늘어선 힙한 소품샵, 편집숍, 셀프 사진관들 📸",
+    scene: "골목길 자전거 옆을 지나며 마주한 솔선재 벽쿵씬 📸",
     reality: "주말엔 SNS 감성 팝업과 플리마켓이 열리는 핫플. 아기자기한 벽화들로 끝없는 인생샷 갤러리!",
     coord: "화성행궁 ~ 화서문 일대 골목길",
     photoTip: "한낮 정오 즈음 방문하면 그림자가 짧아져 벽화골목의 다채로운 파스텔톤 컬러가 가장 선명하게 찍혀요.",
@@ -114,7 +114,7 @@ const spots = [
     tag: "문화유산",
     category: "heritage",
     title: "화성행궁 성벽길",
-    scene: "골목길을 걷다 고개만 들면 갑자기 펼쳐지는 장엄한 조선시대! 탁 트인 성벽 전망이 가슴을 뻥 뚫어줘요.",
+    scene: "성벽길을 따라 걸으며 내려다보는 행궁동 전경과 아름다운 성곽 노을의 장관 🧱",
     reality: "유네스코 세계문화유산. 봄엔 벚꽃, 가을엔 단풍, 겨울엔 설경까지 — 사계절 모두 장관입니다.",
     coord: "수원시 팔달구 남창동 6-2 (수원화성)",
     photoTip: "성벽 언덕에 올라가 행궁동 마을 전체가 발밑으로 내려다보이는 와이드 구도로 찍어보세요.",
@@ -484,11 +484,11 @@ export default function SuwonTour() {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-5">
-                        <div className="md:col-span-2 relative aspect-[4/3] md:aspect-auto min-h-[220px] bg-gray-100">
+                      <div className="flex flex-col">
+                        <div className="relative aspect-[16/9] w-full bg-gray-100">
                           <img src={s.image} alt={s.title} className="absolute inset-0 w-full h-full object-cover" />
                         </div>
-                        <div className="md:col-span-3 p-6 flex flex-col gap-4">
+                        <div className="p-6 flex flex-col gap-4">
                           <h3 className="text-base font-extrabold text-gray-900">
                             {s.emoji} {s.title}
                           </h3>
