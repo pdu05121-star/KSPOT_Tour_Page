@@ -31,15 +31,15 @@ export default function TourList() {
     },
     {
       id: "gangneung",
-      title: "〈푸른 바다〉 강릉 커피 해변 & 안목해변 로드맵 🌊",
-      desc: "동해 바다의 파도 소리를 들으며 걷는 해변 해송길 산책 코스와 초당 순두부, 커피거리 찐 로컬 카페 투어",
-      tag: "오픈 준비 중",
-      tagColor: "bg-gray-400",
+      title: "〈도깨비 10주년〉 8년이 지나도 사라지지 않는 그 바다 🌊",
+      desc: "도깨비·지은탁 첫 만남의 주문진 방파제부터 오죽헌 대나무숲, 안목해변 커피거리까지 이어지는 완벽한 당일치기 코스",
+      tag: "인기 스팟",
+      tagColor: "bg-red-500",
       rating: "4.8",
-      reviews: "0",
-      price: "준비 중",
+      reviews: "96",
+      price: "0원",
       image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop&auto=format",
-      status: "coming_soon",
+      status: "active",
     }
   ];
 
@@ -75,7 +75,7 @@ export default function TourList() {
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                   <Badge className={`absolute top-3 left-3 text-white font-bold border-none px-2.5 py-0.5 text-[10px] ${tour.tagColor} flex items-center gap-1`}>
-                    {tour.id === "suwon" && <Flame size={10} className="animate-pulse" />}
+                    {(tour.id === "suwon" || tour.id === "gangneung") && <Flame size={10} className="animate-pulse" />}
                     {tour.tag}
                   </Badge>
                 </div>
