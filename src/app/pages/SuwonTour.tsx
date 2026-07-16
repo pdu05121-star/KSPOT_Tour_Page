@@ -23,20 +23,26 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from "@/app/components/ui/badge";
 
 // Local Image Imports
-import haenggungImg from "@/assets/suwon/haenggung.jpg";
-import hwaseongImg from "@/assets/suwon/hwaseong.jpg";
+import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import sunjaeSiljaImg from "@/assets/carousel/sunjae_silja.jpg";
 import suwonHongwhamunImg from "@/assets/suwon/suwon_hongwhamun.jpg";
-import bangwhasuryujeongImg from "@/assets/suwon/bangwhasuryujeong.jpg";
+import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.jpg";
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
-import jeongjiyoungStoreImg from "@/assets/suwon/jeongjiyoung_store.png";
+import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
 
 const TEAL = "#1D9E75";
 const TEAL_DARK = "#0F6E56";
 const TEXT_PRIMARY = "#111827";
 const TEXT_MUTED = "#9CA3AF";
+
+// 카테고리별 테마: 드라마 스팟(Teal) / 로컬 힐링 스팟(Emerald) / 문화유산 스팟(Blue)
+const CATEGORY_THEME: Record<string, { label: string; text: string; bg: string; border: string }> = {
+  drama: { label: "🎬 드라마 속 그 장면", text: "#1D9E75", bg: "#E8F5F0", border: "#1D9E75" },
+  local: { label: "🌿 로컬 힐링 포인트", text: "#10B981", bg: "#ECFDF5", border: "#10B981" },
+  heritage: { label: "🧱 스팟 매력 포인트", text: "#3B82F6", bg: "#EFF6FF", border: "#3B82F6" },
+};
 
 const galleryImages = [
   janganmunNightImg,
@@ -50,6 +56,7 @@ const spots = [
     id: 1,
     emoji: "🎬",
     tag: "드라마 스팟 1",
+    category: "drama",
     title: "솔이네 & 선재네 집 골목",
     scene: "선재가 매일 밤 솔이네 집 파란 대문 앞을 서성이던 풋풋한 등하굣길 골목 ☂️",
     reality: "실제로는 예쁜 카페와 주택이 마주한 한적한 골목. 대문 앞에 서면 OST가 자동 재생돼요!",
@@ -63,6 +70,7 @@ const spots = [
     id: 2,
     emoji: "🚲",
     tag: "드라마 스팟 2",
+    category: "drama",
     title: "화홍문 & 방화수류정 돌다리",
     scene: "19살 솔과 선재가 자전거를 끌고 나란히 하교하며 수줍게 고백하던 그 돌다리 징검다리 🚲",
     reality: "시원한 수원천 물소리와 휘날리는 버드나무가 매력적인 곳. 이어폰 꽂고 '소나기' 재생 필수!",
@@ -76,6 +84,7 @@ const spots = [
     id: 3,
     emoji: "🌿",
     tag: "로컬 힐링 스팟",
+    category: "local",
     title: "방화수류정 피크닉",
     scene: "솔선 골목에서 걸어서 7분! 연못(용연) 잔디밭에 돗자리 깔고 멍 때리기 좋은 로컬들의 안식처 🧺",
     reality: "낮에는 청량한 피크닉, 밤에는 환상적인 성곽 라이트업으로 180도 반전 매력을 선사해요.",
@@ -83,12 +92,13 @@ const spots = [
     photoTip: "연못 건너편에서 정자 전체가 물속에 거울처럼 완벽하게 비치는 데칼코마니 각도가 정석!",
     warning: "노을과 야경을 모두 잡으려면 '일몰 30분 전' 도착이 황금 타이밍입니다.",
     syncRate: "",
-    image: bangwhasuryujeongImg,
+    image: bangwhasuryujeongPicnicImg,
   },
   {
     id: 4,
     emoji: "🛍️",
-    tag: "감성 투어",
+    tag: "드라마 스팟 3",
+    category: "drama",
     title: "행궁동 벽화골목 & 행리단길",
     scene: "과몰입 끝났으면 현실 감성 채울 시간! 성곽길 따라 늘어선 힙한 소품샵, 편집숍, 셀프 사진관들 📸",
     reality: "주말엔 SNS 감성 팝업과 플리마켓이 열리는 핫플. 아기자기한 벽화들로 끝없는 인생샷 갤러리!",
@@ -96,12 +106,13 @@ const spots = [
     photoTip: "한낮 정오 즈음 방문하면 그림자가 짧아져 벽화골목의 다채로운 파스텔톤 컬러가 가장 선명하게 찍혀요.",
     warning: "주말 골목길은 매우 혼잡하니 주차는 '화성행궁 노상 주차장'을 추천합니다.",
     syncRate: "",
-    image: jeongjiyoungStoreImg,
+    image: haenggungdongMuralImg,
   },
   {
     id: 5,
     emoji: "🧱",
     tag: "문화유산",
+    category: "heritage",
     title: "화성행궁 성벽길",
     scene: "골목길을 걷다 고개만 들면 갑자기 펼쳐지는 장엄한 조선시대! 탁 트인 성벽 전망이 가슴을 뻥 뚫어줘요.",
     reality: "유네스코 세계문화유산. 봄엔 벚꽃, 가을엔 단풍, 겨울엔 설경까지 — 사계절 모두 장관입니다.",
@@ -109,7 +120,7 @@ const spots = [
     photoTip: "성벽 언덕에 올라가 행궁동 마을 전체가 발밑으로 내려다보이는 와이드 구도로 찍어보세요.",
     warning: "입장료 1,500원. 걷기 힘들 땐 귀여운 '화성어차' 순환 열차를 미리 현장 예매해 타고 둘러보세요.",
     syncRate: "",
-    image: haenggungImg,
+    image: suwonFortressWallImg,
   },
 ];
 
@@ -452,7 +463,9 @@ export default function SuwonTour() {
                 <p className="text-xs text-gray-500 font-semibold mb-6">수원의 숨은 뷰 포인트와 카메라 앵글 잡는 가이드까지 함께 담았습니다.</p>
                 
                 <div className="space-y-8">
-                  {spots.map((s, idx) => (
+                  {spots.map((s, idx) => {
+                    const theme = CATEGORY_THEME[s.category];
+                    return (
                     <div
                       key={s.id}
                       className="rounded-2xl border border-gray-100 shadow-sm bg-white overflow-hidden"
@@ -482,8 +495,8 @@ export default function SuwonTour() {
                           
                           <div className="space-y-3.5 text-xs font-semibold leading-relaxed">
                             <div>
-                              <p className="text-[10px] font-bold text-[#1D9E75] mb-1">🎬 드라마 속 그 장면</p>
-                              <p className="bg-[#E8F5F0] text-gray-800 p-2.5 rounded-xl border-l-4 border-[#1D9E75]">
+                              <p className="text-[10px] font-bold mb-1" style={{ color: theme.text }}>{theme.label}</p>
+                              <p className="text-gray-800 p-2.5 rounded-xl border-l-4" style={{ backgroundColor: theme.bg, borderColor: theme.border }}>
                                 {s.scene}
                               </p>
                             </div>
@@ -510,7 +523,8 @@ export default function SuwonTour() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </TabsContent>
