@@ -15,15 +15,24 @@ import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
 
 // ─────────────────────────────────────────────
-// 디자인 토큰 (에디토리얼/여행일기 톤 — 이커머스 색 제거)
+// 디자인 토큰 — KSPOT Design System v3 기준 (Dev_Spec_v2 0-1 컬러 표 그대로 사용)
 // ─────────────────────────────────────────────
-const INK = "#2B2620";        // 본문 텍스트 (완전 검정 아님)
-const PINE = "#14332B";       // 헤드라인 (브랜드 틸 계열 딥 그린)
-const STAMP = "#A8442E";      // 우표/도장 포인트 (테라코타 아님, 벽돌빛 레드)
-const PAPER = "#F3EEE4";      // 종이 배경
-const PAPER_DEEP = "#EAE3D3"; // 섹션 구분용 짙은 종이
-const HAIRLINE = "#D8CFBB";   // 헤어라인 구분선
-const TEAL = "#1D9E75";       // 브랜드 틸 (링크/포인트에만 절제해서 사용)
+const TEXT_PRIMARY = "#111827";   // 제목, 강조 텍스트
+const TEXT_SECONDARY = "#374151"; // 본문
+const TEXT_MUTED = "#9CA3AF";     // 보조, 라벨, 캡션
+const TEAL = "#1D9E75";           // 주요 버튼/CTA/포인트 액센트
+const TEAL_DARK = "#0F6E56";      // 로고, 헤드라인
+const TEAL_BG = "#E8F5F0";        // 뱃지·하이라이트 배경
+const IVORY = "#F7F5F0";          // 폰 기본 배경 (--ivory)
+const BORDER = "#E8EAED";         // 카드·구분선 테두리
+
+// 아래 이름은 기존 코드 호환용 별칭 (에디토리얼 레이아웃 그대로, 색상만 시스템 값으로 교체)
+const INK = TEXT_SECONDARY;
+const PINE = TEAL_DARK;
+const STAMP = TEAL;
+const PAPER = IVORY;
+const PAPER_DEEP = TEAL_BG;
+const HAIRLINE = BORDER;
 
 const spots = [
   {
@@ -362,7 +371,7 @@ export default function SuwonTourBlog() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <button
-              className="w-full max-w-md py-4 rounded-md font-bold text-sm shadow-md transition-opacity hover:opacity-90"
+              className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >
               투어 프로그램 신청하기
@@ -381,9 +390,9 @@ export default function SuwonTourBlog() {
             {submitted ? (
               <div className="rounded-xl p-5 text-center my-4" style={{ backgroundColor: PAPER_DEEP }}>
                 <p className="text-2xl mb-1">🎉</p>
-                <p className="font-bold text-sm" style={{ color: PINE }}>신청이 정상 접수되었습니다!</p>
-                <p className="text-xs mt-1" style={{ color: INK, opacity: 0.7 }}>
-                  남겨주신 정보를 확인하여<br />빠른 시일 내에 연락드리겠습니다.
+                <p className="font-extrabold text-sm" style={{ color: PINE }}>투어 프로그램 신청 완료!</p>
+                <p className="text-xs mt-1 font-semibold" style={{ color: INK, opacity: 0.7 }}>
+                  작성해주신 정보를 확인하여<br />빠른 시일 내에 연락드리겠습니다.
                 </p>
               </div>
             ) : (
