@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles, Mail, User, Phone } from "lucide-react";
 import { supabase } from "@/app/supabase";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog";
 
 // Local Image Imports (동일한 수원 에셋 재사용 — 이커머스형과 1:1 비교용)
 import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
@@ -101,6 +102,7 @@ export default function SuwonTourBlog() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // 에디토리얼 톤에 맞는 세리프/산세리프 폰트 로드
   useEffect(() => {
@@ -335,8 +337,8 @@ export default function SuwonTourBlog() {
         </div>
       </section>
 
-      {/* CTA / 신청 폼 */}
-      <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-24 mb-24">
+      {/* CLOSING */}
+      <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-28 mb-32">
         <div
           className="rounded-lg p-7 sm:p-9 text-center"
           style={{ backgroundColor: PINE }}
@@ -347,65 +349,9 @@ export default function SuwonTourBlog() {
           <h3 className="text-xl sm:text-2xl font-black text-white mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             완벽 동선 구글맵 핀 + 가이드북,<br className="hidden sm:block" /> 지금 무료로 받아보세요
           </h3>
-          <p className="text-xs sm:text-sm mb-7" style={{ color: "#C7DED4" }}>
-            이름과 연락처, 이메일만 남기면 10분 내로 가이드북과 구글맵 핀 링크를 보내드려요.
+          <p className="text-xs sm:text-sm" style={{ color: "#C7DED4" }}>
+            아래 버튼을 눌러 이름과 연락처, 이메일만 남기면 10분 내로 보내드려요.
           </p>
-
-          {submitted ? (
-            <div className="rounded-md p-5" style={{ backgroundColor: "rgba(255,255,255,0.12)" }}>
-              <p className="text-2xl mb-1">🎉</p>
-              <p className="font-bold text-white text-sm">신청이 정상 접수되었습니다!</p>
-              <p className="text-xs mt-1" style={{ color: "#C7DED4" }}>빠른 시일 내에 연락드리겠습니다.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="max-w-sm mx-auto space-y-2.5 text-left">
-              <div className="relative">
-                <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: PINE, opacity: 0.5 }} />
-                <input
-                  type="text"
-                  placeholder="이름"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="w-full pl-9 pr-4 py-2.5 rounded-md text-xs font-semibold focus:outline-none"
-                  style={{ backgroundColor: "#fff", color: INK }}
-                />
-              </div>
-              <div className="relative">
-                <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: PINE, opacity: 0.5 }} />
-                <input
-                  type="tel"
-                  placeholder="연락처 (예: 010-1234-5678)"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="w-full pl-9 pr-4 py-2.5 rounded-md text-xs font-semibold focus:outline-none"
-                  style={{ backgroundColor: "#fff", color: INK }}
-                />
-              </div>
-              <div className="relative">
-                <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: PINE, opacity: 0.5 }} />
-                <input
-                  type="email"
-                  placeholder="가이드를 받을 이메일 주소"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-9 pr-4 py-2.5 rounded-md text-xs font-semibold focus:outline-none"
-                  style={{ backgroundColor: "#fff", color: INK }}
-                />
-              </div>
-              {submitError && <p className="text-[10px] font-semibold" style={{ color: "#FCA5A5" }}>{submitError}</p>}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-3 rounded-md font-bold text-xs disabled:opacity-50 transition-opacity"
-                style={{ backgroundColor: STAMP, color: "#fff" }}
-              >
-                {submitting ? "신청 처리 중..." : "가이드북 무료로 받기"}
-              </button>
-            </form>
-          )}
         </div>
 
         <div className="text-center mt-8">
@@ -418,6 +364,93 @@ export default function SuwonTourBlog() {
           </Link>
         </div>
       </section>
+
+      {/* BOTTOM FIXED CTA BAR */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50 px-5 py-3.5 flex items-center justify-between shadow-2xl"
+        style={{ backgroundColor: "#fff", borderTop: `1px solid ${HAIRLINE}` }}
+      >
+        <div className="flex flex-col">
+          <span className="text-[10px] font-bold" style={{ color: INK, opacity: 0.5 }}>가이드 비용</span>
+          <span className="text-base font-black" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>무료</span>
+        </div>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <button
+              className="px-5 py-3 rounded-md font-bold text-xs shadow-md transition-opacity hover:opacity-90"
+              style={{ backgroundColor: STAMP, color: "#fff" }}
+            >
+              가이드북 무료로 받기
+            </button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-base font-black" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
+                🔒 가이드북 무료로 받기
+              </DialogTitle>
+              <DialogDescription className="text-xs font-semibold text-gray-500">
+                이름, 연락처, 이메일을 남겨주시면 10분 내로 가이드북과 구글맵 핀 링크를 보내드립니다.
+              </DialogDescription>
+            </DialogHeader>
+
+            {submitted ? (
+              <div className="rounded-xl p-5 text-center my-4" style={{ backgroundColor: PAPER_DEEP }}>
+                <p className="text-2xl mb-1">🎉</p>
+                <p className="font-bold text-sm" style={{ color: PINE }}>신청이 정상 접수되었습니다!</p>
+                <p className="text-xs mt-1" style={{ color: INK, opacity: 0.7 }}>
+                  남겨주신 정보를 확인하여<br />빠른 시일 내에 연락드리겠습니다.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-3 py-2">
+                <div className="relative">
+                  <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="이름"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
+                  />
+                </div>
+                <div className="relative">
+                  <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="tel"
+                    placeholder="연락처 (예: 010-1234-5678)"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
+                  />
+                </div>
+                <div className="relative">
+                  <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="email"
+                    placeholder="가이드를 받을 이메일 주소"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
+                  />
+                </div>
+                {submitError && <p className="text-[10px] font-semibold text-red-500">{submitError}</p>}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-3 rounded-xl font-bold text-xs shadow-sm transition-opacity disabled:opacity-50"
+                  style={{ backgroundColor: STAMP, color: "#fff" }}
+                >
+                  {submitting ? "신청 처리 중..." : "🔒 신청 완료하기"}
+                </button>
+              </form>
+            )}
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }
