@@ -337,57 +337,41 @@ export default function SuwonTourBlog() {
         </div>
       </section>
 
-      {/* CLOSING */}
-      <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-28 mb-32">
-        <div
-          className="rounded-lg p-7 sm:p-9 text-center"
-          style={{ backgroundColor: PINE }}
+      {/* CLOSING — 핵심 메시지만 담백하게 */}
+      <section className="max-w-xl mx-auto px-5 sm:px-8 mt-28 sm:mt-36 pb-40 sm:pb-44 text-center">
+        <div className="w-10 h-px mx-auto mb-7" style={{ backgroundColor: STAMP }} />
+        <p className="text-[11px] font-black tracking-[0.2em] uppercase mb-6" style={{ color: STAMP }}>
+          🔒 저장하고 이번 주말 그대로 따라가기
+        </p>
+        <h3
+          className="text-2xl sm:text-3xl font-black mb-6 leading-snug"
+          style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}
         >
-          <p className="text-[11px] font-black tracking-[0.2em] uppercase mb-3" style={{ color: "#9FD9C4" }}>
-            🔒 저장하고 이번 주말 그대로 따라가기
-          </p>
-          <h3 className="text-xl sm:text-2xl font-black text-white mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-            완벽 동선 구글맵 핀 + 가이드북,<br className="hidden sm:block" /> 지금 무료로 받아보세요
-          </h3>
-          <p className="text-xs sm:text-sm" style={{ color: "#C7DED4" }}>
-            아래 버튼을 눌러 이름과 연락처, 이메일만 남기면 10분 내로 보내드려요.
-          </p>
-        </div>
-
-        <div className="text-center mt-8">
-          <Link
-            to="/tour"
-            className="text-xs font-bold hover:underline"
-            style={{ color: TEAL }}
-          >
-            ← 다른 지역 로드맵도 둘러보기
-          </Link>
-        </div>
+          완벽 동선 구글맵 핀 + 가이드북,<br className="hidden sm:block" /> 지금 무료로 받아보세요
+        </h3>
+        <p className="text-sm sm:text-[15px] leading-relaxed" style={{ color: INK, opacity: 0.65 }}>
+          아래 버튼을 눌러 이름과 연락처, 이메일만 남기면<br className="hidden sm:block" /> 10분 내로 보내드려요.
+        </p>
       </section>
 
       {/* BOTTOM FIXED CTA BAR */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50 px-5 py-3.5 flex items-center justify-between shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 z-50 px-5 py-5 flex items-center justify-center shadow-2xl"
         style={{ backgroundColor: "#fff", borderTop: `1px solid ${HAIRLINE}` }}
       >
-        <div className="flex flex-col">
-          <span className="text-[10px] font-bold" style={{ color: INK, opacity: 0.5 }}>가이드 비용</span>
-          <span className="text-base font-black" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>무료</span>
-        </div>
-
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <button
-              className="px-5 py-3 rounded-md font-bold text-xs shadow-md transition-opacity hover:opacity-90"
+              className="w-full max-w-md py-4 rounded-md font-bold text-sm shadow-md transition-opacity hover:opacity-90"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >
-              가이드북 무료로 받기
+              투어 프로그램 신청하기
             </button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle className="text-base font-black" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
-                🔒 가이드북 무료로 받기
+                🔒 투어 프로그램 신청하기
               </DialogTitle>
               <DialogDescription className="text-xs font-semibold text-gray-500">
                 이름, 연락처, 이메일을 남겨주시면 10분 내로 가이드북과 구글맵 핀 링크를 보내드립니다.
