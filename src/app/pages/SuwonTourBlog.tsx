@@ -15,24 +15,25 @@ import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
 
 // ─────────────────────────────────────────────
-// 디자인 토큰 — KSPOT Design System v3 기준 (Dev_Spec_v2 0-1 컬러 표 그대로 사용)
+// 디자인 토큰 — "KSPOT 여행일기" 서브 브랜드 전용 팔레트
+// 코어 앱(안심/판단 엔진, teal 기반)과 의도적으로 분리한 컬러.
+// 이 결정은 KSPOT-Vault > Design_System_v3.md 에 서브 브랜드 섹션으로 문서화 예정.
 // ─────────────────────────────────────────────
-const TEXT_PRIMARY = "#111827";   // 제목, 강조 텍스트
-const TEXT_SECONDARY = "#374151"; // 본문
-const TEXT_MUTED = "#9CA3AF";     // 보조, 라벨, 캡션
-const TEAL = "#1D9E75";           // 주요 버튼/CTA/포인트 액센트
-const TEAL_DARK = "#0F6E56";      // 로고, 헤드라인
-const TEAL_BG = "#E8F5F0";        // 뱃지·하이라이트 배경
-const IVORY = "#F7F5F0";          // 폰 기본 배경 (--ivory)
-const BORDER = "#E8EAED";         // 카드·구분선 테두리
+const TOUR_RUST = "#B5502F";       // 주요 CTA·포인트 (여행 스탬프/필름 감성의 벽돌빛 러스트)
+const TOUR_INK_DEEP = "#20362F";   // 헤드라인 (짙은 잉크 그린 — 코어 teal 계열과 톤은 이어가되 채도 낮춤)
+const TOUR_BODY_INK = "#3A342C";  // 본문 텍스트 (완전 검정 아닌 따뜻한 다크 뉴트럴)
+const TOUR_PAPER = "#F5F0E6";      // 배경 (따뜻한 파피루스 톤)
+const TOUR_PAPER_DEEP = "#EAE1CC"; // 하이라이트 박스 배경
+const TOUR_BORDER = "#DED2B8";     // 헤어라인 구분선
+const TEAL = "#1D9E75";            // 코어 브랜드 틸 — 링크 등 최소한의 KSPOT 연결점으로만 사용
 
-// 아래 이름은 기존 코드 호환용 별칭 (에디토리얼 레이아웃 그대로, 색상만 시스템 값으로 교체)
-const INK = TEXT_SECONDARY;
-const PINE = TEAL_DARK;
-const STAMP = TEAL;
-const PAPER = IVORY;
-const PAPER_DEEP = TEAL_BG;
-const HAIRLINE = BORDER;
+// 기존 코드 호환용 별칭
+const INK = TOUR_BODY_INK;
+const PINE = TOUR_INK_DEEP;
+const STAMP = TOUR_RUST;
+const PAPER = TOUR_PAPER;
+const PAPER_DEEP = TOUR_PAPER_DEEP;
+const HAIRLINE = TOUR_BORDER;
 
 const spots = [
   {
