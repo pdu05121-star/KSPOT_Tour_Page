@@ -19,15 +19,15 @@ export default function TourList() {
     },
     {
       id: "chuncheon",
-      title: "〈소도시 감성〉 춘천 호반 의암호 자전거 로드맵 🚲",
-      desc: "푸르른 의암호 물길을 따라 달리는 자전거 코스와 춘천 닭갈비 원조 맛집, 호수 뷰 감성 카페 투어",
-      tag: "오픈 준비 중",
-      tagColor: "bg-gray-400",
+      title: "〈겨울연가 × 스물다섯 스물하나〉 레트로와 청춘이 공존하는 춘천 로드맵 🚲",
+      desc: "남이섬 메타세쿼이아길과 춘천대교 러닝 코스부터 소양강 스카이워크, 김유정역 레일바이크까지 이어지는 당일치기 최적 코스",
+      tag: "인기 스팟",
+      tagColor: "bg-red-500",
       rating: "5.0",
-      reviews: "0",
-      price: "준비 중",
+      reviews: "74",
+      price: "0원",
       image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=400&fit=crop&auto=format",
-      status: "coming_soon",
+      status: "active",
     },
     {
       id: "gangneung",
@@ -75,7 +75,7 @@ export default function TourList() {
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                   <Badge className={`absolute top-3 left-3 text-white font-bold border-none px-2.5 py-0.5 text-[10px] ${tour.tagColor} flex items-center gap-1`}>
-                    {(tour.id === "suwon" || tour.id === "gangneung") && <Flame size={10} className="animate-pulse" />}
+                    {(tour.id === "suwon" || tour.id === "gangneung" || tour.id === "chuncheon") && <Flame size={10} className="animate-pulse" />}
                     {tour.tag}
                   </Badge>
                 </div>
