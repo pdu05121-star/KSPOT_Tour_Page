@@ -160,7 +160,7 @@ export default function SuwonTourBlog() {
             다른 투어 보기
           </Link>
           <span className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
-            KSPOT · 여행일기
+            KSPOT Travelog
           </span>
           <div style={{ width: 90 }} />
         </div>
