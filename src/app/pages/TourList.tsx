@@ -1,125 +1,256 @@
+import { useState } from "react";
 import { Link } from "react-router";
-import { Star, ArrowRight, Flame } from "lucide-react";
-import { Badge } from "@/app/components/ui/badge";
+import "@/styles/router.css";
+import { SURVEY_FORM_URL } from "@/app/surveyConfig";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 
-export default function TourList() {
-  const tours = [
+type Lang = "ko" | "en" | "ja" | "zh";
+
+// 도시 카드 데이터 — 배열로 관리 (개발지시서 지시사항: 하드코딩 금지, 도시 추가 잦을 예정)
+type TourCard = {
+  id: string;
+  status: "open" | "next" | "wait";
+  order: string; // "01", "02" ...
+  cityline: string; // "SUWON 수원"
+  kTag?: string; // K콘텐츠 태그, 없으면 생략
+  title: string;
+  desc: string;
+  thumb?: string; // open 카드만 사용
+  link?: string; // open 카드만 사용
+};
+
+const TOURS: Record<Lang, TourCard[]> = {
+  ko: [
     {
       id: "suwon",
-      title: "〈선재 업고 튀어〉 타임슬립 수원 로드맵 🎬",
-      desc: "임솔♥류선재 촬영지 골목길과 방화수류정 피크닉, 로컬 맛집 남문통닭과 정지영 커피까지 완벽한 당일치기 코스",
-      tag: "인기 스팟",
-      tagColor: "bg-red-500",
-      rating: "4.9",
-      reviews: "128",
-      price: "0원",
-      image: janganmunNightImg,
-      status: "active",
+      status: "open",
+      order: "01",
+      cityline: "SUWON 수원",
+      kTag: "◉ 선재 업고 튀어",
+      title: "타임슬립 골목과 성곽 노을",
+      desc: "드라마 속 그 골목길, 로컬 통닭 성지, 노을 지는 루프탑까지 — 서울에서 다녀오는 하루",
+      thumb: janganmunNightImg,
+      link: "/tour/suwon",
     },
+    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 춘천", title: "호수 따라 달리는 자전거길", desc: "" },
+    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 강릉", title: "파도 소리 들리는 커피 해변", desc: "" },
+  ],
+  en: [
     {
-      id: "chuncheon",
-      title: "〈겨울연가 × 스물다섯 스물하나〉 레트로와 청춘이 공존하는 춘천 로드맵 🚲",
-      desc: "남이섬 메타세쿼이아길과 춘천대교 러닝 코스부터 소양강 스카이워크, 김유정역 레일바이크까지 이어지는 당일치기 최적 코스",
-      tag: "인기 스팟",
-      tagColor: "bg-red-500",
-      rating: "5.0",
-      reviews: "74",
-      price: "0원",
-      image: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&h=400&fit=crop&auto=format",
-      status: "active",
+      id: "suwon",
+      status: "open",
+      order: "01",
+      cityline: "SUWON",
+      kTag: "◉ Lovely Runner",
+      title: "Time-slip alleys & fortress sunset",
+      desc: "The alley from the show, a local fried-chicken spot, a rooftop at golden hour — a day trip from Seoul.",
+      thumb: janganmunNightImg,
+      link: "/tour/suwon",
     },
+    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON", title: "Lakeside cycling route", desc: "" },
+    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG", title: "Coffee beach by the waves", desc: "" },
+  ],
+  ja: [
     {
-      id: "gangneung",
-      title: "〈도깨비 10주년〉 8년이 지나도 사라지지 않는 그 바다 🌊",
-      desc: "도깨비·지은탁 첫 만남의 주문진 방파제부터 오죽헌 대나무숲, 안목해변 커피거리까지 이어지는 완벽한 당일치기 코스",
-      tag: "인기 스팟",
-      tagColor: "bg-red-500",
-      rating: "4.8",
-      reviews: "96",
-      price: "0원",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop&auto=format",
-      status: "active",
-    }
-  ];
+      id: "suwon",
+      status: "open",
+      order: "01",
+      cityline: "SUWON 水原",
+      kTag: "◉ ソンジェ背負って走れ",
+      title: "タイムスリップの路地と城郭の夕焼け",
+      desc: "ドラマのあの路地、ローカルなチキンの名店、夕日のルーフトップまで — ソウルから行く日帰り。",
+      thumb: janganmunNightImg,
+      link: "/tour/suwon",
+    },
+    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 春川", title: "湖畔のサイクリングロード", desc: "" },
+    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 江陵", title: "波音が聞こえるコーヒー海辺", desc: "" },
+  ],
+  zh: [
+    {
+      id: "suwon",
+      status: "open",
+      order: "01",
+      cityline: "SUWON 水原",
+      kTag: "◉ 背着善宰跑",
+      title: "穿越时空的小巷与城郭晚霞",
+      desc: "剧中那条小巷、本地炸鸡名店、夕阳下的天台 — 从首尔出发的一日游。",
+      thumb: janganmunNightImg,
+      link: "/tour/suwon",
+    },
+    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 春川", title: "沿湖骑行路线", desc: "" },
+    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 江陵", title: "听着海浪的咖啡海边", desc: "" },
+  ],
+};
+
+const COPY: Record<Lang, {
+  eyebrow: string; heroTitle: string; heroPre: string; heroKk: string; heroPost: string;
+  nowOpen: string; comingSoon: string; openCta: string; nextBadge: string; waitBadge: string; notify: string;
+  askH3: string; askP: string; askBtn: string; askFine: string;
+}> = {
+  ko: {
+    eyebrow: "KSPOT 로컬 로드맵",
+    heroTitle: "현지인만 아는 진짜 한국,",
+    heroPre: "화면 속에서 보던 ",
+    heroKk: "그 장소",
+    heroPost: "부터, 낯선 도시도 실패 없이 즐기는 하루. 매번 하나씩 꺼내 공개합니다.",
+    nowOpen: "NOW OPEN",
+    comingSoon: "COMING SOON",
+    openCta: "이 코스 열어보기 →",
+    nextBadge: "NEXT · 곧 열려요",
+    waitBadge: "대기 중",
+    notify: "알림받기",
+    askH3: "가고 싶은 곳이 여기 없나요?",
+    askP: "어디가 궁금한지 알려주시면, 그곳을 다음 이야기로 만들어 공개해요.",
+    askBtn: "가고 싶은 곳 알려주기 →",
+    askFine: "30초면 끝나요 · 많이 찾는 곳부터 공개",
+  },
+  en: {
+    eyebrow: "KSPOT LOCAL ROADMAP",
+    heroTitle: "The real Korea only locals know",
+    heroPre: "From ",
+    heroKk: "the places you saw on screen",
+    heroPost: " to unfamiliar towns, a day out without the misses. We open a new one each time.",
+    nowOpen: "NOW OPEN",
+    comingSoon: "COMING SOON",
+    openCta: "Open this course →",
+    nextBadge: "NEXT · Coming soon",
+    waitBadge: "In queue",
+    notify: "Notify me",
+    askH3: "Don't see where you want to go?",
+    askP: "Tell us where you're curious about, and we'll make it the next story.",
+    askBtn: "Tell us where →",
+    askFine: "Takes 30 seconds · Most-requested opens first",
+  },
+  ja: {
+    eyebrow: "KSPOT ローカルロードマップ",
+    heroTitle: "地元の人だけが知る本当の韓国、",
+    heroPre: "画面で見た",
+    heroKk: "あの場所",
+    heroPost: "から、初めての街も失敗なく楽しむ一日。毎回ひとつずつ公開します。",
+    nowOpen: "NOW OPEN",
+    comingSoon: "COMING SOON",
+    openCta: "このコースを開く →",
+    nextBadge: "NEXT · まもなく公開",
+    waitBadge: "準備中",
+    notify: "通知を受け取る",
+    askH3: "行きたい場所がここにない？",
+    askP: "気になる場所を教えてください。次の物語としてお作りします。",
+    askBtn: "行きたい場所を教える →",
+    askFine: "30秒で完了 · リクエストの多い街から公開",
+  },
+  zh: {
+    eyebrow: "KSPOT 本地路线图",
+    heroTitle: "只有当地人知道的真韩国，",
+    heroPre: "从",
+    heroKk: "你在屏幕上看过的那个地方",
+    heroPost: "，到陌生的城市，都能安心尽兴地玩上一天。每次公开一个。",
+    nowOpen: "NOW OPEN",
+    comingSoon: "COMING SOON",
+    openCta: "打开这条路线 →",
+    nextBadge: "NEXT · 即将开启",
+    waitBadge: "排队中",
+    notify: "通知我",
+    askH3: "想去的地方不在这里？",
+    askP: "告诉我们你想去哪里，我们会把它做成下一个故事。",
+    askBtn: "告诉我们你想去哪 →",
+    askFine: "30秒完成 · 从最多人想去的城市开始公开",
+  },
+};
+
+const LANGS: { code: Lang; label: string }[] = [
+  { code: "ko", label: "한" },
+  { code: "en", label: "EN" },
+  { code: "ja", label: "日" },
+  { code: "zh", label: "中" },
+];
+
+export default function TourList() {
+  const [lang, setLang] = useState<Lang>("ko");
+  const t = COPY[lang];
+  const cards = TOURS[lang];
 
   return (
-    <div className="min-h-screen bg-[#FCFCFA] text-[#2C2C2C] py-16 px-6" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-      <div className="max-w-5xl mx-auto space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <Badge className="bg-[#E8F5F0] text-[#0F6E56] hover:bg-[#c3e8da] border-none text-[11px] font-bold px-3 py-1">
-            KSPOT 에디터스 로드맵 투어
-          </Badge>
-          <h1 className="serif text-3xl sm:text-4xl md:text-5xl font-black text-gray-955 leading-tight tracking-tight">
-            한국 소도시 로컬 투어 프로그램 🗺️
-          </h1>
-          <p className="text-sm sm:text-base text-gray-500 font-medium max-w-xl mx-auto leading-relaxed">
-            외국인 여행객들이 한국의 아름다운 소도시를 편리하고 안전하게 방문할 수 있도록 엄선한 로컬 가이드 프로그램을 만나보세요.
-          </p>
+    <div className="router-page">
+      <div className="router-wrap">
+        <div className="router-topbar">
+          <Link to="/" className="router-brand">K<span>SPOT</span></Link>
+          <div className="router-lang">
+            {LANGS.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                className={lang === l.code ? "on" : ""}
+                onClick={() => setLang(l.code)}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Tour Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6">
-          {tours.map((tour) => (
-            <article 
-              key={tour.id} 
-              className="bg-white rounded-2xl border border-gray-150 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300"
+        <div className="router-hero">
+          <span className="router-eyebrow">{t.eyebrow}</span>
+          <h1>{t.heroTitle}</h1>
+          <p>{t.heroPre}<span className="kk">{t.heroKk}</span>{t.heroPost}</p>
+        </div>
+
+        <div className="router-divider">{t.nowOpen}</div>
+
+        {cards.filter((c) => c.status === "open").map((c) => (
+          <div className="router-card open" key={c.id}>
+            <div
+              className="thumb"
+              style={c.thumb ? { backgroundImage: `url(${c.thumb})` } : undefined}
             >
-              <div>
-                {/* Thumbnail */}
-                <div className="relative aspect-video bg-gray-100 overflow-hidden">
-                  <img
-                    src={tour.image}
-                    alt={tour.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                  <Badge className={`absolute top-3 left-3 text-white font-bold border-none px-2.5 py-0.5 text-[10px] ${tour.tagColor} flex items-center gap-1`}>
-                    {(tour.id === "suwon" || tour.id === "gangneung" || tour.id === "chuncheon") && <Flame size={10} className="animate-pulse" />}
-                    {tour.tag}
-                  </Badge>
-                </div>
+              <span className="router-badge">{t.nowOpen}</span>
+            </div>
+            <div className="body">
+              <div className="router-cityline">{c.order} · {c.cityline}</div>
+              {c.kTag && <div className="router-ktag">{c.kTag}</div>}
+              <h2>{c.title}</h2>
+              <div className="desc">{c.desc}</div>
+              <Link className="router-cta" to={c.link ?? "#"}>{t.openCta}</Link>
+            </div>
+          </div>
+        ))}
 
-                {/* Content */}
-                <div className="p-5 space-y-3 font-semibold text-xs leading-relaxed text-gray-600">
-                  <div className="flex items-center gap-1.5 font-sans">
-                    <div className="flex items-center text-yellow-400">
-                      <Star size={13} fill="currentColor" />
-                    </div>
-                    <span className="text-[11px] font-bold text-gray-800">{tour.rating}</span>
-                    <span className="text-[10px] text-gray-400">({tour.reviews}개 리뷰)</span>
-                  </div>
+        <div className="router-divider">{t.comingSoon}</div>
 
-                  <h3 className="font-extrabold text-sm text-gray-955 font-sans leading-snug">
-                    {tour.title}
-                  </h3>
-
-                  <p className="font-medium text-gray-500 line-clamp-3">
-                    {tour.desc}
-                  </p>
-                </div>
+        {cards.filter((c) => c.status !== "open").map((c) => (
+          <div className="router-card locked" key={c.id}>
+            <div className="thumb">
+              <span className="ph">🔒</span>
+              <span className={`router-badge ${c.status === "next" ? "next" : "wait"}`}>
+                {c.status === "next" ? t.nextBadge : `${c.order} · ${t.waitBadge}`}
+              </span>
+            </div>
+            <div className="router-lockrow">
+              <div className="meta">
+                <div className="router-cityline">{c.order} · {c.cityline}</div>
+                <h2>{c.title}</h2>
               </div>
+              <a
+                className="router-notify"
+                href={SURVEY_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                🔔<br />{t.notify}
+              </a>
+            </div>
+          </div>
+        ))}
 
-              {/* Footer / CTA */}
-              <div className="p-5 pt-0 border-t border-gray-50 mt-4 flex items-center justify-between font-sans">
-                <span className="text-sm font-black text-[#1D9E75]">{tour.price}</span>
-                {tour.status === "active" ? (
-                  <Link 
-                    to={`/tour/${tour.id}`} 
-                    className="flex items-center gap-1 bg-[#1D9E75] hover:bg-[#15805d] text-white px-3.5 py-2 rounded-xl text-[11px] font-bold shadow-xs transition-colors"
-                  >
-                    가이드 보기
-                    <ArrowRight size={12} />
-                  </Link>
-                ) : (
-                  <span className="text-gray-400 text-[11px] font-bold bg-gray-50 border border-gray-100 px-3.5 py-2 rounded-xl">
-                    준비 중
-                  </span>
-                )}
-              </div>
-            </article>
-          ))}
+        <div className="router-askbox">
+          <h3>{t.askH3}</h3>
+          <p>{t.askP}</p>
+          <a className="router-askbtn" href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
+            {t.askBtn}
+          </a>
+          <div className="fine">{t.askFine}</div>
         </div>
+
+        <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
       </div>
     </div>
   );

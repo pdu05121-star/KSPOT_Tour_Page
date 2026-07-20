@@ -4,10 +4,7 @@ import "@/styles/landing.css";
 import logoEmblem from "@/assets/logo.png";
 import logoWordmark from "@/assets/landing_img_1.png";
 import kspotBrandingVideo from "@/assets/kspot-branding.mp4";
-
-// TODO: 실제 구글폼 URL로 교체 (KSPOT_수요조사_다국어.md 기반으로 만든 폼)
-// SuwonTour.tsx와 동일한 폼을 씁니다 — 수요조사 창구를 하나로 통일.
-const SURVEY_FORM_URL = "#SURVEY_FORM_URL";
+import { SURVEY_FORM_URL } from "@/app/surveyConfig";
 
 export default function Landing() {
   // Scrolled Navbar State

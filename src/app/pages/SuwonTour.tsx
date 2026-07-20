@@ -26,9 +26,7 @@ import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
 import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
-
-// TODO: 실제 구글폼 URL로 교체 (KSPOT_수요조사_다국어.md 기반으로 만든 폼)
-const SURVEY_FORM_URL = "#SURVEY_FORM_URL";
+import { SURVEY_FORM_URL } from "@/app/surveyConfig";
 
 // 왕복 판단 프레임 — 값은 전부 예시(placeholder).
 // 실제 값은 마스터 코스 템플릿(막차·소요시간 확정본)이 나오면 교체.

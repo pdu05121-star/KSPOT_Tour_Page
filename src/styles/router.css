@@ -1,0 +1,65 @@
+/* KSPOT 라우터 페이지 — router.html 시안 디자인 토큰 그대로 이식 */
+.router-page{
+  --ink:#1a1a1a; --ink-soft:#5a5a5a; --ink-faint:#9a9a9a;
+  --paper:#faf8f4; --card:#ffffff; --line:#e8e4dc; --line-soft:#f0ece4;
+  --accent:#c8452e; --accent-soft:#f7ede9;
+  --locked:#f4f1ea; --gold:#b8893a;
+  --r:14px;
+
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.router-page *{box-sizing:border-box}
+.router-wrap{max-width:440px;margin:0 auto;padding:0 16px 48px;min-height:100vh}
+
+.router-topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 4px 8px}
+.router-brand{font-weight:700;font-size:16px;letter-spacing:.5px;text-decoration:none;color:var(--ink)}
+.router-brand span{color:var(--accent)}
+.router-lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px}
+.router-lang button{border:none;background:none;font-size:11px;padding:4px 9px;border-radius:16px;cursor:pointer;color:var(--ink-soft);font-family:inherit}
+.router-lang button.on{background:var(--ink);color:#fff}
+
+.router-hero{text-align:center;padding:28px 12px 24px}
+.router-eyebrow{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--accent);background:var(--accent-soft);padding:5px 13px;border-radius:20px;margin-bottom:16px;font-weight:500}
+.router-hero h1{font-family:'Gowun Batang',serif;font-size:26px;line-height:1.42;font-weight:700;letter-spacing:-.5px;margin:0}
+.router-hero p{font-size:13.5px;color:var(--ink-soft);margin-top:14px;line-height:1.7;padding:0 6px}
+.router-hero .kk{color:var(--ink);font-weight:500}
+
+.router-divider{display:flex;align-items:center;gap:10px;margin:8px 4px 20px;color:var(--ink-faint);font-size:11px;letter-spacing:.5px}
+.router-divider::before,.router-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.router-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px;transition:transform .15s,box-shadow .15s}
+.router-card.open:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+
+.router-card .thumb{height:172px;background:var(--accent-soft);position:relative;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
+.router-card .thumb .ph{color:var(--accent);opacity:.5;font-size:13px}
+.router-badge{position:absolute;top:12px;left:12px;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.router-badge.next{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+.router-badge.wait{background:#fff;color:var(--ink-faint);border:1px solid var(--line)}
+
+.router-card .body{padding:16px}
+.router-cityline{font-size:11px;color:var(--ink-faint);letter-spacing:.4px}
+.router-ktag{font-size:12px;color:var(--accent);margin-top:8px;display:flex;align-items:center;gap:5px}
+.router-card h2{font-size:17px;font-weight:500;margin-top:5px;line-height:1.4}
+.router-card .desc{font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.65}
+.router-cta{display:block;margin-top:16px;background:var(--ink);color:#fff;text-align:center;padding:12px;border-radius:9px;font-size:14px;font-weight:500;text-decoration:none;font-family:inherit;border:none;width:100%;cursor:pointer}
+
+.router-card.locked .thumb{height:124px;background:var(--locked)}
+.router-card.locked .thumb .ph{color:var(--ink-faint);opacity:.6}
+.router-lockrow{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.router-lockrow .meta{min-width:0}
+.router-lockrow h2{font-size:14.5px;margin-top:4px}
+.router-notify{flex-shrink:0;background:var(--paper);border:1px solid var(--line);color:var(--ink);font-size:12px;padding:9px 13px;border-radius:9px;text-align:center;line-height:1.25;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+.router-notify:hover{border-color:var(--ink-faint)}
+
+.router-askbox{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 18px;text-align:center;margin-top:4px}
+.router-askbox h3{font-size:15.5px;font-weight:500;margin:0}
+.router-askbox p{font-size:12.5px;color:var(--ink-soft);margin:8px 0 15px;line-height:1.6}
+.router-askbtn{display:block;background:var(--accent);color:#fff;text-align:center;padding:13px;border-radius:9px;font-size:14px;font-weight:500;text-decoration:none}
+.router-askbox .fine{font-size:11px;color:var(--ink-faint);margin-top:10px}
+
+.router-foot{text-align:center;font-size:11px;color:var(--ink-faint);margin-top:28px;line-height:1.8}
