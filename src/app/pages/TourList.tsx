@@ -108,7 +108,7 @@ const TOURS: Record<Lang, TourCard[]> = {
 const COPY: Record<Lang, {
   eyebrow: string; heroTitle: string; heroPre: string; heroKk: string; heroPost: string;
   nowOpen: string; comingSoon: string; openCta: string; nextBadge: string; waitBadge: string; notify: string;
-  askH3: string; askP: string; askBtn: string; askFine: string;
+  askH3: string; askP: string; askBtn: string; askFine: string; stickyBtn: string;
 }> = {
   ko: {
     eyebrow: "KSPOT 로컬 로드맵",
@@ -126,6 +126,7 @@ const COPY: Record<Lang, {
     askP: "어디가 궁금한지 알려주시면, 그곳을 다음 이야기로 만들어 공개해요.",
     askBtn: "가고 싶은 곳 알려주기 →",
     askFine: "30초면 끝나요 · 많이 찾는 곳부터 공개",
+    stickyBtn: "알려주기 →",
   },
   en: {
     eyebrow: "KSPOT LOCAL ROADMAP",
@@ -143,6 +144,7 @@ const COPY: Record<Lang, {
     askP: "Tell us where you're curious about, and we'll make it the next story.",
     askBtn: "Tell us where →",
     askFine: "Takes 30 seconds · Most-requested opens first",
+    stickyBtn: "Tell us →",
   },
   ja: {
     eyebrow: "KSPOT ローカルロードマップ",
@@ -160,6 +162,7 @@ const COPY: Record<Lang, {
     askP: "気になる場所を教えてください。次の物語としてお作りします。",
     askBtn: "行きたい場所を教える →",
     askFine: "30秒で完了 · リクエストの多い街から公開",
+    stickyBtn: "教える →",
   },
   zh: {
     eyebrow: "KSPOT 本地路线图",
@@ -177,6 +180,7 @@ const COPY: Record<Lang, {
     askP: "告诉我们你想去哪里，我们会把它做成下一个故事。",
     askBtn: "告诉我们你想去哪 →",
     askFine: "30秒完成 · 从最多人想去的城市开始公开",
+    stickyBtn: "告诉我们 →",
   },
 };
 
@@ -279,6 +283,16 @@ export default function TourList() {
           </div>
 
           <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
+        </div>
+      </div>
+
+      {/* 하단 고정 CTA — 스크롤 내내 노출, 하단 askbox와 별개로 상시 유지 */}
+      <div className="router-sticky-cta">
+        <div className="router-sticky-cta-inner">
+          <span className="msg"><b>{t.askH3}</b></span>
+          <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
+            {t.stickyBtn}
+          </a>
         </div>
       </div>
     </div>
