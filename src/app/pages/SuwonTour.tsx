@@ -91,6 +91,22 @@ const VERDICT_SUB: Record<Lang, Record<Verdict, string>> = {
 
 const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
 
+// 여유시간을 "5시간 59분" 형태로 변환 (언어별 단위)
+const BUFFER_UNIT: Record<Lang, { h: string; m: string; sep: string }> = {
+  ko: { h: "시간", m: "분", sep: " " },
+  en: { h: "hr", m: "min", sep: " " },
+  ja: { h: "時間", m: "分", sep: "" },
+  zh: { h: "小时", m: "分钟", sep: "" },
+};
+function formatBufferHM(minutes: number, lang: Lang): string {
+  const u = BUFFER_UNIT[lang];
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  if (h > 0 && m > 0) return `${h}${u.h}${u.sep}${m}${u.m}`;
+  if (h > 0) return `${h}${u.h}`;
+  return `${m}${u.m}`;
+}
+
 // 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 7곳 (행리단길은 좌표 미확인이라 제외)
 const ROUTE_COORDS = [
   "37.2847710231129,127.013617036234",
@@ -111,8 +127,8 @@ const UI: Record<Lang, {
   backLink: string; brand: string;
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
-  frameEyebrow: string; frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
-  arrivalPrefix: string; lastTrainPrefix: string; bufferLine: (n: number) => string; confirmedNote: string;
+  frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
+  arrivalPrefix: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
   recommendedMenu: string; tipLabel2: string;
@@ -127,14 +143,13 @@ const UI: Record<Lang, {
     heroAlt: "수원 화성 장안문 야경",
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
     blockquote: "인스타에도 없는 진짜 촬영지 좌표부터 웨이팅 ZERO 찐맛집까지, 이 페이지 하나로 완벽 졸업하세요.",
-    frameEyebrow: "⚡ KSPOT 판단 엔진",
     frameHeading: "오늘 일정 한눈에",
     departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
     transferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
     arrivalPrefix: "수원역 도착 → 서울행 막차",
     lastTrainPrefix: "",
-    bufferLine: (n) => `막차까지 여유 약 ${n}분`,
+    bufferLabel: "막차까지 여유",
     confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
     ch1: "과몰입 촬영지 BEST 5", ch2: "현지인 찐맛집", ch3: "카페", ch4: "한눈에 보는 당일치기 타임테이블",
     secretCoord: "시크릿 좌표.", moveLabel: "이동 · 주차.", tipLabel: "에디터 시크릿 꿀팁",
@@ -154,14 +169,13 @@ const UI: Record<Lang, {
     heroAlt: "Suwon Hwaseong Janganmun Gate at night",
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
     blockquote: "From real filming-spot coordinates Instagram never shows, to zero-wait local favorites — graduate Suwon day trips with this one page.",
-    frameEyebrow: "⚡ KSPOT Judgment Engine",
     frameHeading: "Today's plan, at a glance",
     departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
     transferNote: "17:17 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min (confirmed)",
     arrivalPrefix: "Arrive Suwon Station → Last train to Seoul",
     lastTrainPrefix: "",
-    bufferLine: (n) => `About ${n} min to spare before the last train`,
+    bufferLabel: "Time to spare before the last train",
     confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
     ch1: "Obsession-worthy filming spots BEST 5", ch2: "Local favorite restaurant", ch3: "Café", ch4: "Day-trip timetable at a glance",
     secretCoord: "Secret coordinates.", moveLabel: "Getting there / parking.", tipLabel: "Editor's secret tip",
@@ -181,14 +195,13 @@ const UI: Record<Lang, {
     heroAlt: "水原華城 長安門の夜景",
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
     blockquote: "インスタにもない本物のロケ地座標から、待ち時間ゼロの名店まで。このページ一つで完全マスター。",
-    frameEyebrow: "⚡ KSPOT 判断エンジン",
     frameHeading: "今日の予定、ひと目で",
     departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
     transferNote: "17:17 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分(確認済み)",
     arrivalPrefix: "水原駅到着 → ソウル行き終電",
     lastTrainPrefix: "",
-    bufferLine: (n) => `終電まで約${n}分の余裕`,
+    bufferLabel: "終電までの余裕",
     confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
     ch1: "過剰入魂ロケ地 BEST 5", ch2: "地元グルメ", ch3: "カフェ", ch4: "ひと目でわかる日帰りタイムテーブル",
     secretCoord: "シークレット座標.", moveLabel: "移動・駐車.", tipLabel: "エディター秘密の裏技",
@@ -208,14 +221,13 @@ const UI: Record<Lang, {
     heroAlt: "水原华城长安门夜景",
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
     blockquote: "从Instagram都没有的真实取景地坐标，到零等待的本地美食——这一页带你完美征服。",
-    frameEyebrow: "⚡ KSPOT 判断引擎",
     frameHeading: "今日行程一目了然",
     departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
     transferNote: "17:17 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟(已确认)",
     arrivalPrefix: "到达水原站 → 开往首尔的末班车",
     lastTrainPrefix: "",
-    bufferLine: (n) => `距末班车还有约${n}分钟余量`,
+    bufferLabel: "距末班车还有",
     confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
     ch1: "沉浸式取景地 BEST 5", ch2: "本地人气美食", ch3: "咖啡店", ch4: "一目了然的一日游时间表",
     secretCoord: "秘密坐标.", moveLabel: "交通·停车.", tipLabel: "编辑私藏秘诀",
@@ -538,16 +550,10 @@ export default function SuwonTour() {
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 — KSPOT 판단 엔진, 서비스 핵심 차별점이라 시각적으로 강조 */}
-        <p
-          className="text-[11px] font-black tracking-[0.15em] uppercase mb-2"
-          style={{ color: STAMP }}
-        >
-          {t.frameEyebrow}
-        </p>
+        {/* 왕복 판단 프레임 */}
         <div
           className="rounded-md overflow-hidden mb-10"
-          style={{ border: `2px solid ${VERDICT_COLOR[verdict]}`, boxShadow: `0 6px 24px ${VERDICT_COLOR[verdict]}33` }}
+          style={{ border: `1px solid ${HAIRLINE}` }}
         >
           <div
             className="px-4 py-3 text-sm font-black flex items-center gap-2"
@@ -584,14 +590,22 @@ export default function SuwonTour() {
               </span>
             </div>
           </div>
+
+          {/* 판정 결과 — 코스의 핵심 결론이라 크게, 내용도 풍부하게 */}
           <div
-            className="px-4 py-2.5 flex items-center justify-between text-white"
+            className="px-5 py-6 text-white text-center"
             style={{ backgroundColor: VERDICT_COLOR[verdict] }}
           >
-            <span className="text-sm font-black">{VERDICT_LABEL[verdict]}</span>
-            <span className="text-[11px] font-semibold opacity-90">
-              {ROUND_TRIP.bufferMinutes !== null ? t.bufferLine(ROUND_TRIP.bufferMinutes) : ""} · {VERDICT_SUB[lang][verdict]}
-            </span>
+            <div className="text-3xl font-black mb-2 tracking-wide">{VERDICT_LABEL[verdict]}</div>
+            {ROUND_TRIP.bufferMinutes !== null && (
+              <div className="mb-1.5">
+                <span className="text-[13px] font-semibold opacity-85 mr-1.5">{t.bufferLabel}</span>
+                <span className="text-2xl font-black" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  {formatBufferHM(ROUND_TRIP.bufferMinutes, lang)}
+                </span>
+              </div>
+            )}
+            <p className="text-[13px] font-semibold opacity-90">{VERDICT_SUB[lang][verdict]}</p>
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
