@@ -126,7 +126,7 @@ const COPY: Record<Lang, {
     askP: "어디가 궁금한지 알려주시면, 그곳을 다음 이야기로 만들어 공개해요.",
     askBtn: "가고 싶은 곳 알려주기 →",
     askFine: "30초면 끝나요 · 많이 찾는 곳부터 공개",
-    stickyBtn: "알려주기 →",
+    stickyBtn: "귀띔하기 →",
   },
   en: {
     eyebrow: "🔓 KSPOT SECRET UNLOCK",
@@ -144,7 +144,7 @@ const COPY: Record<Lang, {
     askP: "Tell us where you're curious about, and we'll make it the next story.",
     askBtn: "Tell us where →",
     askFine: "Takes 30 seconds · Most-requested opens first",
-    stickyBtn: "Tell us →",
+    stickyBtn: "Tip us off →",
   },
   ja: {
     eyebrow: "🔓 KSPOT シークレット解禁",
@@ -162,7 +162,7 @@ const COPY: Record<Lang, {
     askP: "気になる場所を教えてください。次の物語としてお作りします。",
     askBtn: "行きたい場所を教える →",
     askFine: "30秒で完了 · リクエストの多い街から公開",
-    stickyBtn: "教える →",
+    stickyBtn: "こっそり教える →",
   },
   zh: {
     eyebrow: "🔓 KSPOT 秘密解锁",
@@ -180,7 +180,7 @@ const COPY: Record<Lang, {
     askP: "告诉我们你想去哪里，我们会把它做成下一个故事。",
     askBtn: "告诉我们你想去哪 →",
     askFine: "30秒完成 · 从最多人想去的城市开始公开",
-    stickyBtn: "告诉我们 →",
+    stickyBtn: "偷偷告诉我们 →",
   },
 };
 
@@ -273,20 +273,11 @@ export default function TourList() {
         </div>
 
         <div className="router-narrow">
-          <div className="router-askbox">
-            <h3>{t.askH3}</h3>
-            <p>{t.askP}</p>
-            <a className="router-askbtn" href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
-              {t.askBtn}
-            </a>
-            <div className="fine">{t.askFine}</div>
-          </div>
-
           <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
         </div>
       </div>
 
-      {/* 하단 고정 CTA — 스크롤 내내 노출, 하단 askbox와 별개로 상시 유지 */}
+      {/* 하단 고정 CTA — 스크롤 내내 노출 */}
       <div className="router-sticky-cta">
         <div className="router-sticky-cta-inner">
           <span className="msg"><b>{t.askH3}</b></span>
