@@ -6,8 +6,8 @@ import { SURVEY_FORM_URL } from "@/app/surveyConfig";
 // Local Image Imports (동일한 수원 에셋 재사용)
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import sunjaeSiljaImg from "@/assets/carousel/sunjae_silja.jpg";
-import suwonHongwhamunImg from "@/assets/suwon/hwahongmun_official.jpg";
-import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_official.jpg";
+import suwonHongwhamunImg from "@/assets/suwon/hwahongmun_v2.webp";
+import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_v2.webp";
 import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
@@ -252,14 +252,14 @@ const SPOTS: Record<Lang, SpotItem[]> = {
   ko: [
     { no: "01", emoji: "🎬", title: "몽테드 카페", subtitle: "솔이네 비디오가게 앞 · 노란 우산씬",
       scene: "선재와 솔이의 노란 우산 장면이 촬영된 그 골목 앞 카페. 오픈 시간에 맞춰 여유 있게 하루를 시작해요.",
-      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "몽테드 카페 → 화홍문, 도보 9분 (확인됨)",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "몽테드 카페 → 화홍문, 도보 9분",
       goldenHour: "10시 오픈이라 그 전에 도착하면 골목 사진부터 찍고 들어가는 걸 추천해요.",
       caution: "영업시간 10:00–19:00 · 매주 수요일 휴무", image: sunjaeSiljaImg },
     { no: "02", emoji: "💌", title: "화홍문", subtitle: "솔이가 선재에게 고백한 곳",
       scene: "수원천 위 돌다리. 19살 솔이가 선재에게 마음을 고백하던 장면이 촬영된 곳이에요.",
-      coord: "경기 수원시 팔달구 북수동", move: "화홍문 → 방화수류정, 도보 3분 (확인됨)",
+      coord: "경기 수원시 팔달구 북수동", move: "화홍문 → 방화수류정, 도보 3분",
       goldenHour: "OST를 들으며 천천히 건너보세요 — 다리를 건너는 뒷모습과 화홍문 누각을 한 앵글에 담기 좋아요.",
-      caution: "24시간 개방 · 휴무 없음", image: suwonHongwhamunImg },
+      caution: "24시간 개방 · 휴무 없음", image: suwonHongwhamunImg, imgPosition: "top" },
     { no: "03", emoji: "🚲", title: "방화수류정", subtitle: "자전거를 가르쳐주던 그 자리",
       scene: "선재가 솔이에게 자전거 타는 법을 가르쳐주던 곳. 날씨 좋은 날엔 잠깐 앉아 쉬어가기 좋은 뷰예요.",
       coord: "경기 수원시 팔달구 매향동 151", move: "방화수류정 → 행궁동 벽화마을, 도보 3분 [추정 · 확인 필요]",
@@ -279,14 +279,14 @@ const SPOTS: Record<Lang, SpotItem[]> = {
   en: [
     { no: "01", emoji: "🎬", title: "Monde Café", subtitle: "In front of Sol's video store · the yellow umbrella scene",
       scene: "The café by the alley where Sun-jae and Sol's yellow umbrella scene was filmed. Start your day at an easy pace, at opening time.",
-      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde Café → Hwahongmun, 9 min walk (confirmed)",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde Café → Hwahongmun, 9 min walk",
       goldenHour: "It opens at 10, so arriving early lets you get alley photos before going in.",
       caution: "Open 10:00–19:00 · Closed Wednesdays", image: sunjaeSiljaImg },
     { no: "02", emoji: "💌", title: "Hwahongmun", subtitle: "Where Sol confessed to Sun-jae",
       scene: "The stone bridge over Suwoncheon. Where 19-year-old Sol confessed her feelings to Sun-jae.",
-      coord: "경기 수원시 팔달구 북수동", move: "Hwahongmun → Banghwasuryujeong, 3 min walk (confirmed)",
+      coord: "경기 수원시 팔달구 북수동", move: "Hwahongmun → Banghwasuryujeong, 3 min walk",
       goldenHour: "Cross slowly while listening to the OST — a great angle catches both your back and the Hwahongmun pavilion.",
-      caution: "Open 24 hours · No closed days", image: suwonHongwhamunImg },
+      caution: "Open 24 hours · No closed days", image: suwonHongwhamunImg, imgPosition: "top" },
     { no: "03", emoji: "🚲", title: "Banghwasuryujeong", subtitle: "Where he taught her to ride a bike",
       scene: "Where Sun-jae taught Sol how to ride a bicycle. A nice view to sit and rest on a good-weather day.",
       coord: "경기 수원시 팔달구 매향동 151", move: "Banghwasuryujeong → Haenggung-dong Mural Village, 3 min walk [estimated, needs confirmation]",
@@ -306,14 +306,14 @@ const SPOTS: Record<Lang, SpotItem[]> = {
   ja: [
     { no: "01", emoji: "🎬", title: "モンテドカフェ", subtitle: "ソルの家のビデオ店前・黄色い傘のシーン",
       scene: "ソンジェとソルの黄色い傘のシーンが撮影された路地前のカフェ。オープン時間に合わせてゆったり一日を始めましょう。",
-      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "モンテドカフェ→華虹門、徒歩9分(確認済み)",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "モンテドカフェ→華虹門、徒歩9分",
       goldenHour: "10時オープンなので、その前に着けば路地の写真を撮ってから入れます。",
       caution: "営業時間10:00–19:00 · 毎週水曜休み", image: sunjaeSiljaImg },
     { no: "02", emoji: "💌", title: "華虹門", subtitle: "ソルがソンジェに告白した場所",
       scene: "水原川に架かる石橋。19歳のソルがソンジェに気持ちを告白したシーンが撮影された場所です。",
-      coord: "경기 수원시 팔달구 북수동", move: "華虹門→訪花随柳亭、徒歩3分(確認済み)",
+      coord: "경기 수원시 팔달구 북수동", move: "華虹門→訪花随柳亭、徒歩3分",
       goldenHour: "OSTを聴きながらゆっくり渡ってみて — 橋を渡る後ろ姿と華虹門の楼閣を一つのアングルに収めるのがおすすめです。",
-      caution: "24時間開放 · 休みなし", image: suwonHongwhamunImg },
+      caution: "24時間開放 · 休みなし", image: suwonHongwhamunImg, imgPosition: "top" },
     { no: "03", emoji: "🚲", title: "訪花随柳亭", subtitle: "自転車を教えてもらったその場所",
       scene: "ソンジェがソルに自転車の乗り方を教えた場所。天気の良い日はちょっと座って休むのにいいビューです。",
       coord: "경기 수원시 팔달구 매향동 151", move: "訪花随柳亭→行宮洞壁画村、徒歩3分[推定・確認要]",
@@ -333,14 +333,14 @@ const SPOTS: Record<Lang, SpotItem[]> = {
   zh: [
     { no: "01", emoji: "🎬", title: "Monde咖啡", subtitle: "Sol家录像店门前·黄色雨伞那场戏",
       scene: "Sunjae和Sol的黄色雨伞场景取景地附近的咖啡店。配合开店时间，从容开始一天。",
-      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde咖啡→花虹门，步行9分钟(已确认)",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde咖啡→花虹门，步行9分钟",
       goldenHour: "10点开门，提前到达可以先拍巷子照片再进店。",
       caution: "营业时间10:00–19:00 · 每周三休息", image: sunjaeSiljaImg },
     { no: "02", emoji: "💌", title: "花虹门", subtitle: "Sol向Sunjae表白的地方",
       scene: "水原川上的石桥。19岁的Sol向Sunjae表白心意的场景取景地。",
-      coord: "경기 수원시 팔달구 북수동", move: "花虹门→访花随柳亭，步行3分钟(已确认)",
+      coord: "경기 수원시 팔달구 북수동", move: "花虹门→访花随柳亭，步行3分钟",
       goldenHour: "边听OST边慢慢走过桥 — 背影配上花虹门楼阁的角度很出片。",
-      caution: "24小时开放 · 无休息日", image: suwonHongwhamunImg },
+      caution: "24小时开放 · 无休息日", image: suwonHongwhamunImg, imgPosition: "top" },
     { no: "03", emoji: "🚲", title: "访花随柳亭", subtitle: "教她骑自行车的地方",
       scene: "Sunjae教Sol骑自行车的地方。天气好的时候坐着休息一下也很不错。",
       coord: "경기 수원시 팔달구 매향동 151", move: "访花随柳亭→行宫洞壁画村，步行3分钟[预估·待确认]",
@@ -602,9 +602,6 @@ export default function SuwonTour() {
             </span>
           </div>
         </div>
-        <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
-          {t.confirmedNote}
-        </p>
       </section>
 
       {/* SPOTS */}
@@ -629,6 +626,18 @@ export default function SuwonTour() {
                     className="w-full h-full object-cover"
                     style={{ objectPosition: s.imgPosition ?? "center" }}
                   />
+                  {/* 드라마 장면 자막 오버레이 — 실제 스틸컷 대신, 이 사진이 그 장면임을 떠올리게 하는 장치 */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 px-3.5 py-3 pt-8"
+                    style={{ background: "linear-gradient(to top, rgba(10,20,15,0.85), rgba(10,20,15,0) 75%)" }}
+                  >
+                    <p
+                      className="text-white text-[13px] font-bold flex items-center gap-1.5"
+                      style={{ fontFamily: "'Noto Serif KR', serif", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
+                    >
+                      <span>🎬</span> {s.subtitle}
+                    </p>
+                  </div>
                 </div>
                 <div
                   className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
