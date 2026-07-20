@@ -111,8 +111,8 @@ export default function Landing() {
           <img src={logoEmblem} alt="KSPOT Logo Emblem" className="logo-emblem" />
           <img src={logoWordmark} alt="KSPOT" className="logo-wordmark" />
         </Link>
-        <Link to="/tour/suwon" className="cta-small">
-          서비스 시작하기
+        <Link to="/tour" className="cta-small">
+          투어 코스 보러가기
         </Link>
       </nav>
 
@@ -162,7 +162,7 @@ export default function Landing() {
               <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 원하는 코스 받아보기 →
               </a>
-              <a href="#tour" className="btn-ghost">수원 코스 먼저 보기</a>
+              <Link to="/tour" className="btn-ghost">투어 코스 보러가기</Link>
             </div>
           </div>
         </div>
@@ -201,8 +201,8 @@ export default function Landing() {
           <div className="mb-eyebrow">Moment</div>
           <p className="mb-quote">정보는 다 찾아봤는데,<br />정류장 앞에 서니 또 막막해졌어요.</p>
           <div className="mb-cta">
-            <Link to="/tour/suwon" className="btn-primary-dark">
-              지금 코스 확인해보기 →
+            <Link to="/tour" className="btn-primary-dark">
+              투어 코스 보러가기 →
             </Link>
           </div>
         </div>
@@ -495,9 +495,6 @@ export default function Landing() {
             <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary-dark">
               원하는 코스 받아보기 →
             </a>
-            <Link to="/tour/suwon" className="btn-ghost-dark">
-              수원 코스 먼저 체험하기
-            </Link>
             <a href="mailto:kspot02026@gmail.com" className="btn-ghost-dark">팀에게 문의하기</a>
           </div>
         </div>
