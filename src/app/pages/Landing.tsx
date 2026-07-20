@@ -4,25 +4,14 @@ import "@/styles/landing.css";
 import logoEmblem from "@/assets/logo.png";
 import logoWordmark from "@/assets/landing_img_1.png";
 import kspotBrandingVideo from "@/assets/kspot-branding.mp4";
-import { supabase } from "@/app/supabase";
 
-const COURSE_OPTIONS = [
-  { value: "suwon", label: "수원 (선재 업고 튀어)" },
-  { value: "chuncheon", label: "춘천 (겨울연가)" },
-  { value: "gangneung", label: "강릉 (도깨비)" },
-  { value: "etc", label: "기타 (직접 입력)" },
-];
+// TODO: 실제 구글폼 URL로 교체 (KSPOT_수요조사_다국어.md 기반으로 만든 폼)
+// SuwonTour.tsx와 동일한 폼을 씁니다 — 수요조사 창구를 하나로 통일.
+const SURVEY_FORM_URL = "#SURVEY_FORM_URL";
 
 export default function Landing() {
   // Scrolled Navbar State
   const [scrolled, setScrolled] = useState(false);
-
-  // Subscribe Modal State (뉴스레터 구독 + 수요조사)
-  const [subscribeOpen, setSubscribeOpen] = useState(false);
-  const [subEmail, setSubEmail] = useState("");
-  const [subCourse, setSubCourse] = useState("");
-  const [subCourseEtc, setSubCourseEtc] = useState("");
-  const [subStatus, setSubStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
   // FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -117,57 +106,6 @@ export default function Landing() {
     setOpenFaq(prev => (prev === index ? null : index));
   };
 
-  // Subscribe Modal — ESC로 닫기
-  useEffect(() => {
-    if (!subscribeOpen) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeSubscribeModal();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscribeOpen]);
-
-  const openSubscribeModal = () => {
-    setSubStatus("idle");
-    setSubEmail("");
-    setSubCourse("");
-    setSubCourseEtc("");
-    setSubscribeOpen(true);
-  };
-
-  const closeSubscribeModal = () => {
-    setSubscribeOpen(false);
-  };
-
-  const handleSubscribeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!subEmail.trim()) return;
-
-    setSubStatus("submitting");
-
-    const interestedCourse =
-      subCourse === "etc" ? subCourseEtc.trim() : (COURSE_OPTIONS.find(c => c.value === subCourse)?.label ?? "");
-
-    const { error } = await supabase.from("launch_notify").insert([
-      {
-        email: subEmail.trim(),
-        interested_course: interestedCourse || null,
-      },
-    ]);
-
-    if (error) {
-      console.error("launch_notify insert error:", error);
-      setSubStatus("error");
-      return;
-    }
-
-    setSubStatus("success");
-    setTimeout(() => {
-      closeSubscribeModal();
-    }, 1800);
-  };
-
   return (
     <div className="landing-page">
       {/* Navigation */}
@@ -224,9 +162,9 @@ export default function Landing() {
               <span className={`quote-mark hide-until-done ${typingDone ? "show" : ""}`}>”</span>
             </p>
             <div className="hero-foot seq" style={{ "--d": "0.2s" } as React.CSSProperties}>
-              <button type="button" className="btn-primary" onClick={openSubscribeModal}>
-                원하는 코스 알려주기 →
-              </button>
+              <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                원하는 코스 받아보기 →
+              </a>
               <a href="#tour" className="btn-ghost">수원 코스 먼저 보기</a>
             </div>
           </div>
@@ -557,9 +495,9 @@ export default function Landing() {
           <div className="sec-eyebrow">KSPOT</div>
           <p className="cta-final-title">이제, <span className="accent">서울 밖으로</span><br />한 걸음 내딛을 시간입니다.</p>
           <div className="cta-actions">
-            <button type="button" className="btn-primary-dark" onClick={openSubscribeModal}>
-              원하는 코스 신청하기 →
-            </button>
+            <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary-dark">
+              원하는 코스 받아보기 →
+            </a>
             <Link to="/tour/suwon" className="btn-ghost-dark">
               수원 코스 먼저 체험하기
             </Link>
@@ -582,88 +520,6 @@ export default function Landing() {
           <div className="footer-brand"><span className="footer-copy">KSPOT © 2026</span></div>
         </div>
       </footer>
-
-      {/* SUBSCRIBE MODAL — 뉴스레터 구독 + 수요조사 */}
-      {subscribeOpen && (
-        <div
-          className="subscribe-overlay"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) closeSubscribeModal();
-          }}
-        >
-          <div className="subscribe-modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-title">
-            <button
-              type="button"
-              className="subscribe-close"
-              aria-label="닫기"
-              onClick={closeSubscribeModal}
-            >
-              ✕
-            </button>
-
-            {subStatus === "success" ? (
-              <div className="subscribe-success">
-                <div className="subscribe-success-icon">✅</div>
-                <div className="subscribe-success-title">신청 완료했어요</div>
-                <div className="subscribe-success-desc">알려주신 코스, 잊지 않고 반영할게요.</div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubscribeSubmit}>
-                <div id="subscribe-title" className="subscribe-title">어떤 코스가 궁금하세요?</div>
-                <p className="subscribe-desc">
-                  신청 많은 지역부터 순서대로 코스를 만들어요. 이메일만 남겨도 뉴스레터로 새 소식을 보내드려요.
-                </p>
-
-                <label className="subscribe-label" htmlFor="subscribe-email">이메일</label>
-                <input
-                  id="subscribe-email"
-                  type="email"
-                  required
-                  placeholder="you@example.com"
-                  className="subscribe-input"
-                  value={subEmail}
-                  onChange={(e) => setSubEmail(e.target.value)}
-                />
-
-                <label className="subscribe-label" htmlFor="subscribe-course">궁금한 코스 (선택)</label>
-                <select
-                  id="subscribe-course"
-                  className="subscribe-input"
-                  value={subCourse}
-                  onChange={(e) => setSubCourse(e.target.value)}
-                >
-                  <option value="">선택 안 함</option>
-                  {COURSE_OPTIONS.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
-
-                {subCourse === "etc" && (
-                  <input
-                    type="text"
-                    placeholder="예: 전주, 부산 등 원하는 지역"
-                    className="subscribe-input"
-                    value={subCourseEtc}
-                    onChange={(e) => setSubCourseEtc(e.target.value)}
-                  />
-                )}
-
-                {subStatus === "error" && (
-                  <div className="subscribe-error">신청 중 문제가 생겼어요. 잠시 후 다시 시도해주세요.</div>
-                )}
-
-                <button
-                  type="submit"
-                  className="subscribe-submit"
-                  disabled={subStatus === "submitting"}
-                >
-                  {subStatus === "submitting" ? "보내는 중..." : "신청하기"}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

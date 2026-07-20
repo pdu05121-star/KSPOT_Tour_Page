@@ -3,23 +3,18 @@ import { Link } from "react-router";
 import { 
   MapPin, 
   ArrowRight, 
-  Mail, 
-  User, 
-  Phone,
   ChevronLeft, 
-  Star, 
+  Star,
   Clock, 
   CheckCircle2, 
   Footprints, 
   Flame, 
   HelpCircle 
 } from "lucide-react";
-import { supabase } from "@/app/supabase";
 
 // UI Components
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/app/components/ui/tabs";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/app/components/ui/accordion";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog";
 import { Badge } from "@/app/components/ui/badge";
 
 // Local Image Imports
@@ -31,6 +26,20 @@ import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
 import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
+
+// TODO: 실제 구글폼 URL로 교체 (KSPOT_수요조사_다국어.md 기반으로 만든 폼)
+const SURVEY_FORM_URL = "#SURVEY_FORM_URL";
+
+// 왕복 판단 프레임 — 값은 전부 예시(placeholder).
+// 실제 값은 마스터 코스 템플릿(막차·소요시간 확정본)이 나오면 교체.
+const ROUND_TRIP = {
+  departTime: "08:40",
+  departNote: "서울역 · 1호선 약 55분 [예시 — 템플릿 확정 전]",
+  lastTrainTime: "23:12",
+  lastTrainNote: "수원역 → 서울행 막차 [예시]",
+  bufferMinutes: 277,
+  verdict: "GO" as const,
+};
 
 const TEAL = "#1D9E75";
 const TEAL_DARK = "#0F6E56";
@@ -206,36 +215,6 @@ const faqs = [
 
 export default function SuwonTour() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !phone.trim()) return;
-
-    setSubmitting(true);
-    setSubmitError("");
-
-    try {
-      const fullNameWithPhone = `${name.trim()} (${phone.trim()})`;
-      const { error } = await supabase
-        .from("tour_applications")
-        .insert([{ name: fullNameWithPhone, email: email.trim(), course: "suwon" }]);
-
-      if (error) throw error;
-      setSubmitted(true);
-    } catch (err: any) {
-      console.error("Supabase insert error:", err);
-      setSubmitError("신청서 제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <div
@@ -301,25 +280,48 @@ export default function SuwonTour() {
             </div>
           </div>
 
-          {/* RIGHT: Product Box & Booking Card */}
+          {/* RIGHT: 왕복 판단 카드 */}
           <div className="lg:col-span-5 flex flex-col justify-between">
             <div className="lg:sticky lg:top-20 bg-white rounded-2xl p-6 border border-gray-100 shadow-md">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="flex items-center gap-0.5 text-yellow-400 font-sans">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={15} fill="currentColor" />
-                  ))}
-                </div>
-                <span className="text-xs font-bold text-gray-700">4.9</span>
-                <span className="text-xs text-gray-400 font-semibold">(후기 128개)</span>
-              </div>
-
               <h1 className="text-xl sm:text-2xl font-black leading-tight text-gray-900 mb-3 tracking-tight">
-                [선업튀 성지 순례] 임솔♥류선재 타임슬립 수원 행궁동 당일치기 코스 가이드
+                [선업튀 성지 순례] 임솔♥류선재 타임슬립 수원 행궁동 당일치기 코스
               </h1>
 
               <p className="text-xs font-semibold text-gray-500 mb-5 leading-relaxed">
                 서울 근교 1시간, 풋풋한 19살 그 시절 감성 그대로 걷는 완벽 동선 가이드북 & 실시간 길 찾기 구글맵 핀 패키지 💛
+              </p>
+
+              {/* 왕복 판단 프레임 — KSPOT 핵심 기능 */}
+              <div className="rounded-2xl border border-gray-100 overflow-hidden mb-5">
+                <div className="bg-gray-50 px-4 py-2.5 text-xs font-extrabold text-gray-700">
+                  ☰ 이 하루, 한눈에
+                </div>
+                <div className="px-4 py-3 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#0F6E56]">
+                    <span>🚆</span>
+                    <span>{ROUND_TRIP.departTime} 출발 · {ROUND_TRIP.departNote}</span>
+                  </div>
+                  <div className="pl-5 border-l-2 border-dashed border-gray-200 ml-1.5 space-y-1">
+                    {timeline.map((t, idx) => (
+                      <div key={idx} className="text-[11px] font-semibold text-gray-500">
+                        {t.time} · {t.title}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#92400E]">
+                    <span>🕚</span>
+                    <span>{ROUND_TRIP.lastTrainNote} {ROUND_TRIP.lastTrainTime}</span>
+                  </div>
+                </div>
+                <div className="bg-[#1D9E75] text-white px-4 py-2.5 flex items-center justify-between">
+                  <span className="text-sm font-extrabold">✓ {ROUND_TRIP.verdict}</span>
+                  <span className="text-[11px] font-semibold opacity-90">
+                    막차까지 여유 {ROUND_TRIP.bufferMinutes}분 · 무사히 귀환
+                  </span>
+                </div>
+              </div>
+              <p className="text-[10px] text-gray-400 font-semibold mb-5 -mt-3">
+                ⚠️ 시각·여유시간은 마스터 코스 템플릿 확정 전 예시값입니다. 실제 배차·막차는 현지 사정에 따라 달라질 수 있어요.
               </p>
 
               {/* 스펙 리스트 */}
@@ -344,87 +346,26 @@ export default function SuwonTour() {
                 </div>
               </div>
 
-              {/* 가격/무료 명시 영역 */}
-              <div className="flex justify-between items-center mb-6 border-t border-gray-100 pt-4">
-                <span className="text-xs font-bold text-gray-500">가이드 비용</span>
-                <span className="text-lg font-black text-[#1D9E75]">무료</span>
-              </div>
-
-              {/* 신청 폼 (데스크톱 전용) */}
-              <div className="hidden md:block">
-                {submitted ? (
-                  <div className="bg-[#E8F5F0] rounded-xl p-5 border border-[#c3e8da] text-center">
-                    <p className="text-2xl mb-1">🎉</p>
-                    <p className="font-extrabold text-[#0F6E56] text-xs">투어 프로그램 신청 완료!</p>
-                    <p className="text-[10px] text-[#0F6E56]/80 mt-1 font-semibold leading-relaxed">
-                      작성해주신 정보를 확인하여<br />빠른 시일 내에 연락드리겠습니다.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-3 font-sans">
-                    <div className="space-y-2">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="이름을 입력해 주세요"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          required
-                          className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                        />
-                        <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="tel"
-                          placeholder="연락처 (예: 010-1234-5678)"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          required
-                          className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                        />
-                        <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                      <div className="relative">
-                        <input
-                          type="email"
-                          placeholder="가이드를 받을 이메일 주소"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                        />
-                        <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                      </div>
-                    </div>
-                    {submitError && (
-                      <p className="text-red-500 text-[10px] font-semibold text-left">{submitError}</p>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="w-full py-3 bg-[#1D9E75] hover:bg-[#15805d] text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-xs shadow-sm transition-colors cursor-pointer"
-                    >
-                      {submitting ? "신청 처리 중..." : "🔒 투어 프로그램 신청하기"}
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              {/* Social Proof Rest limit progress bar */}
-              <div className="mt-4 space-y-1.5 text-gray-600 font-sans">
-                <div className="flex justify-between text-[10px] font-bold">
-                  <span>신청 인원 95명</span>
-                  <span className="text-red-500 animate-pulse">오늘 남은 혜택 수량 5개!</span>
-                </div>
-                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-red-400 rounded-full" style={{ width: "95%" }} />
-                </div>
+              {/* 다른 지역 신청 (수요조사 구글폼 링크) */}
+              <div className="hidden md:block bg-[#F7EDE9] rounded-xl p-4 text-center">
+                <p className="text-xs font-extrabold text-gray-800 mb-1">여기 없는 지역에 가고 싶으세요?</p>
+                <p className="text-[11px] text-gray-500 font-semibold mb-3 leading-relaxed">
+                  원하는 지역도 이 코스처럼 막차까지 계산해서 무료로 만들어 드려요.
+                </p>
+                <a
+                  href={SURVEY_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full py-3 bg-[#1D9E75] hover:bg-[#15805d] text-white rounded-xl font-bold text-xs shadow-sm transition-colors"
+                >
+                  내가 가고 싶은 지역 신청하기 →
+                </a>
+                <p className="text-[10px] text-gray-400 font-semibold mt-2">수요조사 폼으로 이동합니다 (2분)</p>
               </div>
 
               {/* 모바일 화면용 간단 텍스트 */}
               <div className="block md:hidden text-center bg-gray-50 py-2.5 rounded-xl text-xs font-bold text-gray-600">
-                👇 하단의 '무료로 받기' 버튼으로 바로 신청하세요!
+                👇 하단의 버튼으로 다른 지역도 신청할 수 있어요
               </div>
 
             </div>
@@ -805,88 +746,19 @@ export default function SuwonTour() {
       </footer>
 
       {/* MOBILE STICKY BOTTOM CTA BAR */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-5 py-3.5 flex items-center justify-between shadow-2xl font-sans">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-5 py-3.5 flex items-center justify-between shadow-2xl font-sans gap-3">
         <div className="flex flex-col">
-          <span className="text-[10px] text-gray-400 font-bold">가이드 비용</span>
-          <span className="text-base font-extrabold text-[#1D9E75]">무료</span>
+          <span className="text-[10px] text-gray-400 font-bold">막차까지 여유</span>
+          <span className="text-base font-extrabold text-[#1D9E75]">{ROUND_TRIP.bufferMinutes}분 · GO</span>
         </div>
-        
-        {/* 모바일 예약 팝업용 Dialog */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <button className="bg-[#1D9E75] hover:bg-[#15805d] text-white px-5 py-3 rounded-xl font-bold text-xs shadow-md cursor-pointer transition-colors">
-              투어 신청하기
-            </button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle className="text-base font-extrabold text-gray-900 font-sans">
-                🎁 투어 프로그램 신청하기
-              </DialogTitle>
-              <DialogDescription className="text-xs font-semibold text-gray-500 font-sans">
-                성함, 연락처, 이메일을 남겨주시면 담당자가 빠른 시일 내에 연락을 드립니다.
-              </DialogDescription>
-            </DialogHeader>
-
-            {submitted ? (
-              <div className="bg-[#E8F5F0] rounded-xl p-5 border border-[#c3e8da] text-center my-4 font-sans">
-                <p className="text-2xl mb-1">🎉</p>
-                <p className="font-extrabold text-[#0F6E56] text-xs">신청이 정상 접수되었습니다!</p>
-                <p className="text-[10px] text-[#0F6E56]/80 mt-1 font-semibold leading-relaxed">
-                  남겨주신 정보를 확인하여<br />빠른 시일 내에 연락드리겠습니다.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4 py-4 font-sans">
-                <div className="space-y-3">
-                  <div className="relative">
-                    <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="이름"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                    />
-                  </div>
-                  <div className="relative">
-                    <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="tel"
-                      placeholder="연락처 (예: 010-1234-5678)"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                      className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                    />
-                  </div>
-                  <div className="relative">
-                    <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="email"
-                      placeholder="이메일 주소"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-[#1D9E75] focus:bg-white transition-colors"
-                    />
-                  </div>
-                </div>
-                {submitError && (
-                  <p className="text-red-500 text-[10px] font-semibold text-left">{submitError}</p>
-                )}
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full py-3 bg-[#1D9E75] hover:bg-[#15805d] text-white disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-xs shadow-sm transition-colors cursor-pointer"
-                >
-                  {submitting ? "접수 중..." : "🔒 신청 완료하기"}
-                </button>
-              </form>
-            )}
-          </DialogContent>
-        </Dialog>
+        <a
+          href={SURVEY_FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-[#1D9E75] hover:bg-[#15805d] text-white px-5 py-3 rounded-xl font-bold text-xs shadow-md transition-colors whitespace-nowrap"
+        >
+          다른 지역 신청하기
+        </a>
       </div>
 
     </div>
