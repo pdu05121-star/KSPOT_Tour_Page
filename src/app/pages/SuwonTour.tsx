@@ -89,6 +89,14 @@ const VERDICT_SUB: Record<Lang, Record<Verdict, string>> = {
   zh: { draft: "判定暂缓", go: "可以安全返回", care: "请留出充足时间", reconsider: "建议精简行程", not_now: "目前条件下有困难" },
 };
 
+// 도착 시각 바로 뒤에 붙는 한 줄 결론 — 숫자(막차시각) 대신 "왜 안심해도 되는지"를 바로 말해줌
+const VERDICT_ARRIVAL_HINT: Record<Lang, Record<Verdict, string>> = {
+  ko: { draft: "막차 정보 확인 중이에요", go: "막차까지 여유 넉넉해요", care: "막차 전까지 서두르면 괜찮아요", reconsider: "막차 시간이 빠듯해요", not_now: "막차를 놓칠 수 있어요" },
+  en: { draft: "Checking the last train info", go: "plenty of time before the last train", care: "you'll need to keep moving before the last train", reconsider: "cutting it close for the last train", not_now: "you may miss the last train" },
+  ja: { draft: "終電情報を確認中です", go: "終電まで余裕があります", care: "終電まで少し急いだ方がいいです", reconsider: "終電まで時間がぎりぎりです", not_now: "終電に間に合わないかもしれません" },
+  zh: { draft: "末班车信息确认中", go: "距末班车还很宽裕", care: "赶末班车需要抓紧时间", reconsider: "赶末班车时间比较紧", not_now: "可能赶不上末班车" },
+};
+
 const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
 
 // 여유시간을 "5시간 59분" 형태로 변환 (언어별 단위)
@@ -132,7 +140,7 @@ const UI: Record<Lang, {
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
   frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
-  arrivalPrefix: string; arrivalSuffix: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
+  arrivalLabel: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
   recommendedMenu: string; tipLabel2: string;
@@ -152,7 +160,7 @@ const UI: Record<Lang, {
     hubWarning: " [출발 허브 확정 필요]",
     startTransferNote: "10:00 수원역 도착 → 몽테드 카페, 약 20분",
     transferNote: "17:37 정지영커피 출발 → 수원역, 버스(35번·13번) 15분",
-    arrivalPrefix: "수원역 도착 · 서울행 막차는", arrivalSuffix: "까지 있어요",
+    arrivalLabel: "수원역 도착",
     lastTrainPrefix: "",
     bufferLabel: "막차까지 여유",
     confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
@@ -179,7 +187,7 @@ const UI: Record<Lang, {
     hubWarning: " [Departure hub not finalized]",
     startTransferNote: "10:00 Arrive Suwon Station → Monde Café, about 20 min",
     transferNote: "17:37 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min",
-    arrivalPrefix: "Arrive Suwon Station · last train to Seoul runs until", arrivalSuffix: "",
+    arrivalLabel: "Arrive Suwon Station",
     lastTrainPrefix: "",
     bufferLabel: "Time to spare before the last train",
     confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
@@ -206,7 +214,7 @@ const UI: Record<Lang, {
     hubWarning: " [出発ハブ未確定]",
     startTransferNote: "10:00 水原駅到着 → モンテドカフェ、約20分",
     transferNote: "17:37 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分",
-    arrivalPrefix: "水原駅到着 · ソウル行き終電は", arrivalSuffix: "まであります",
+    arrivalLabel: "水原駅到着",
     lastTrainPrefix: "",
     bufferLabel: "終電までの余裕",
     confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
@@ -233,7 +241,7 @@ const UI: Record<Lang, {
     hubWarning: " [出发枢纽尚未确定]",
     startTransferNote: "10:00 到达水原站 → Monde咖啡，约20分钟",
     transferNote: "17:37 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟",
-    arrivalPrefix: "到达水原站 · 开往首尔的末班车最晚是", arrivalSuffix: "",
+    arrivalLabel: "到达水原站",
     lastTrainPrefix: "",
     bufferLabel: "距末班车还有",
     confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
@@ -594,8 +602,7 @@ export default function SuwonTour() {
             <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: VERDICT_COLOR[verdict] }}>
               <span>🕚</span>
               <span>
-                {ROUND_TRIP.estimatedStationArrival} {t.arrivalPrefix}{" "}
-                <b>{ROUND_TRIP.lastTrainTime}</b>{t.arrivalSuffix}
+                {ROUND_TRIP.estimatedStationArrival} {t.arrivalLabel} — {VERDICT_ARRIVAL_HINT[lang][verdict]}
               </span>
             </div>
           </div>
