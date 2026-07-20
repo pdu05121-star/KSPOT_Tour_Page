@@ -626,18 +626,6 @@ export default function SuwonTour() {
                     className="w-full h-full object-cover"
                     style={{ objectPosition: s.imgPosition ?? "center" }}
                   />
-                  {/* 드라마 장면 자막 오버레이 — 실제 스틸컷 대신, 이 사진이 그 장면임을 떠올리게 하는 장치 */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 px-3.5 py-3 pt-8"
-                    style={{ background: "linear-gradient(to top, rgba(10,20,15,0.85), rgba(10,20,15,0) 75%)" }}
-                  >
-                    <p
-                      className="text-white text-[13px] font-bold flex items-center gap-1.5"
-                      style={{ fontFamily: "'Noto Serif KR', serif", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}
-                    >
-                      <span>🎬</span> {s.subtitle}
-                    </p>
-                  </div>
                 </div>
                 <div
                   className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
