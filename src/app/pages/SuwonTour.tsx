@@ -39,7 +39,7 @@ const ROUND_TRIP = {
   departTime: "08:40",
   departNote: "서울역 출발 · 1호선 약 55분",
   departConfirmed: false, // 출발 허브 팀 결정 아직 안 남
-  courseEndTime: "16:47",
+  courseEndTime: "17:17",
   returnStation: "수원역",
   status: "draft" as const, // draft | go | care | reconsider | not_now
 };
@@ -91,7 +91,7 @@ const spots = [
     subtitle: "설레는 벽쿵씬 그 골목",
     scene: "성벽을 따라 걷다 만나는 벽화 골목. 선재와 솔이의 벽쿵씬이 촬영된 자리예요.",
     coord: "경기 수원시 팔달구 화서문로72번길 9-7",
-    move: "행궁동 벽화마을 → 화성행궁, 도보 11분 [추정 · 확인 필요]",
+    move: "행궁동 벽화마을 → 화성행궁, 도보 13분 [추정 · 확인 필요]",
     goldenHour: "골목 자체가 24시간 개방이라 시간대 상관없이 들를 수 있어요.",
     caution: "개별 가게는 방문 시 영업 여부 확인 필요",
     image: haenggungdongMuralImg,
@@ -103,8 +103,8 @@ const spots = [
     subtitle: "조선시대로 타임슬립",
     scene: "골목에서 걸어 나와 만나는 궁궐. 정조가 머물던 화성행궁을 천천히 둘러보는 구간이에요.",
     coord: "경기 수원시 팔달구 정조로 825",
-    move: "화성행궁 → 수원왕갈비통닭, 도보 5분 (확인됨)",
-    goldenHour: "야간개장 기간(5~11월 금~일·공휴일 18:00–21:30, 마감 21:00)엔 야경도 가능해요.",
+    move: "화성행궁 → 수원왕갈비통닭, 도보 11분 [추정 · 확인 필요]",
+    goldenHour: "야간개장 기간(5~11월 금~일·공휴일 18:00–21:30, 마감 21:00)엔 야경도 가능해요. 전각이 여러 채라 체류시간을 넉넉히(90분) 잡아두세요.",
     caution: "입장료 2,000원 · 09:00–18:00 (입장마감 1시간 전) · 휴무 없음",
     image: suwonFortressWallImg,
   },
@@ -141,9 +141,9 @@ const timetable = [
   { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
   { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
   { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
-  { time: "13:39", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
-  { time: "14:44", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
-  { time: "15:47", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
+  { time: "14:09", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
+  { time: "15:14", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
+  { time: "16:17", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
 ];
 
 export default function SuwonTour() {
