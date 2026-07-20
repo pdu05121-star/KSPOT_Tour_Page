@@ -112,7 +112,7 @@ const COPY: Record<Lang, {
 }> = {
   ko: {
     eyebrow: "🔓 KSPOT 시크릿 언락",
-    heroTitle: "한국에 이런 곳이 있다고? — 걱정마세요.",
+    heroTitle: "한국에 이런 곳이 있다고? — 가도 괜찮은 곳인지, 저희가 먼저 확인했어요.",
     heroPre: "화면 속에서 보던 ",
     heroKk: "그 장소",
     heroPost: "부터 아무도 모르는 로컬 스팟까지, 무사히 다녀올 수 있는 코스만 열어드려요.",
@@ -130,7 +130,7 @@ const COPY: Record<Lang, {
   },
   en: {
     eyebrow: "🔓 KSPOT SECRET UNLOCK",
-    heroTitle: "Korea has a place like THIS? — Don't worry.",
+    heroTitle: "Korea has a place like THIS? — We checked if it's safe to visit, first.",
     heroPre: "From ",
     heroKk: "the places you saw on screen",
     heroPost: " to spots no one talks about, we only unlock courses you can safely make it back from.",
@@ -148,7 +148,7 @@ const COPY: Record<Lang, {
   },
   ja: {
     eyebrow: "🔓 KSPOT シークレット解禁",
-    heroTitle: "韓国にこんな場所が? — 心配しないで。",
+    heroTitle: "韓国にこんな場所が? — 行っても大丈夫か、先に確認しました。",
     heroPre: "画面で見た",
     heroKk: "あの場所",
     heroPost: "から誰も知らないローカルスポットまで、無事に楽しめるコースだけを解禁します。",
@@ -166,7 +166,7 @@ const COPY: Record<Lang, {
   },
   zh: {
     eyebrow: "🔓 KSPOT 秘密解锁",
-    heroTitle: "韩国竟然有这种地方? — 别担心。",
+    heroTitle: "韩国竟然有这种地方? — 能不能去，我们先帮你确认了。",
     heroPre: "从",
     heroKk: "你在屏幕上看过的那个地方",
     heroPost: "到没人知道的本地秘境，只解锁能安全往返的路线。",
