@@ -142,7 +142,7 @@ const UI: Record<Lang, {
 }> = {
   ko: {
     backLink: "다른 투어 보기", brand: "KSPOT Travelog",
-    heroBadge: "📍 수원 행궁동 · 당일치기 로드맵",
+    heroBadge: "📍 수원 행궁동 · 당일치기 8시간 코스",
     heroTitle1: "수원에서 만나는", heroTitle2: "〈선재 업고 튀어〉 타임슬립 로드맵",
     heroAlt: "수원 화성 장안문 야경",
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
@@ -168,7 +168,7 @@ const UI: Record<Lang, {
   },
   en: {
     backLink: "See other tours", brand: "KSPOT Travelog",
-    heroBadge: "📍 Suwon Haenggung-dong · Day Trip Roadmap",
+    heroBadge: "📍 Suwon Haenggung-dong · 8-Hour Day Trip Course",
     heroTitle1: "A day in Suwon with", heroTitle2: "〈Lovely Runner〉's time-slip road",
     heroAlt: "Suwon Hwaseong Janganmun Gate at night",
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
@@ -194,7 +194,7 @@ const UI: Record<Lang, {
   },
   ja: {
     backLink: "他のツアーを見る", brand: "KSPOT Travelog",
-    heroBadge: "📍 水原 行宮洞 · 日帰りロードマップ",
+    heroBadge: "📍 水原 行宮洞 · 日帰り8時間コース",
     heroTitle1: "水原で出会う", heroTitle2: "〈ソンジェ背負って走れ〉タイムスリップロードマップ",
     heroAlt: "水原華城 長安門の夜景",
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
@@ -220,7 +220,7 @@ const UI: Record<Lang, {
   },
   zh: {
     backLink: "查看其他路线", brand: "KSPOT Travelog",
-    heroBadge: "📍 水原 行宫洞 · 一日游路线图",
+    heroBadge: "📍 水原 行宫洞 · 一日游8小时路线",
     heroTitle1: "在水原邂逅", heroTitle2: "〈背着善宰跑〉穿越时空路线",
     heroAlt: "水原华城长安门夜景",
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
