@@ -591,21 +591,15 @@ export default function SuwonTour() {
             </div>
           </div>
 
-          {/* 판정 결과 — 코스의 핵심 결론이라 크게, 내용도 풍부하게 */}
+          {/* 판정 결과 */}
           <div
-            className="px-5 py-6 text-white text-center"
+            className="px-4 py-2.5 flex items-center justify-between text-white"
             style={{ backgroundColor: VERDICT_COLOR[verdict] }}
           >
-            <div className="text-3xl font-black mb-2 tracking-wide">{VERDICT_LABEL[verdict]}</div>
-            {ROUND_TRIP.bufferMinutes !== null && (
-              <div className="mb-1.5">
-                <span className="text-[13px] font-semibold opacity-85 mr-1.5">{t.bufferLabel}</span>
-                <span className="text-2xl font-black" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                  {formatBufferHM(ROUND_TRIP.bufferMinutes, lang)}
-                </span>
-              </div>
-            )}
-            <p className="text-[13px] font-semibold opacity-90">{VERDICT_SUB[lang][verdict]}</p>
+            <span className="text-sm font-black">{VERDICT_LABEL[verdict]}</span>
+            <span className="text-[11px] font-semibold opacity-90">
+              {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferHM(ROUND_TRIP.bufferMinutes, lang) : ""} · {VERDICT_SUB[lang][verdict]}
+            </span>
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
