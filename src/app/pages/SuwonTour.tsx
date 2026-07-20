@@ -33,19 +33,19 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
-// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차 시각 확정 반영
-// 정지영커피→수원역 이동수단만 아직 미확인. 다만 그 구간을 넉넉잡아(버스/택시 20분) 추정해도
-// 막차까지 여유가 5시간 이상이라 GO 판정 표시. (팀 원칙: 근거 없는 판정 금지 — 그래서 추정 구간을 숨기지 않고 그대로 표기)
+// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차·귀환 이동 전부 확정
+// 정지영커피 → 수원역: 버스 35번·13번, 15분 확인됨. 서울행 막차 23:31 확인됨.
+// → 왕복 정보 전체 확인 완료. GO 판정.
 const ROUND_TRIP = {
   departTime: "08:40",
   departNote: "서울역 출발 · 1호선 약 55분",
-  departConfirmed: false, // 출발 허브 팀 결정 아직 안 남
+  departConfirmed: false, // 출발 허브만 아직 팀 결정 안 남 (막차·귀환 이동은 전부 확정)
   courseEndTime: "17:17",
-  stationTransferNote: "17:17 정지영커피 출발 → 수원역, 약 20분 [버스/택시 추정 · 정확한 이동수단 확인 필요]",
-  estimatedStationArrival: "17:37",
+  stationTransferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
+  estimatedStationArrival: "17:32",
   lastTrainTime: "23:31",
   lastTrainConfirmed: true,
-  bufferMinutes: 354,
+  bufferMinutes: 359,
   returnStation: "수원역",
   status: "go" as const, // draft | go | care | reconsider | not_now
 };
@@ -264,7 +264,7 @@ export default function SuwonTour() {
             <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: GO_GREEN }}>
               <span>🕚</span>
               <span>
-                {ROUND_TRIP.estimatedStationArrival} 수원역 도착(추정) → 서울행 막차{" "}
+                {ROUND_TRIP.estimatedStationArrival} 수원역 도착 → 서울행 막차{" "}
                 <b>{ROUND_TRIP.lastTrainTime}</b>
               </span>
             </div>
@@ -280,7 +280,7 @@ export default function SuwonTour() {
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
-          ⚠️ 서울행 막차(23:31)는 확정됐지만, 정지영커피→수원역 구간은 아직 정확한 이동수단이 미확인이라 20분으로 추정해 계산했습니다. 이 구간이 40~50분으로 늘어나도 막차까지 여유는 여전히 4시간 이상이라 판정은 바뀌지 않습니다.
+          ✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.
         </p>
       </section>
 
