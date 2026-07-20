@@ -119,6 +119,10 @@ const ROUTE_COORDS = [
 ];
 const GOOGLE_MAPS_ROUTE_URL = `https://www.google.com/maps/dir/?api=1&origin=${ROUTE_COORDS[0]}&destination=${ROUTE_COORDS[ROUTE_COORDS.length - 1]}&waypoints=${ROUTE_COORDS.slice(1, -1).join("|")}&travelmode=walking`;
 
+// My Maps — 7곳이 담긴 지도. 팀이 mymaps.google.com에서 직접 생성·공유 설정한 링크.
+// 길찾기 딥링크(위 GOOGLE_MAPS_ROUTE_URL)와 다르게, 사용자가 자기 구글 계정에 실제로 저장(즐겨찾기)할 수 있음.
+const GOOGLE_MY_MAPS_URL = "https://www.google.com/maps/d/viewer?mid=1aWeZoTginTKzpvtjmGTbihFzFYPssus";
+
 // ─────────────────────────────────────────────
 // 카피 — 언어별 (⚠️ AI 초벌 번역. 배포 전 원어민(중국어·일본어) 검수 필수 — 개발지시서 규칙)
 // ─────────────────────────────────────────────
@@ -154,8 +158,8 @@ const UI: Record<Lang, {
     ch1: "과몰입 촬영지 BEST 5", ch2: "현지인 찐맛집", ch3: "카페", ch4: "한눈에 보는 당일치기 타임테이블",
     secretCoord: "시크릿 좌표.", moveLabel: "이동 · 주차.", tipLabel: "에디터 시크릿 꿀팁",
     recommendedMenu: "추천 메뉴.", tipLabel2: "꿀팁.",
-    saveBtn: "🗺️ 구글맵으로 코스 받기",
-    saveNote: "몽테드 카페부터 정지영 커피까지, 스팟 7곳 순서대로 길찾기가 열려요.",
+    saveBtn: "🗺️ 구글 지도에 저장하기",
+    saveNote: "몽테드 카페부터 정지영 커피까지, 스팟 7곳이 담긴 지도예요. 내 구글 계정에 저장해두고 나중에 다시 볼 수 있어요.",
     closingEyebrow: "✦ 여기 없는 지역도 궁금하신가요",
     closingTitle1: "원하는 지역도 이 코스처럼", closingTitle2: "막차까지 계산해서 만들어 드려요",
     closingSub1: "가고 싶은 지역이 궁금하면 알려주세요.", closingSub2: "신청 많은 곳부터 순서대로 다음 이야기를 만들어요.",
@@ -180,8 +184,8 @@ const UI: Record<Lang, {
     ch1: "Obsession-worthy filming spots BEST 5", ch2: "Local favorite restaurant", ch3: "Café", ch4: "Day-trip timetable at a glance",
     secretCoord: "Secret coordinates.", moveLabel: "Getting there / parking.", tipLabel: "Editor's secret tip",
     recommendedMenu: "Recommended.", tipLabel2: "Tip.",
-    saveBtn: "🗺️ Get the route on Google Maps",
-    saveNote: "Opens walking directions in order, from Monde Café to Jeong Jiyoung Coffee.",
+    saveBtn: "🗺️ Save to Google Maps",
+    saveNote: "A map with all 7 spots, from Monde Café to Jeong Jiyoung Coffee. Save it to your Google account to come back to later.",
     closingEyebrow: "✦ Curious about a place not listed here?",
     closingTitle1: "We'll build your course too,", closingTitle2: "calculated down to the last train",
     closingSub1: "Tell us where you're curious about.", closingSub2: "We build the most-requested places next, in order.",
@@ -206,8 +210,8 @@ const UI: Record<Lang, {
     ch1: "過剰入魂ロケ地 BEST 5", ch2: "地元グルメ", ch3: "カフェ", ch4: "ひと目でわかる日帰りタイムテーブル",
     secretCoord: "シークレット座標.", moveLabel: "移動・駐車.", tipLabel: "エディター秘密の裏技",
     recommendedMenu: "おすすめ.", tipLabel2: "裏技.",
-    saveBtn: "🗺️ Googleマップでコースを受け取る",
-    saveNote: "モンテドカフェからジョンジヨンコーヒーまで、7スポット順番の徒歩ルートが開きます。",
+    saveBtn: "🗺️ Googleマップに保存する",
+    saveNote: "モンテドカフェからジョンジヨンコーヒーまで、7スポットが入った地図です。自分のGoogleアカウントに保存して後で見返せます。",
     closingEyebrow: "✦ ここにない場所も気になりますか",
     closingTitle1: "気になる地域もこのコースのように", closingTitle2: "終電まで計算してお作りします",
     closingSub1: "行きたい地域があれば教えてください。", closingSub2: "リクエストの多い場所から順番に次の物語を作ります。",
@@ -232,8 +236,8 @@ const UI: Record<Lang, {
     ch1: "沉浸式取景地 BEST 5", ch2: "本地人气美食", ch3: "咖啡店", ch4: "一目了然的一日游时间表",
     secretCoord: "秘密坐标.", moveLabel: "交通·停车.", tipLabel: "编辑私藏秘诀",
     recommendedMenu: "推荐.", tipLabel2: "小贴士.",
-    saveBtn: "🗺️ 用谷歌地图获取路线",
-    saveNote: "从Monde咖啡到Jeong Jiyoung咖啡，7个地点按顺序打开步行路线。",
+    saveBtn: "🗺️ 保存到谷歌地图",
+    saveNote: "从Monde咖啡到Jeong Jiyoung咖啡，包含7个地点的地图。保存到你的谷歌账号，以后可以随时查看。",
     closingEyebrow: "✦ 想去的地方不在这里？",
     closingTitle1: "想去的地区，我们也会像这条路线一样", closingTitle2: "算好末班车时间为你制作",
     closingSub1: "告诉我们你想去哪里。", closingSub2: "我们会按申请人数多少依次制作下一个故事。",
@@ -765,10 +769,10 @@ export default function SuwonTour() {
         </div>
       </section>
 
-      {/* 저장 — 구글맵으로 코스 받기 */}
+      {/* 저장 — 구글 지도에 실제로 저장 가능한 My Maps 링크 */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-14">
         <a
-          href={GOOGLE_MAPS_ROUTE_URL}
+          href={GOOGLE_MY_MAPS_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm border transition-colors"
