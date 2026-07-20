@@ -1184,3 +1184,73 @@
   0%,100%{box-shadow:0 0 0 rgba(127,227,194,0);}
   50%{box-shadow:0 0 28px rgba(127,227,194,0.35);}
 }
+
+/* ---------- subscribe modal (뉴스레터 구독 + 수요조사) ---------- */
+.hero-subscribe-link{
+  margin-top:14px;
+  background:none;border:none;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--teal-dark);
+  text-decoration:underline;text-underline-offset:3px;
+  padding:0;
+}
+.hero-subscribe-link:hover{color:var(--teal-deep);}
+
+.subscribe-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(17,24,39,0.5);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.subscribe-modal{
+  position:relative;
+  width:100%;max-width:420px;
+  background:var(--paper);
+  border-radius:20px;
+  padding:32px 28px 28px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.25);
+  font-family:'Noto Sans KR', sans-serif;
+}
+.subscribe-close{
+  position:absolute;top:16px;right:16px;
+  width:28px;height:28px;border-radius:50%;
+  border:none;background:var(--ivory);color:var(--ink-mute);
+  font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.subscribe-close:hover{background:var(--border);color:var(--ink);}
+.subscribe-title{font-size:19px;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.subscribe-desc{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:20px;}
+.subscribe-label{display:block;font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:6px;}
+.subscribe-input{
+  width:100%;
+  padding:11px 14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:14px;
+  color:var(--ink);
+  margin-bottom:16px;
+  background:white;
+  font-family:inherit;
+}
+.subscribe-input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+.subscribe-error{
+  font-size:12px;color:var(--c-not-tx);
+  background:var(--c-not-bg);border-radius:8px;
+  padding:8px 12px;margin-bottom:14px;
+}
+.subscribe-submit{
+  width:100%;
+  padding:13px;
+  border:none;border-radius:12px;
+  background:var(--teal);color:white;
+  font-size:14px;font-weight:700;
+  cursor:pointer;
+  transition:background .2s;
+}
+.subscribe-submit:hover{background:var(--teal-dark);}
+.subscribe-submit:disabled{opacity:0.6;cursor:not-allowed;}
+
+.subscribe-success{text-align:center;padding:12px 0 4px;}
+.subscribe-success-icon{font-size:32px;margin-bottom:10px;}
+.subscribe-success-title{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:6px;}
+.subscribe-success-desc{font-size:13px;color:var(--ink-soft);}
