@@ -7,11 +7,13 @@ import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 type Lang = "ko" | "en" | "ja" | "zh";
 
 // 도시 카드 데이터 — 배열로 관리 (개발지시서 지시사항: 하드코딩 금지, 도시 추가 잦을 예정)
+// COMING SOON 목록은 RE_PRD_v1.1의 타겟 10개 지역(경주·포항·부산·대구·전주·강릉·제주·여수·순천·춘천) +
+// 캐러셀_제작_프롬프트_가이드의 드라마 페어링 기준. 확정 안 된 도시는 K태그 생략.
 type TourCard = {
   id: string;
   status: "open" | "next" | "wait";
   order: string; // "01", "02" ...
-  cityline: string; // "SUWON 수원"
+  cityline: string;
   kTag?: string; // K콘텐츠 태그, 없으면 생략
   title: string;
   desc: string;
@@ -19,67 +21,88 @@ type TourCard = {
   link?: string; // open 카드만 사용
 };
 
+const OPEN_KO: TourCard = {
+  id: "suwon", status: "open", order: "01", cityline: "SUWON 수원",
+  kTag: "◉ 선재 업고 튀어", title: "타임슬립 골목과 성곽 노을",
+  desc: "드라마 속 그 골목길, 로컬 통닭 성지, 노을 지는 루프탑까지 — 서울에서 다녀오는 하루",
+  thumb: janganmunNightImg, link: "/tour/suwon",
+};
+const OPEN_EN: TourCard = {
+  id: "suwon", status: "open", order: "01", cityline: "SUWON",
+  kTag: "◉ Lovely Runner", title: "Time-slip alleys & fortress sunset",
+  desc: "The alley from the show, a local fried-chicken spot, a rooftop at golden hour — a day trip from Seoul.",
+  thumb: janganmunNightImg, link: "/tour/suwon",
+};
+const OPEN_JA: TourCard = {
+  id: "suwon", status: "open", order: "01", cityline: "SUWON 水原",
+  kTag: "◉ ソンジェ背負って走れ", title: "タイムスリップの路地と城郭の夕焼け",
+  desc: "ドラマのあの路地、ローカルなチキンの名店、夕日のルーフトップまで — ソウルから行く日帰り。",
+  thumb: janganmunNightImg, link: "/tour/suwon",
+};
+const OPEN_ZH: TourCard = {
+  id: "suwon", status: "open", order: "01", cityline: "SUWON 水原",
+  kTag: "◉ 背着善宰跑", title: "穿越时空的小巷与城郭晚霞",
+  desc: "剧中那条小巷、本地炸鸡名店、夕阳下的天台 — 从首尔出发的一日游。",
+  thumb: janganmunNightImg, link: "/tour/suwon",
+};
+
+// 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
+const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
+  { id: "chuncheon", order: "02", status: "next" },
+  { id: "gangneung", order: "03", status: "wait" },
+  { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
+  { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
+  { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
+  { id: "gyeongju", order: "07", status: "wait" },
+  { id: "busan", order: "08", status: "wait" },
+  { id: "daegu", order: "09", status: "wait" },
+  { id: "yeosu", order: "10", status: "wait" },
+  { id: "suncheon", order: "11", status: "wait" },
+];
+
+const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
+  chuncheon: { ko: "CHUNCHEON 춘천", en: "CHUNCHEON", ja: "CHUNCHEON 春川", zh: "CHUNCHEON 春川" },
+  gangneung: { ko: "GANGNEUNG 강릉", en: "GANGNEUNG", ja: "GANGNEUNG 江陵", zh: "GANGNEUNG 江陵" },
+  jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州" },
+  pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项" },
+  jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州" },
+  gyeongju: { ko: "GYEONGJU 경주", en: "GYEONGJU", ja: "GYEONGJU 慶州", zh: "GYEONGJU 庆州" },
+  busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山" },
+  daegu: { ko: "DAEGU 대구", en: "DAEGU", ja: "DAEGU 大邱", zh: "DAEGU 大邱" },
+  yeosu: { ko: "YEOSU 여수", en: "YEOSU", ja: "YEOSU 麗水", zh: "YEOSU 丽水" },
+  suncheon: { ko: "SUNCHEON 순천", en: "SUNCHEON", ja: "SUNCHEON 順天", zh: "SUNCHEON 顺天" },
+};
+
+const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
+  chuncheon: { ko: "호수 따라 달리는 자전거길", en: "Lakeside cycling route", ja: "湖畔のサイクリングロード", zh: "沿湖骑行路线" },
+  gangneung: { ko: "파도 소리 들리는 커피 해변", en: "Coffee beach by the waves", ja: "波音が聞こえるコーヒー海辺", zh: "听着海浪的咖啡海边" },
+  jeonju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  pohang: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  jeju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  gyeongju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  busan: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  daegu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  yeosu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  suncheon: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+};
+
+function buildLockedCards(lang: Lang): TourCard[] {
+  return LOCKED_META.map((m) => ({
+    id: m.id,
+    status: m.status,
+    order: m.order,
+    cityline: LOCKED_CITYLINE[m.id][lang],
+    kTag: m.kTag,
+    title: LOCKED_TITLE[m.id][lang],
+    desc: "",
+  }));
+}
+
 const TOURS: Record<Lang, TourCard[]> = {
-  ko: [
-    {
-      id: "suwon",
-      status: "open",
-      order: "01",
-      cityline: "SUWON 수원",
-      kTag: "◉ 선재 업고 튀어",
-      title: "타임슬립 골목과 성곽 노을",
-      desc: "드라마 속 그 골목길, 로컬 통닭 성지, 노을 지는 루프탑까지 — 서울에서 다녀오는 하루",
-      thumb: janganmunNightImg,
-      link: "/tour/suwon",
-    },
-    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 춘천", title: "호수 따라 달리는 자전거길", desc: "" },
-    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 강릉", title: "파도 소리 들리는 커피 해변", desc: "" },
-  ],
-  en: [
-    {
-      id: "suwon",
-      status: "open",
-      order: "01",
-      cityline: "SUWON",
-      kTag: "◉ Lovely Runner",
-      title: "Time-slip alleys & fortress sunset",
-      desc: "The alley from the show, a local fried-chicken spot, a rooftop at golden hour — a day trip from Seoul.",
-      thumb: janganmunNightImg,
-      link: "/tour/suwon",
-    },
-    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON", title: "Lakeside cycling route", desc: "" },
-    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG", title: "Coffee beach by the waves", desc: "" },
-  ],
-  ja: [
-    {
-      id: "suwon",
-      status: "open",
-      order: "01",
-      cityline: "SUWON 水原",
-      kTag: "◉ ソンジェ背負って走れ",
-      title: "タイムスリップの路地と城郭の夕焼け",
-      desc: "ドラマのあの路地、ローカルなチキンの名店、夕日のルーフトップまで — ソウルから行く日帰り。",
-      thumb: janganmunNightImg,
-      link: "/tour/suwon",
-    },
-    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 春川", title: "湖畔のサイクリングロード", desc: "" },
-    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 江陵", title: "波音が聞こえるコーヒー海辺", desc: "" },
-  ],
-  zh: [
-    {
-      id: "suwon",
-      status: "open",
-      order: "01",
-      cityline: "SUWON 水原",
-      kTag: "◉ 背着善宰跑",
-      title: "穿越时空的小巷与城郭晚霞",
-      desc: "剧中那条小巷、本地炸鸡名店、夕阳下的天台 — 从首尔出发的一日游。",
-      thumb: janganmunNightImg,
-      link: "/tour/suwon",
-    },
-    { id: "chuncheon", status: "next", order: "02", cityline: "CHUNCHEON 春川", title: "沿湖骑行路线", desc: "" },
-    { id: "gangneung", status: "wait", order: "03", cityline: "GANGNEUNG 江陵", title: "听着海浪的咖啡海边", desc: "" },
-  ],
+  ko: [OPEN_KO, ...buildLockedCards("ko")],
+  en: [OPEN_EN, ...buildLockedCards("en")],
+  ja: [OPEN_JA, ...buildLockedCards("ja")],
+  zh: [OPEN_ZH, ...buildLockedCards("zh")],
 };
 
 const COPY: Record<Lang, {
@@ -172,85 +195,91 @@ export default function TourList() {
   return (
     <div className="router-page">
       <div className="router-wrap">
-        <div className="router-topbar">
-          <Link to="/" className="router-brand">K<span>SPOT</span></Link>
-          <div className="router-lang">
-            {LANGS.map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                className={lang === l.code ? "on" : ""}
-                onClick={() => setLang(l.code)}
+        <div className="router-narrow">
+          <div className="router-topbar">
+            <Link to="/" className="router-brand">K<span>SPOT</span></Link>
+            <div className="router-lang">
+              {LANGS.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  className={lang === l.code ? "on" : ""}
+                  onClick={() => setLang(l.code)}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="router-hero">
+            <span className="router-eyebrow">{t.eyebrow}</span>
+            <h1>{t.heroTitle}</h1>
+            <p>{t.heroPre}<span className="kk">{t.heroKk}</span>{t.heroPost}</p>
+          </div>
+
+          <div className="router-divider">{t.nowOpen}</div>
+
+          {cards.filter((c) => c.status === "open").map((c) => (
+            <div className="router-card open" key={c.id}>
+              <div
+                className="thumb"
+                style={c.thumb ? { backgroundImage: `url(${c.thumb})` } : undefined}
               >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="router-hero">
-          <span className="router-eyebrow">{t.eyebrow}</span>
-          <h1>{t.heroTitle}</h1>
-          <p>{t.heroPre}<span className="kk">{t.heroKk}</span>{t.heroPost}</p>
-        </div>
-
-        <div className="router-divider">{t.nowOpen}</div>
-
-        {cards.filter((c) => c.status === "open").map((c) => (
-          <div className="router-card open" key={c.id}>
-            <div
-              className="thumb"
-              style={c.thumb ? { backgroundImage: `url(${c.thumb})` } : undefined}
-            >
-              <span className="router-badge">{t.nowOpen}</span>
-            </div>
-            <div className="body">
-              <div className="router-cityline">{c.order} · {c.cityline}</div>
-              {c.kTag && <div className="router-ktag">{c.kTag}</div>}
-              <h2>{c.title}</h2>
-              <div className="desc">{c.desc}</div>
-              <Link className="router-cta" to={c.link ?? "#"}>{t.openCta}</Link>
-            </div>
-          </div>
-        ))}
-
-        <div className="router-divider">{t.comingSoon}</div>
-
-        {cards.filter((c) => c.status !== "open").map((c) => (
-          <div className="router-card locked" key={c.id}>
-            <div className="thumb">
-              <span className="ph">🔒</span>
-              <span className={`router-badge ${c.status === "next" ? "next" : "wait"}`}>
-                {c.status === "next" ? t.nextBadge : `${c.order} · ${t.waitBadge}`}
-              </span>
-            </div>
-            <div className="router-lockrow">
-              <div className="meta">
-                <div className="router-cityline">{c.order} · {c.cityline}</div>
-                <h2>{c.title}</h2>
+                <span className="router-badge">{t.nowOpen}</span>
               </div>
-              <a
-                className="router-notify"
-                href={SURVEY_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                🔔<br />{t.notify}
-              </a>
+              <div className="body">
+                <div className="router-cityline">{c.order} · {c.cityline}</div>
+                {c.kTag && <div className="router-ktag">{c.kTag}</div>}
+                <h2>{c.title}</h2>
+                <div className="desc">{c.desc}</div>
+                <Link className="router-cta" to={c.link ?? "#"}>{t.openCta}</Link>
+              </div>
             </div>
-          </div>
-        ))}
-
-        <div className="router-askbox">
-          <h3>{t.askH3}</h3>
-          <p>{t.askP}</p>
-          <a className="router-askbtn" href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
-            {t.askBtn}
-          </a>
-          <div className="fine">{t.askFine}</div>
+          ))}
         </div>
 
-        <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
+        <div className="router-divider router-divider-wide">{t.comingSoon}</div>
+
+        {/* 준비 중인 지역 — 그리드로 "이만큼 준비돼 있다"를 한눈에 보여줌 (개별 순서 서사는 NOW OPEN 카드에서만 지킴) */}
+        <div className="router-locked-grid">
+          {cards.filter((c) => c.status !== "open").map((c) => (
+            <div className="router-card locked" key={c.id}>
+              <div className="thumb">
+                <span className="ph">🔒</span>
+                <span className={`router-badge ${c.status === "next" ? "next" : "wait"}`}>
+                  {c.status === "next" ? t.nextBadge : `${c.order} · ${t.waitBadge}`}
+                </span>
+              </div>
+              <div className="router-lockcol">
+                <div className="router-cityline">{c.order} · {c.cityline}</div>
+                {c.kTag && <div className="router-ktag">{c.kTag}</div>}
+                <h2>{c.title}</h2>
+                <a
+                  className="router-notify"
+                  href={SURVEY_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  🔔 {t.notify}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="router-narrow">
+          <div className="router-askbox">
+            <h3>{t.askH3}</h3>
+            <p>{t.askP}</p>
+            <a className="router-askbtn" href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
+              {t.askBtn}
+            </a>
+            <div className="fine">{t.askFine}</div>
+          </div>
+
+          <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
+        </div>
       </div>
     </div>
   );
