@@ -119,7 +119,7 @@ const eats = [
     coord: "경기 수원시 팔달구 정조로800번길 12",
     menu: "왕갈비 통닭 (워크인만 가능)",
     tip: "라스트오더 21:00. 웨이팅 있는 편이니 여유 있게 방문하세요.",
-    view: "화성행궁에서 도보 5분 — 관람 끝나고 바로 걸어갈 수 있는 로컬 맛집이에요.",
+    view: "화성행궁에서 도보 11분 — 관람 끝나고 걸어갈 수 있는 로컬 맛집이에요.",
     image: nammanTongdakImg,
   },
   {
@@ -198,7 +198,7 @@ export default function SuwonTour() {
       {/* INTRO */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
-          아직도 사람 바글바글한 전주·경주만 가? '선업튀' 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트
+          〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트
         </p>
 
         <blockquote
@@ -277,7 +277,7 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 1</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>과몰입 촬영지 & 타임슬립 코스</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>과몰입 촬영지 BEST 5</span>
         </div>
 
         <div className="space-y-16 sm:space-y-20">
@@ -293,7 +293,7 @@ export default function SuwonTour() {
                 </div>
                 {/* 우표/도장 넘버 배지 */}
                 <div
-                  className="absolute -top-4 -right-3 sm:-right-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[8deg]"
+                  className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
                   style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
                 >
                   <span className="text-[9px] font-bold tracking-widest uppercase leading-none">SPOT</span>
