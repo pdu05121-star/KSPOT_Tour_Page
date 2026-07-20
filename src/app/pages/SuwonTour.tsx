@@ -7,6 +7,8 @@ import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import sunjaeSiljaImg from "@/assets/carousel/sunjae_silja.jpg";
 import suwonHongwhamunImg from "@/assets/suwon/suwon_hongwhamun.jpg";
 import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.jpg";
+import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
+import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
 import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
 
@@ -31,87 +33,117 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
-// 왕복 판단 프레임 — 값은 전부 예시(placeholder).
-// 실제 값은 마스터 코스 템플릿(막차·소요시간 확정본)이 나오면 교체.
-// course_detail.html 시안의 "목차형 왕복 프레임" — KSPOT 핵심 기능이라 최우선 반영.
+// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20)
+// ⚠️ 막차 시각·정지영커피→수원역 이동수단 미확인 상태. 근거 없는 판정(GO 등)은 표시하지 않음 — 팀 원칙.
 const ROUND_TRIP = {
   departTime: "08:40",
-  departNote: "서울역 · 1호선 약 55분 [예시 — 템플릿 확정 전]",
-  lastTrainTime: "23:12",
-  lastTrainNote: "수원역 → 서울행 막차 [예시]",
-  bufferMinutes: 277,
-  verdict: "GO" as const,
+  departNote: "서울역 출발 · 1호선 약 55분",
+  departConfirmed: false, // 출발 허브 팀 결정 아직 안 남
+  courseEndTime: "16:47",
+  returnStation: "수원역",
+  status: "draft" as const, // draft | go | care | reconsider | not_now
 };
-const GO_GREEN = "#2F7D5B"; // 판단 신호는 서브 브랜드와 무관하게 전면 공통 색 유지
+const WARN_AMBER = "#B8893A"; // DRAFT/미확정 상태 전용 — 서브 브랜드와 무관하게 공통
+const GO_GREEN = "#2F7D5B";   // 판정 확정 시 사용할 공통 GO 컬러 (지금은 미사용)
 
+// 촬영지 · 관광지 — Chapter 1 (v3 템플릿 SPOT 01~05)
 const spots = [
   {
     no: "01",
     emoji: "🎬",
-    title: "몽테드 골목",
-    subtitle: "솔이네 & 선재네 집 골목",
-    scene: "선재가 매일 밤 솔이 몰래 지켜보던 그 골목. 소나기 우산씬이 시작된 자리.",
-    coord: "수원시 팔달구 화서문로48번길 일대 (화성행궁 도보 5분)",
-    move: "화성행궁 정문에서 도보 5분. 근처 노상주차는 협소하니 화성행궁 노상주차장 이용 추천.",
-    goldenHour: "오전 10시 이전 방문 시 골목이 한산해요. 대문 정면보다 골목 아래에서 위로 올려다보듯(0.5배 광각) 찍으면 드라마 포스터 구도가 나옵니다.",
-    caution: "실제 거주지라 셔터음은 무음으로, 오전 10시~오후 6시 사이 매너 방문 필수예요.",
+    title: "몽테드 카페",
+    subtitle: "솔이네 비디오가게 앞 · 노란 우산씬",
+    scene: "선재와 솔이의 노란 우산 장면이 촬영된 그 골목 앞 카페. 오픈 시간에 맞춰 여유 있게 하루를 시작해요.",
+    coord: "경기 수원시 팔달구 화서문로48번길 14 1층",
+    move: "몽테드 카페 → 화홍문, 도보 9분 (확인됨)",
+    goldenHour: "10시 오픈이라 그 전에 도착하면 골목 사진부터 찍고 들어가는 걸 추천해요.",
+    caution: "영업시간 10:00–19:00 · 매주 수요일 휴무",
     image: sunjaeSiljaImg,
   },
   {
     no: "02",
-    emoji: "🚲",
-    title: "화홍문 징검다리",
-    subtitle: "화홍문 & 방화수류정 돌다리",
-    scene: "19살 솔과 선재가 자전거를 끌고 함께 건너던 그 징검다리. 이어폰 꽂으면 자동으로 '소나기'가 재생되는 구간.",
-    coord: "수원시 팔달구 매향동 수원천로392번길 44-6",
-    move: "몽테드 골목에서 도보 12분. '화홍문 공영주차장'이 하루 최대 3,500원으로 가장 편해요.",
-    goldenHour: "수원천 건너편 둔치로 내려가서, 다리를 건너는 뒷모습과 화홍문 누각을 한 앵글에 담아보세요.",
-    caution: "발밑 물가가 미끄러울 수 있어요 — 사진에 몰입하다 보면 꼭 한 명은 발을 헛디딥니다.",
+    emoji: "💌",
+    title: "화홍문",
+    subtitle: "솔이가 선재에게 고백한 곳",
+    scene: "수원천 위 돌다리. 19살 솔이가 선재에게 마음을 고백하던 장면이 촬영된 곳이에요.",
+    coord: "경기 수원시 팔달구 북수동",
+    move: "화홍문 → 방화수류정, 도보 3분 (확인됨)",
+    goldenHour: "OST를 들으며 천천히 건너보세요 — 다리를 건너는 뒷모습과 화홍문 누각을 한 앵글에 담기 좋아요.",
+    caution: "24시간 개방 · 휴무 없음",
     image: suwonHongwhamunImg,
   },
   {
     no: "03",
-    emoji: "🌿",
-    title: "방화수류정 피크닉",
-    subtitle: "용연 연못가 로컬 힐링 스팟",
-    scene: "드라마엔 안 나오지만 몽테드 골목에서 도보 7분, 수원 사람들의 영원한 힐링 아지트.",
-    coord: "수원시 팔달구 수원천로 392",
-    move: "돗자리 하나면 충분. 근처 편의점에서 간단한 간식 사서 들어가는 걸 추천해요.",
-    goldenHour: "일몰 30분 전 도착이 황금 타이밍 — 연못 건너편에서 정자가 물에 데칼코마니처럼 비치는 각도가 정석입니다.",
-    caution: "밤에는 성곽 라이트업으로 낮과 완전히 다른 얼굴이 돼요. 노을과 야경 둘 다 노린다면 여유롭게 1시간은 잡아두세요.",
+    emoji: "🚲",
+    title: "방화수류정",
+    subtitle: "자전거를 가르쳐주던 그 자리",
+    scene: "선재가 솔이에게 자전거 타는 법을 가르쳐주던 곳. 날씨 좋은 날엔 잠깐 앉아 쉬어가기 좋은 뷰예요.",
+    coord: "경기 수원시 팔달구 매향동 151",
+    move: "방화수류정 → 행궁동 벽화마을, 도보 3분 [추정 · 확인 필요]",
+    goldenHour: "정자와 용연 연못이 함께 담기는 각도가 정석이에요.",
+    caution: "24시간 개방 · 휴무 없음",
     image: bangwhasuryujeongPicnicImg,
+  },
+  {
+    no: "04",
+    emoji: "🧱",
+    title: "행궁동 벽화마을",
+    subtitle: "설레는 벽쿵씬 그 골목",
+    scene: "성벽을 따라 걷다 만나는 벽화 골목. 선재와 솔이의 벽쿵씬이 촬영된 자리예요.",
+    coord: "경기 수원시 팔달구 화서문로72번길 9-7",
+    move: "행궁동 벽화마을 → 화성행궁, 도보 11분 [추정 · 확인 필요]",
+    goldenHour: "골목 자체가 24시간 개방이라 시간대 상관없이 들를 수 있어요.",
+    caution: "개별 가게는 방문 시 영업 여부 확인 필요",
+    image: haenggungdongMuralImg,
+  },
+  {
+    no: "05",
+    emoji: "🏯",
+    title: "화성행궁",
+    subtitle: "조선시대로 타임슬립",
+    scene: "골목에서 걸어 나와 만나는 궁궐. 정조가 머물던 화성행궁을 천천히 둘러보는 구간이에요.",
+    coord: "경기 수원시 팔달구 정조로 825",
+    move: "화성행궁 → 수원왕갈비통닭, 도보 5분 (확인됨)",
+    goldenHour: "야간개장 기간(5~11월 금~일·공휴일 18:00–21:30, 마감 21:00)엔 야경도 가능해요.",
+    caution: "입장료 2,000원 · 09:00–18:00 (입장마감 1시간 전) · 휴무 없음",
+    image: suwonFortressWallImg,
   },
 ];
 
+// 현지인 찐맛집 & 카페 — Chapter 2 (v3 템플릿 SPOT 06, 08 · 행리단길은 두 장소 사이 경유로 소개)
 const eats = [
   {
     emoji: "🍗",
-    category: "로컬 맛집 · 통닭",
+    category: "점심 · 통닭",
     title: "수원 왕갈비 통닭",
-    coord: "수원 팔달구 남문 치킨 골목 일대",
-    menu: "왕갈비 통닭 (2인 기준 약 2.3만원)",
-    tip: "오후 1시 30분 이후 방문하거나, 원격 줄서기 앱으로 미리 이름 올려두세요.",
-    view: "성곽길 걷느라 떨어진 당을 채우기 딱 좋은 위치 — 골목 안쪽 자리가 대기 없이 빠르게 앉을 수 있어요.",
+    coord: "경기 수원시 팔달구 정조로800번길 12",
+    menu: "왕갈비 통닭 (워크인만 가능)",
+    tip: "라스트오더 21:00. 웨이팅 있는 편이니 여유 있게 방문하세요.",
+    view: "화성행궁에서 도보 5분 — 관람 끝나고 바로 걸어갈 수 있는 로컬 맛집이에요.",
     image: nammanTongdakImg,
   },
   {
     emoji: "☕",
-    category: "루프탑 카페",
+    category: "루프탑 카페 · 마무리",
     title: "정지영 커피 로스터즈",
-    coord: "수원 팔달구 행리단길 내 루프탑",
-    menu: "시그니처 라떼 + 성곽뷰 루프탑 좌석",
-    tip: "일몰 40분 전 도착해서 루프탑 야외 자리를 미리 찜해두는 게 핵심이에요.",
-    view: "관광객들이 몰리는 카페 대신, 현지인들이 노을 보러 가는 진짜 숨은 명소.",
+    coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)",
+    menu: "시그니처 라떼 + 성곽 뷰 루프탑 좌석",
+    tip: "루프탑 좌석은 선착순이라 도착하자마자 자리부터 잡는 걸 추천해요.",
+    view: "행리단길 소품샵·골목을 구경하며 걸어오면 자연스럽게 도착하는 코스 마지막 스팟이에요.",
     image: jeongjiyoungLatteImg,
   },
 ];
 
+// 한눈에 보는 당일치기 타임테이블 — v3 템플릿 실제 시각 그대로
 const timetable = [
-  { time: "11:00", emoji: "🏃‍♂️", label: "몽테드 골목", desc: "인파 몰리기 전 대문 앞 인증샷부터 호다닥" },
-  { time: "12:30", emoji: "🍗", label: "왕갈비 통닭", desc: "뷰 명당 자리에서 든든한 점심" },
-  { time: "14:30", emoji: "🚲", label: "화홍문 징검다리", desc: "OST 들으며 19살 감성으로 징검다리 건너기" },
-  { time: "16:00", emoji: "🛍️", label: "행리단길 · 벽화골목", desc: "골목 구경하며 소품샵 득템" },
-  { time: "17:30", emoji: "🌅", label: "정지영 커피", desc: "루프탑에서 노을 보며 완벽하게 마무리" },
+  { time: "10:00", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
+  { time: "10:39", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
+  { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
+  { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
+  { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
+  { time: "13:39", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
+  { time: "14:44", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
+  { time: "15:47", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
 ];
 
 export default function SuwonTour() {
@@ -203,7 +235,12 @@ export default function SuwonTour() {
           <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
             <div className="flex items-center gap-2 font-bold" style={{ color: GO_GREEN }}>
               <span>🚆</span>
-              <span>{ROUND_TRIP.departTime} 출발 · {ROUND_TRIP.departNote}</span>
+              <span>
+                {ROUND_TRIP.departTime} {ROUND_TRIP.departNote}
+                {!ROUND_TRIP.departConfirmed && (
+                  <span style={{ color: STAMP, fontWeight: 500 }}> [출발 허브 확정 필요]</span>
+                )}
+              </span>
             </div>
             <div className="pl-5 mt-1.5 space-y-1" style={{ borderLeft: `1.5px dashed ${HAIRLINE}`, marginLeft: 6 }}>
               {timetable.map((t, idx) => (
@@ -212,23 +249,26 @@ export default function SuwonTour() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: "#92400E" }}>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: WARN_AMBER }}>
               <span>🕚</span>
-              <span>{ROUND_TRIP.lastTrainNote} {ROUND_TRIP.lastTrainTime}</span>
+              <span>
+                {ROUND_TRIP.courseEndTime} 코스 종료 → {ROUND_TRIP.returnStation} · 서울행 막차{" "}
+                <b>[확인 필요]</b>
+              </span>
             </div>
           </div>
           <div
             className="px-4 py-2.5 flex items-center justify-between text-white"
-            style={{ backgroundColor: GO_GREEN }}
+            style={{ backgroundColor: WARN_AMBER }}
           >
-            <span className="text-sm font-black">✓ {ROUND_TRIP.verdict}</span>
+            <span className="text-sm font-black">◐ DRAFT</span>
             <span className="text-[11px] font-semibold opacity-90">
-              막차까지 여유 {ROUND_TRIP.bufferMinutes}분 · 무사히 귀환
+              막차 시각 확인 전까지 판정 보류
             </span>
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
-          ⚠️ 시각·여유시간은 마스터 코스 템플릿 확정 전 예시값입니다. 실제 배차·막차는 현지 사정에 따라 달라질 수 있어요.
+          ⚠️ 정지영커피 → 수원역 이동수단·소요시간, 서울행 막차 시각이 아직 미확인이라 GO/RECONSIDER 판정을 표시하지 않습니다. 확인되는 대로 반영할게요.
         </p>
       </section>
 
@@ -237,7 +277,7 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 1</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>과몰입 촬영지 BEST 3</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>과몰입 촬영지 & 타임슬립 코스</span>
         </div>
 
         <div className="space-y-16 sm:space-y-20">
