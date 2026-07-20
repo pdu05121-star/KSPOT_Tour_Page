@@ -5,8 +5,8 @@ import { SURVEY_FORM_URL } from "@/app/surveyConfig";
 // Local Image Imports (동일한 수원 에셋 재사용)
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import sunjaeSiljaImg from "@/assets/carousel/sunjae_silja.jpg";
-import suwonHongwhamunImg from "@/assets/suwon/suwon_hongwhamun.jpg";
-import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.jpg";
+import suwonHongwhamunImg from "@/assets/suwon/hwahongmun_official.jpg";
+import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_official.jpg";
 import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
@@ -33,18 +33,24 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
-// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20)
-// ⚠️ 막차 시각·정지영커피→수원역 이동수단 미확인 상태. 근거 없는 판정(GO 등)은 표시하지 않음 — 팀 원칙.
+// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차 시각 확정 반영
+// 정지영커피→수원역 이동수단만 아직 미확인. 다만 그 구간을 넉넉잡아(버스/택시 20분) 추정해도
+// 막차까지 여유가 5시간 이상이라 GO 판정 표시. (팀 원칙: 근거 없는 판정 금지 — 그래서 추정 구간을 숨기지 않고 그대로 표기)
 const ROUND_TRIP = {
   departTime: "08:40",
   departNote: "서울역 출발 · 1호선 약 55분",
   departConfirmed: false, // 출발 허브 팀 결정 아직 안 남
   courseEndTime: "17:17",
+  stationTransferNote: "17:17 정지영커피 출발 → 수원역, 약 20분 [버스/택시 추정 · 정확한 이동수단 확인 필요]",
+  estimatedStationArrival: "17:37",
+  lastTrainTime: "23:31",
+  lastTrainConfirmed: true,
+  bufferMinutes: 354,
   returnStation: "수원역",
-  status: "draft" as const, // draft | go | care | reconsider | not_now
+  status: "go" as const, // draft | go | care | reconsider | not_now
 };
 const WARN_AMBER = "#B8893A"; // DRAFT/미확정 상태 전용 — 서브 브랜드와 무관하게 공통
-const GO_GREEN = "#2F7D5B";   // 판정 확정 시 사용할 공통 GO 컬러 (지금은 미사용)
+const GO_GREEN = "#2F7D5B";   // 판정 확정 시 사용할 공통 GO 컬러
 
 // 촬영지 · 관광지 — Chapter 1 (v3 템플릿 SPOT 01~05)
 const spots = [
@@ -83,7 +89,6 @@ const spots = [
     goldenHour: "정자와 용연 연못이 함께 담기는 각도가 정석이에요.",
     caution: "24시간 개방 · 휴무 없음",
     image: bangwhasuryujeongPicnicImg,
-    imgPosition: "top",
   },
   {
     no: "04",
@@ -111,9 +116,10 @@ const spots = [
   },
 ];
 
-// 현지인 찐맛집 & 카페 — Chapter 2 (v3 템플릿 SPOT 06, 08 · 행리단길은 두 장소 사이 경유로 소개)
+// 현지인 찐맛집 & 카페 — Chapter 2·3 (v3 템플릿 SPOT 06, 08 · 행리단길은 두 장소 사이 경유로 소개)
 const eats = [
   {
+    section: "food" as const,
     emoji: "🍗",
     category: "점심 · 통닭",
     title: "수원 왕갈비 통닭",
@@ -124,6 +130,7 @@ const eats = [
     image: nammanTongdakImg,
   },
   {
+    section: "cafe" as const,
     emoji: "☕",
     category: "루프탑 카페 · 마무리",
     title: "정지영 커피 로스터즈",
@@ -250,26 +257,30 @@ export default function SuwonTour() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: WARN_AMBER }}>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
+              <span>🚕</span>
+              <span>{ROUND_TRIP.stationTransferNote}</span>
+            </div>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: GO_GREEN }}>
               <span>🕚</span>
               <span>
-                {ROUND_TRIP.courseEndTime} 코스 종료 → {ROUND_TRIP.returnStation} · 서울행 막차{" "}
-                <b>[확인 필요]</b>
+                {ROUND_TRIP.estimatedStationArrival} 수원역 도착(추정) → 서울행 막차{" "}
+                <b>{ROUND_TRIP.lastTrainTime}</b>
               </span>
             </div>
           </div>
           <div
             className="px-4 py-2.5 flex items-center justify-between text-white"
-            style={{ backgroundColor: WARN_AMBER }}
+            style={{ backgroundColor: GO_GREEN }}
           >
-            <span className="text-sm font-black">◐ DRAFT</span>
+            <span className="text-sm font-black">✓ GO</span>
             <span className="text-[11px] font-semibold opacity-90">
-              막차 시각 확인 전까지 판정 보류
+              막차까지 여유 약 {ROUND_TRIP.bufferMinutes}분 · 무사히 귀환
             </span>
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
-          ⚠️ 정지영커피 → 수원역 이동수단·소요시간, 서울행 막차 시각이 아직 미확인이라 GO/RECONSIDER 판정을 표시하지 않습니다. 확인되는 대로 반영할게요.
+          ⚠️ 서울행 막차(23:31)는 확정됐지만, 정지영커피→수원역 구간은 아직 정확한 이동수단이 미확인이라 20분으로 추정해 계산했습니다. 이 구간이 40~50분으로 늘어나도 막차까지 여유는 여전히 4시간 이상이라 판정은 바뀌지 않습니다.
         </p>
       </section>
 
@@ -348,42 +359,70 @@ export default function SuwonTour() {
         </div>
       </section>
 
-      {/* EAT & DRINK */}
+      {/* 현지인 찐맛집 */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-24">
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 2</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>현지인 찐맛집 & 카페</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>현지인 찐맛집</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
-          {eats.map((e, idx) => (
-            <div key={idx}>
-              <div
-                className="relative aspect-[4/3] overflow-hidden rounded-sm mb-4"
-                style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
-              >
-                <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
-              </div>
-              <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
-              <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
-                {e.emoji} {e.title}
-              </h4>
-              <div className="space-y-2 text-[13px] leading-relaxed">
-                <p><b className="font-bold">📍</b> {e.coord}</p>
-                <p><b className="font-bold">추천 메뉴.</b> {e.menu}</p>
-                <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>꿀팁.</b> {e.tip}</p>
-                <p style={{ opacity: 0.8 }}>{e.view}</p>
-              </div>
+        {eats.filter((e) => e.section === "food").map((e, idx) => (
+          <div key={idx}>
+            <div
+              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
+              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+            >
+              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
             </div>
-          ))}
+            <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
+            <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
+              {e.emoji} {e.title}
+            </h4>
+            <div className="space-y-2 text-[13px] leading-relaxed">
+              <p><b className="font-bold">📍</b> {e.coord}</p>
+              <p><b className="font-bold">추천 메뉴.</b> {e.menu}</p>
+              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>꿀팁.</b> {e.tip}</p>
+              <p style={{ opacity: 0.8 }}>{e.view}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* 카페 */}
+      <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-24">
+        <div className="flex items-center gap-3 mb-8">
+          <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 3</span>
+          <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>카페</span>
         </div>
+
+        {eats.filter((e) => e.section === "cafe").map((e, idx) => (
+          <div key={idx}>
+            <div
+              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
+              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+            >
+              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+            </div>
+            <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
+            <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
+              {e.emoji} {e.title}
+            </h4>
+            <div className="space-y-2 text-[13px] leading-relaxed">
+              <p><b className="font-bold">📍</b> {e.coord}</p>
+              <p><b className="font-bold">추천 메뉴.</b> {e.menu}</p>
+              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>꿀팁.</b> {e.tip}</p>
+              <p style={{ opacity: 0.8 }}>{e.view}</p>
+            </div>
+          </div>
+        ))}
       </section>
 
       {/* TIMETABLE */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-20 sm:mt-24">
         <div className="flex items-center gap-3 mb-8">
-          <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 3</span>
+          <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 4</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
           <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>한눈에 보는 당일치기 타임테이블</span>
         </div>
@@ -427,18 +466,23 @@ export default function SuwonTour() {
 
       {/* BOTTOM FIXED CTA BAR — 수요조사 폼으로 연결 (개인정보 직접 수집 안 함) */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50 px-5 py-5 flex items-center justify-center shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 z-50 px-5 py-4 shadow-2xl"
         style={{ backgroundColor: "#fff", borderTop: `1px solid ${HAIRLINE}` }}
       >
-        <a
-          href={SURVEY_FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
-          style={{ backgroundColor: STAMP, color: "#fff" }}
-        >
-          가고 싶은 곳 알려주기 →
-        </a>
+        <p className="text-center text-[11px] font-bold mb-2" style={{ color: PINE }}>
+          여기 없는 지역도 이 코스처럼 만들어 드려요
+        </p>
+        <div className="flex items-center justify-center">
+          <a
+            href={SURVEY_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
+            style={{ backgroundColor: STAMP, color: "#fff" }}
+          >
+            가고 싶은 곳 알려주기 →
+          </a>
+        </div>
       </div>
     </div>
   );

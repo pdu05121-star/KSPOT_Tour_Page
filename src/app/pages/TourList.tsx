@@ -23,25 +23,25 @@ type TourCard = {
 
 const OPEN_KO: TourCard = {
   id: "suwon", status: "open", order: "01", cityline: "SUWON 수원",
-  kTag: "◉ 선재 업고 튀어", title: "타임슬립 골목과 성곽 노을",
+  kTag: "◉ 선재 업고 튀어", title: "타임슬립 골목과 성곽 뷰",
   desc: "드라마 속 그 골목길, 로컬 통닭 성지, 노을 지는 루프탑까지 — 서울에서 다녀오는 하루",
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
 const OPEN_EN: TourCard = {
   id: "suwon", status: "open", order: "01", cityline: "SUWON",
-  kTag: "◉ Lovely Runner", title: "Time-slip alleys & fortress sunset",
+  kTag: "◉ Lovely Runner", title: "Time-slip alleys & fortress views",
   desc: "The alley from the show, a local fried-chicken spot, a rooftop at golden hour — a day trip from Seoul.",
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
 const OPEN_JA: TourCard = {
   id: "suwon", status: "open", order: "01", cityline: "SUWON 水原",
-  kTag: "◉ ソンジェ背負って走れ", title: "タイムスリップの路地と城郭の夕焼け",
+  kTag: "◉ ソンジェ背負って走れ", title: "タイムスリップの路地と城郭ビュー",
   desc: "ドラマのあの路地、ローカルなチキンの名店、夕日のルーフトップまで — ソウルから行く日帰り。",
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
 const OPEN_ZH: TourCard = {
   id: "suwon", status: "open", order: "01", cityline: "SUWON 水原",
-  kTag: "◉ 背着善宰跑", title: "穿越时空的小巷与城郭晚霞",
+  kTag: "◉ 背着善宰跑", title: "穿越时空的小巷与城郭美景",
   desc: "剧中那条小巷、本地炸鸡名店、夕阳下的天台 — 从首尔出发的一日游。",
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
@@ -111,11 +111,11 @@ const COPY: Record<Lang, {
   askH3: string; askP: string; askBtn: string; askFine: string; stickyBtn: string;
 }> = {
   ko: {
-    eyebrow: "KSPOT 로컬 로드맵",
-    heroTitle: "현지인만 아는 진짜 한국,",
+    eyebrow: "🔓 KSPOT 시크릿 언락",
+    heroTitle: "한국에 이런 곳이 있다고?",
     heroPre: "화면 속에서 보던 ",
     heroKk: "그 장소",
-    heroPost: "부터, 낯선 도시도 실패 없이 즐기는 하루. 매번 하나씩 꺼내 공개합니다.",
+    heroPost: "부터 아무도 모르는 로컬 스팟까지, 하나씩 풀어드려요.",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "이 코스 열어보기 →",
@@ -129,11 +129,11 @@ const COPY: Record<Lang, {
     stickyBtn: "알려주기 →",
   },
   en: {
-    eyebrow: "KSPOT LOCAL ROADMAP",
-    heroTitle: "The real Korea only locals know",
+    eyebrow: "🔓 KSPOT SECRET UNLOCK",
+    heroTitle: "Korea has a place like THIS?",
     heroPre: "From ",
     heroKk: "the places you saw on screen",
-    heroPost: " to unfamiliar towns, a day out without the misses. We open a new one each time.",
+    heroPost: " to spots no one talks about — unlocked one at a time.",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "Open this course →",
@@ -147,11 +147,11 @@ const COPY: Record<Lang, {
     stickyBtn: "Tell us →",
   },
   ja: {
-    eyebrow: "KSPOT ローカルロードマップ",
-    heroTitle: "地元の人だけが知る本当の韓国、",
+    eyebrow: "🔓 KSPOT シークレット解禁",
+    heroTitle: "韓国にこんな場所が?",
     heroPre: "画面で見た",
     heroKk: "あの場所",
-    heroPost: "から、初めての街も失敗なく楽しむ一日。毎回ひとつずつ公開します。",
+    heroPost: "から誰も知らないローカルスポットまで、ひとつずつ解禁します。",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "このコースを開く →",
@@ -165,11 +165,11 @@ const COPY: Record<Lang, {
     stickyBtn: "教える →",
   },
   zh: {
-    eyebrow: "KSPOT 本地路线图",
-    heroTitle: "只有当地人知道的真韩国，",
+    eyebrow: "🔓 KSPOT 秘密解锁",
+    heroTitle: "韩国竟然有这种地方?",
     heroPre: "从",
     heroKk: "你在屏幕上看过的那个地方",
-    heroPost: "，到陌生的城市，都能安心尽兴地玩上一天。每次公开一个。",
+    heroPost: "到没人知道的本地秘境，一个一个解锁。",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "打开这条路线 →",
