@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles } from "lucide-react";
 import { SURVEY_FORM_URL } from "@/app/surveyConfig";
@@ -14,18 +15,15 @@ import jeongjiyoungStoreImg from "@/assets/suwon/jeongjiyoung_store.png";
 
 // ─────────────────────────────────────────────
 // 디자인 토큰 — "KSPOT 여행일기" 서브 브랜드 전용 팔레트
-// 코어 앱(안심/판단 엔진, teal 기반)과 의도적으로 분리한 컬러.
-// 이 결정은 KSPOT-Vault > Design_System_v3.md 에 서브 브랜드 섹션으로 문서화 예정.
 // ─────────────────────────────────────────────
-const TOUR_RUST = "#B5502F";       // 주요 CTA·포인트 (여행 스탬프/필름 감성의 벽돌빛 러스트)
-const TOUR_INK_DEEP = "#20362F";   // 헤드라인 (짙은 잉크 그린 — 코어 teal 계열과 톤은 이어가되 채도 낮춤)
-const TOUR_BODY_INK = "#3A342C";  // 본문 텍스트 (완전 검정 아닌 따뜻한 다크 뉴트럴)
-const TOUR_PAPER = "#F5F0E6";      // 배경 (따뜻한 파피루스 톤)
-const TOUR_PAPER_DEEP = "#EAE1CC"; // 하이라이트 박스 배경
-const TOUR_BORDER = "#DED2B8";     // 헤어라인 구분선
-const TEAL = "#1D9E75";            // 코어 브랜드 틸 — 링크 등 최소한의 KSPOT 연결점으로만 사용
+const TOUR_RUST = "#B5502F";
+const TOUR_INK_DEEP = "#20362F";
+const TOUR_BODY_INK = "#3A342C";
+const TOUR_PAPER = "#F5F0E6";
+const TOUR_PAPER_DEEP = "#EAE1CC";
+const TOUR_BORDER = "#DED2B8";
+const TEAL = "#1D9E75";
 
-// 기존 코드 호환용 별칭
 const INK = TOUR_BODY_INK;
 const PINE = TOUR_INK_DEEP;
 const STAMP = TOUR_RUST;
@@ -33,23 +31,26 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
+type Lang = "ko" | "en" | "ja" | "zh";
+const LANGS: { code: Lang; label: string }[] = [
+  { code: "ko", label: "한" },
+  { code: "en", label: "EN" },
+  { code: "ja", label: "日" },
+  { code: "zh", label: "中" },
+];
+
 // 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차·귀환 이동 전부 확정
-// 정지영커피 → 수원역: 버스 35번·13번, 15분 확인됨. 서울행 막차 23:31 확인됨.
 const ROUND_TRIP = {
   departTime: "08:40",
-  departNote: "서울역 출발 · 1호선 약 55분",
-  departConfirmed: false, // 출발 허브만 아직 팀 결정 안 남 (막차·귀환 이동은 전부 확정)
-  courseEndTime: "17:17",
-  stationTransferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
+  departConfirmed: false, // 출발 허브만 아직 팀 결정 안 남
   estimatedStationArrival: "17:32",
   lastTrainTime: "23:31",
-  lastTrainConfirmed: true,
   bufferMinutes: 359 as number | null, // null = 아직 계산 불가(귀환 정보 미확정) → DRAFT
 };
 
 // 판정 임계값 — 개발지시서 기준. 여기 숫자만 바꾸면 전 지역 코스에 동일 적용됨.
-const VERDICT_THRESHOLD_GO = 90;   // 90분 이상 여유 → GO
-const VERDICT_THRESHOLD_CARE = 45; // 45~90분 → GO WITH CARE, 45분 미만 → RECONSIDER, 0 이하 → NOT NOW
+const VERDICT_THRESHOLD_GO = 90;
+const VERDICT_THRESHOLD_CARE = 45;
 
 type Verdict = "draft" | "go" | "care" | "reconsider" | "not_now";
 
@@ -62,138 +63,385 @@ function computeVerdict(bufferMinutes: number | null): Verdict {
 }
 
 const GO_GREEN = "#2F7D5B";
-const WARN_AMBER = "#B8893A"; // DRAFT 전용
+const WARN_AMBER = "#B8893A";
 const CARE_AMBER = "#B45309";
 const RECONSIDER_ORANGE = "#9A3412";
 const NOT_NOW_RED = "#922B21";
 
-const VERDICT_META: Record<Verdict, { label: string; color: string; sub: string }> = {
-  draft: { label: "◐ DRAFT", color: WARN_AMBER, sub: "판정 보류" },
-  go: { label: "✓ GO", color: GO_GREEN, sub: "무사히 귀환" },
-  care: { label: "⚠ GO WITH CARE", color: CARE_AMBER, sub: "시간 여유를 두고 움직이세요" },
-  reconsider: { label: "△ RECONSIDER", color: RECONSIDER_ORANGE, sub: "코스 축소를 권장해요" },
-  not_now: { label: "✕ NOT NOW", color: NOT_NOW_RED, sub: "지금 조건에서는 어려워요" },
+const VERDICT_COLOR: Record<Verdict, string> = {
+  draft: WARN_AMBER,
+  go: GO_GREEN,
+  care: CARE_AMBER,
+  reconsider: RECONSIDER_ORANGE,
+  not_now: NOT_NOW_RED,
+};
+const VERDICT_LABEL: Record<Verdict, string> = {
+  draft: "◐ DRAFT",
+  go: "✓ GO",
+  care: "⚠ GO WITH CARE",
+  reconsider: "△ RECONSIDER",
+  not_now: "✕ NOT NOW",
+};
+const VERDICT_SUB: Record<Lang, Record<Verdict, string>> = {
+  ko: { draft: "판정 보류", go: "무사히 귀환", care: "시간 여유를 두고 움직이세요", reconsider: "코스 축소를 권장해요", not_now: "지금 조건에서는 어려워요" },
+  en: { draft: "Verdict on hold", go: "Safe return", care: "Leave some extra time", reconsider: "Consider trimming the course", not_now: "Difficult under current conditions" },
+  ja: { draft: "判定保留", go: "無事帰還できます", care: "時間に余裕を持って", reconsider: "コースを減らすことをお勧めします", not_now: "今の条件では難しいです" },
+  zh: { draft: "判定暂缓", go: "可以安全返回", care: "请留出充足时间", reconsider: "建议精简行程", not_now: "目前条件下有困难" },
 };
 
 const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
-const verdictMeta = VERDICT_META[verdict];
 
-// 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 8곳 중 좌표 확인된 7곳 순서대로.
-// 행리단길은 템플릿에 좌표 없음(출처 미확인) — 경로에서 제외.
+// 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 7곳 (행리단길은 좌표 미확인이라 제외)
 const ROUTE_COORDS = [
-  "37.2847710231129,127.013617036234", // 01 몽테드 카페
-  "37.2855291351344,127.01661296437",  // 02 화홍문
-  "37.2875267997459,127.018037812296", // 03 방화수류정
-  "37.285686283703,127.016560223438",  // 04 행궁동 벽화마을
-  "37.2818820191942,127.014394463798", // 05 화성행궁
-  "37.2794246460132,127.017499823481", // 06 수원 왕갈비 통닭
-  "37.2848962630143,127.014416125317", // 08 정지영 커피 (마지막 스팟)
+  "37.2847710231129,127.013617036234",
+  "37.2855291351344,127.01661296437",
+  "37.2875267997459,127.018037812296",
+  "37.285686283703,127.016560223438",
+  "37.2818820191942,127.014394463798",
+  "37.2794246460132,127.017499823481",
+  "37.2848962630143,127.014416125317",
 ];
 const GOOGLE_MAPS_ROUTE_URL = `https://www.google.com/maps/dir/?api=1&origin=${ROUTE_COORDS[0]}&destination=${ROUTE_COORDS[ROUTE_COORDS.length - 1]}&waypoints=${ROUTE_COORDS.slice(1, -1).join("|")}&travelmode=walking`;
 
-// 촬영지 · 관광지 — Chapter 1 (v3 템플릿 SPOT 01~05)
-const spots = [
-  {
-    no: "01",
-    emoji: "🎬",
-    title: "몽테드 카페",
-    subtitle: "솔이네 비디오가게 앞 · 노란 우산씬",
-    scene: "선재와 솔이의 노란 우산 장면이 촬영된 그 골목 앞 카페. 오픈 시간에 맞춰 여유 있게 하루를 시작해요.",
-    coord: "경기 수원시 팔달구 화서문로48번길 14 1층",
-    move: "몽테드 카페 → 화홍문, 도보 9분 (확인됨)",
-    goldenHour: "10시 오픈이라 그 전에 도착하면 골목 사진부터 찍고 들어가는 걸 추천해요.",
-    caution: "영업시간 10:00–19:00 · 매주 수요일 휴무",
-    image: sunjaeSiljaImg,
-  },
-  {
-    no: "02",
-    emoji: "💌",
-    title: "화홍문",
-    subtitle: "솔이가 선재에게 고백한 곳",
-    scene: "수원천 위 돌다리. 19살 솔이가 선재에게 마음을 고백하던 장면이 촬영된 곳이에요.",
-    coord: "경기 수원시 팔달구 북수동",
-    move: "화홍문 → 방화수류정, 도보 3분 (확인됨)",
-    goldenHour: "OST를 들으며 천천히 건너보세요 — 다리를 건너는 뒷모습과 화홍문 누각을 한 앵글에 담기 좋아요.",
-    caution: "24시간 개방 · 휴무 없음",
-    image: suwonHongwhamunImg,
-  },
-  {
-    no: "03",
-    emoji: "🚲",
-    title: "방화수류정",
-    subtitle: "자전거를 가르쳐주던 그 자리",
-    scene: "선재가 솔이에게 자전거 타는 법을 가르쳐주던 곳. 날씨 좋은 날엔 잠깐 앉아 쉬어가기 좋은 뷰예요.",
-    coord: "경기 수원시 팔달구 매향동 151",
-    move: "방화수류정 → 행궁동 벽화마을, 도보 3분 [추정 · 확인 필요]",
-    goldenHour: "정자와 용연 연못이 함께 담기는 각도가 정석이에요.",
-    caution: "24시간 개방 · 휴무 없음",
-    image: bangwhasuryujeongPicnicImg,
-  },
-  {
-    no: "04",
-    emoji: "🧱",
-    title: "행궁동 벽화마을",
-    subtitle: "설레는 벽쿵씬 그 골목",
-    scene: "성벽을 따라 걷다 만나는 벽화 골목. 선재와 솔이의 벽쿵씬이 촬영된 자리예요.",
-    coord: "경기 수원시 팔달구 화서문로72번길 9-7",
-    move: "행궁동 벽화마을 → 화성행궁, 도보 13분 [추정 · 확인 필요]",
-    goldenHour: "골목 자체가 24시간 개방이라 시간대 상관없이 들를 수 있어요.",
-    caution: "개별 가게는 방문 시 영업 여부 확인 필요",
-    image: haenggungdongMuralImg,
-  },
-  {
-    no: "05",
-    emoji: "🏯",
-    title: "화성행궁",
-    subtitle: "조선시대로 타임슬립",
-    scene: "골목에서 걸어 나와 만나는 궁궐. 정조가 머물던 화성행궁을 천천히 둘러보는 구간이에요.",
-    coord: "경기 수원시 팔달구 정조로 825",
-    move: "화성행궁 → 수원왕갈비통닭, 도보 11분 [추정 · 확인 필요]",
-    goldenHour: "야간개장 기간(5~11월 금~일·공휴일 18:00–21:30, 마감 21:00)엔 야경도 가능해요. 전각이 여러 채라 체류시간을 넉넉히(90분) 잡아두세요.",
-    caution: "입장료 2,000원 · 09:00–18:00 (입장마감 1시간 전) · 휴무 없음",
-    image: suwonFortressWallImg,
-  },
-];
+// ─────────────────────────────────────────────
+// 카피 — 언어별 (⚠️ AI 초벌 번역. 배포 전 원어민(중국어·일본어) 검수 필수 — 개발지시서 규칙)
+// ─────────────────────────────────────────────
 
-// 현지인 찐맛집 & 카페 — Chapter 2·3 (v3 템플릿 SPOT 06, 08 · 행리단길은 두 장소 사이 경유로 소개)
-const eats = [
-  {
-    section: "food" as const,
-    emoji: "🍗",
-    category: "점심 · 통닭",
-    title: "수원 왕갈비 통닭",
-    coord: "경기 수원시 팔달구 정조로800번길 12",
-    menu: "왕갈비 통닭 (워크인만 가능)",
-    tip: "라스트오더 21:00. 웨이팅 있는 편이니 여유 있게 방문하세요.",
-    view: "화성행궁에서 도보 11분 — 관람 끝나고 걸어갈 수 있는 로컬 맛집이에요.",
-    image: nammanTongdakImg,
+const UI: Record<Lang, {
+  backLink: string; brand: string;
+  heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
+  introSub: string; blockquote: string;
+  frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
+  arrivalPrefix: string; lastTrainPrefix: string; bufferLine: (n: number) => string; confirmedNote: string;
+  ch1: string; ch2: string; ch3: string; ch4: string;
+  secretCoord: string; moveLabel: string; tipLabel: string;
+  recommendedMenu: string; tipLabel2: string;
+  saveBtn: string; saveNote: string;
+  closingEyebrow: string; closingTitle1: string; closingTitle2: string; closingSub1: string; closingSub2: string;
+  stickyMsg: string; stickyBtn: string;
+}> = {
+  ko: {
+    backLink: "다른 투어 보기", brand: "KSPOT Travelog",
+    heroBadge: "📍 수원 행궁동 · 당일치기 로드맵",
+    heroTitle1: "수원에서 만나는", heroTitle2: "〈선재 업고 튀어〉 타임슬립 로드맵",
+    heroAlt: "수원 화성 장안문 야경",
+    introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
+    blockquote: "인스타그램에서 다 알려주지 못한 〈선재 업고 튀어〉 속 진짜 촬영지 좌표부터, 현지인들도 몰래 숨겨둔 웨이팅 ZERO 찐맛집과 카페까지. 이 페이지 하나로 수원 당일치기 완벽 졸업하세요.",
+    frameHeading: "☰ 이 하루, 한눈에",
+    departNote: "서울역 출발 · 1호선 약 55분",
+    hubWarning: " [출발 허브 확정 필요]",
+    transferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
+    arrivalPrefix: "수원역 도착 → 서울행 막차",
+    lastTrainPrefix: "",
+    bufferLine: (n) => `막차까지 여유 약 ${n}분`,
+    confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
+    ch1: "과몰입 촬영지 BEST 5", ch2: "현지인 찐맛집", ch3: "카페", ch4: "한눈에 보는 당일치기 타임테이블",
+    secretCoord: "시크릿 좌표.", moveLabel: "이동 · 주차.", tipLabel: "에디터 시크릿 꿀팁",
+    recommendedMenu: "추천 메뉴.", tipLabel2: "꿀팁.",
+    saveBtn: "🗺️ 구글맵으로 코스 받기",
+    saveNote: "몽테드 카페부터 정지영 커피까지, 스팟 7곳 순서대로 길찾기가 열려요.",
+    closingEyebrow: "✦ 여기 없는 지역도 궁금하신가요",
+    closingTitle1: "원하는 지역도 이 코스처럼", closingTitle2: "막차까지 계산해서 만들어 드려요",
+    closingSub1: "가고 싶은 지역이 궁금하면 알려주세요.", closingSub2: "신청 많은 곳부터 순서대로 다음 이야기를 만들어요.",
+    stickyMsg: "여기 없는 지역도 이 코스처럼 만들어 드려요",
+    stickyBtn: "가고 싶은 곳 알려주기 →",
   },
-  {
-    section: "cafe" as const,
-    emoji: "☕",
-    category: "루프탑 카페 · 마무리",
-    title: "정지영 커피 로스터즈",
-    coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)",
-    menu: "시그니처 라떼 + 성곽 뷰 루프탑 좌석",
-    tip: "루프탑 좌석은 선착순이라 도착하자마자 자리부터 잡는 걸 추천해요.",
-    view: "행리단길 소품샵·골목을 구경하며 걸어오면 자연스럽게 도착하는 코스 마지막 스팟이에요.",
-    image: jeongjiyoungStoreImg,
+  en: {
+    backLink: "See other tours", brand: "KSPOT Travelog",
+    heroBadge: "📍 Suwon Haenggung-dong · Day Trip Roadmap",
+    heroTitle1: "A day in Suwon with", heroTitle2: "〈Lovely Runner〉's time-slip road",
+    heroAlt: "Suwon Hwaseong Janganmun Gate at night",
+    introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
+    blockquote: "From real filming-spot coordinates Instagram never fully shows, to zero-wait local restaurants and cafés only locals know — graduate Suwon day trips with this one page.",
+    frameHeading: "☰ Your day, at a glance",
+    departNote: "Depart Seoul Station · ~55 min on Line 1",
+    hubWarning: " [Departure hub not finalized]",
+    transferNote: "17:17 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min (confirmed)",
+    arrivalPrefix: "Arrive Suwon Station → Last train to Seoul",
+    lastTrainPrefix: "",
+    bufferLine: (n) => `About ${n} min to spare before the last train`,
+    confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
+    ch1: "Obsession-worthy filming spots BEST 5", ch2: "Local favorite restaurant", ch3: "Café", ch4: "Day-trip timetable at a glance",
+    secretCoord: "Secret coordinates.", moveLabel: "Getting there / parking.", tipLabel: "Editor's secret tip",
+    recommendedMenu: "Recommended.", tipLabel2: "Tip.",
+    saveBtn: "🗺️ Get the route on Google Maps",
+    saveNote: "Opens walking directions in order, from Monde Café to Jeong Jiyoung Coffee.",
+    closingEyebrow: "✦ Curious about a place not listed here?",
+    closingTitle1: "We'll build your course too,", closingTitle2: "calculated down to the last train",
+    closingSub1: "Tell us where you're curious about.", closingSub2: "We build the most-requested places next, in order.",
+    stickyMsg: "We'll build a course for other regions too",
+    stickyBtn: "Tell us where →",
   },
-];
+  ja: {
+    backLink: "他のツアーを見る", brand: "KSPOT Travelog",
+    heroBadge: "📍 水原 行宮洞 · 日帰りロードマップ",
+    heroTitle1: "水原で出会う", heroTitle2: "〈ソンジェ背負って走れ〉タイムスリップロードマップ",
+    heroAlt: "水原華城 長安門の夜景",
+    introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
+    blockquote: "インスタでは伝えきれない本物のロケ地座標から、現地の人だけが知る待ち時間ゼロの名店・カフェまで。このページ一つで水原日帰りを完全マスター。",
+    frameHeading: "☰ この一日、ひと目で",
+    departNote: "ソウル駅発 · 1号線約55分",
+    hubWarning: " [出発ハブ未確定]",
+    transferNote: "17:17 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分(確認済み)",
+    arrivalPrefix: "水原駅到着 → ソウル行き終電",
+    lastTrainPrefix: "",
+    bufferLine: (n) => `終電まで約${n}分の余裕`,
+    confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
+    ch1: "過剰入魂ロケ地 BEST 5", ch2: "地元グルメ", ch3: "カフェ", ch4: "ひと目でわかる日帰りタイムテーブル",
+    secretCoord: "シークレット座標.", moveLabel: "移動・駐車.", tipLabel: "エディター秘密の裏技",
+    recommendedMenu: "おすすめ.", tipLabel2: "裏技.",
+    saveBtn: "🗺️ Googleマップでコースを受け取る",
+    saveNote: "モンテドカフェからジョンジヨンコーヒーまで、7スポット順番の徒歩ルートが開きます。",
+    closingEyebrow: "✦ ここにない場所も気になりますか",
+    closingTitle1: "気になる地域もこのコースのように", closingTitle2: "終電まで計算してお作りします",
+    closingSub1: "行きたい地域があれば教えてください。", closingSub2: "リクエストの多い場所から順番に次の物語を作ります。",
+    stickyMsg: "他の地域もこのコースのように作ります",
+    stickyBtn: "リクエストする →",
+  },
+  zh: {
+    backLink: "查看其他路线", brand: "KSPOT Travelog",
+    heroBadge: "📍 水原 行宫洞 · 一日游路线图",
+    heroTitle1: "在水原邂逅", heroTitle2: "〈背着善宰跑〉穿越时空路线",
+    heroAlt: "水原华城长安门夜景",
+    introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
+    blockquote: "从Instagram都没能完全展示的真实取景地坐标，到只有本地人知道的零等待美食和咖啡店——这一页带你完美征服水原一日游。",
+    frameHeading: "☰ 一目了然的一天",
+    departNote: "首尔站出发 · 1号线约55分钟",
+    hubWarning: " [出发枢纽尚未确定]",
+    transferNote: "17:17 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟(已确认)",
+    arrivalPrefix: "到达水原站 → 开往首尔的末班车",
+    lastTrainPrefix: "",
+    bufferLine: (n) => `距末班车还有约${n}分钟余量`,
+    confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
+    ch1: "沉浸式取景地 BEST 5", ch2: "本地人气美食", ch3: "咖啡店", ch4: "一目了然的一日游时间表",
+    secretCoord: "秘密坐标.", moveLabel: "交通·停车.", tipLabel: "编辑私藏秘诀",
+    recommendedMenu: "推荐.", tipLabel2: "小贴士.",
+    saveBtn: "🗺️ 用谷歌地图获取路线",
+    saveNote: "从Monde咖啡到Jeong Jiyoung咖啡，7个地点按顺序打开步行路线。",
+    closingEyebrow: "✦ 想去的地方不在这里？",
+    closingTitle1: "想去的地区，我们也会像这条路线一样", closingTitle2: "算好末班车时间为你制作",
+    closingSub1: "告诉我们你想去哪里。", closingSub2: "我们会按申请人数多少依次制作下一个故事。",
+    stickyMsg: "其他地区我们也会像这样制作路线",
+    stickyBtn: "提交请求 →",
+  },
+};
 
-// 한눈에 보는 당일치기 타임테이블 — v3 템플릿 실제 시각 그대로
-const timetable = [
-  { time: "10:00", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
-  { time: "10:39", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
-  { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
-  { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
-  { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
-  { time: "14:09", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
-  { time: "15:14", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
-  { time: "16:17", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
-];
+type SpotItem = {
+  no: string; emoji: string; title: string; subtitle: string; scene: string;
+  coord: string; move: string; goldenHour: string; caution: string;
+  image: string; imgPosition?: string;
+};
+
+const SPOTS: Record<Lang, SpotItem[]> = {
+  ko: [
+    { no: "01", emoji: "🎬", title: "몽테드 카페", subtitle: "솔이네 비디오가게 앞 · 노란 우산씬",
+      scene: "선재와 솔이의 노란 우산 장면이 촬영된 그 골목 앞 카페. 오픈 시간에 맞춰 여유 있게 하루를 시작해요.",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "몽테드 카페 → 화홍문, 도보 9분 (확인됨)",
+      goldenHour: "10시 오픈이라 그 전에 도착하면 골목 사진부터 찍고 들어가는 걸 추천해요.",
+      caution: "영업시간 10:00–19:00 · 매주 수요일 휴무", image: sunjaeSiljaImg },
+    { no: "02", emoji: "💌", title: "화홍문", subtitle: "솔이가 선재에게 고백한 곳",
+      scene: "수원천 위 돌다리. 19살 솔이가 선재에게 마음을 고백하던 장면이 촬영된 곳이에요.",
+      coord: "경기 수원시 팔달구 북수동", move: "화홍문 → 방화수류정, 도보 3분 (확인됨)",
+      goldenHour: "OST를 들으며 천천히 건너보세요 — 다리를 건너는 뒷모습과 화홍문 누각을 한 앵글에 담기 좋아요.",
+      caution: "24시간 개방 · 휴무 없음", image: suwonHongwhamunImg },
+    { no: "03", emoji: "🚲", title: "방화수류정", subtitle: "자전거를 가르쳐주던 그 자리",
+      scene: "선재가 솔이에게 자전거 타는 법을 가르쳐주던 곳. 날씨 좋은 날엔 잠깐 앉아 쉬어가기 좋은 뷰예요.",
+      coord: "경기 수원시 팔달구 매향동 151", move: "방화수류정 → 행궁동 벽화마을, 도보 3분 [추정 · 확인 필요]",
+      goldenHour: "정자와 용연 연못이 함께 담기는 각도가 정석이에요.",
+      caution: "24시간 개방 · 휴무 없음", image: bangwhasuryujeongPicnicImg },
+    { no: "04", emoji: "🧱", title: "행궁동 벽화마을", subtitle: "설레는 벽쿵씬 그 골목",
+      scene: "성벽을 따라 걷다 만나는 벽화 골목. 선재와 솔이의 벽쿵씬이 촬영된 자리예요.",
+      coord: "경기 수원시 팔달구 화서문로72번길 9-7", move: "행궁동 벽화마을 → 화성행궁, 도보 13분 [추정 · 확인 필요]",
+      goldenHour: "골목 자체가 24시간 개방이라 시간대 상관없이 들를 수 있어요.",
+      caution: "개별 가게는 방문 시 영업 여부 확인 필요", image: haenggungdongMuralImg },
+    { no: "05", emoji: "🏯", title: "화성행궁", subtitle: "조선시대로 타임슬립",
+      scene: "골목에서 걸어 나와 만나는 궁궐. 정조가 머물던 화성행궁을 천천히 둘러보는 구간이에요.",
+      coord: "경기 수원시 팔달구 정조로 825", move: "화성행궁 → 수원왕갈비통닭, 도보 11분 [추정 · 확인 필요]",
+      goldenHour: "야간개장 기간(5~11월 금~일·공휴일 18:00–21:30, 마감 21:00)엔 야경도 가능해요. 전각이 여러 채라 체류시간을 넉넉히(90분) 잡아두세요.",
+      caution: "입장료 2,000원 · 09:00–18:00 (입장마감 1시간 전) · 휴무 없음", image: suwonFortressWallImg },
+  ],
+  en: [
+    { no: "01", emoji: "🎬", title: "Monde Café", subtitle: "In front of Sol's video store · the yellow umbrella scene",
+      scene: "The café by the alley where Sun-jae and Sol's yellow umbrella scene was filmed. Start your day at an easy pace, at opening time.",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde Café → Hwahongmun, 9 min walk (confirmed)",
+      goldenHour: "It opens at 10, so arriving early lets you get alley photos before going in.",
+      caution: "Open 10:00–19:00 · Closed Wednesdays", image: sunjaeSiljaImg },
+    { no: "02", emoji: "💌", title: "Hwahongmun", subtitle: "Where Sol confessed to Sun-jae",
+      scene: "The stone bridge over Suwoncheon. Where 19-year-old Sol confessed her feelings to Sun-jae.",
+      coord: "경기 수원시 팔달구 북수동", move: "Hwahongmun → Banghwasuryujeong, 3 min walk (confirmed)",
+      goldenHour: "Cross slowly while listening to the OST — a great angle catches both your back and the Hwahongmun pavilion.",
+      caution: "Open 24 hours · No closed days", image: suwonHongwhamunImg },
+    { no: "03", emoji: "🚲", title: "Banghwasuryujeong", subtitle: "Where he taught her to ride a bike",
+      scene: "Where Sun-jae taught Sol how to ride a bicycle. A nice view to sit and rest on a good-weather day.",
+      coord: "경기 수원시 팔달구 매향동 151", move: "Banghwasuryujeong → Haenggung-dong Mural Village, 3 min walk [estimated, needs confirmation]",
+      goldenHour: "The classic shot frames the pavilion together with Yongyeon Pond.",
+      caution: "Open 24 hours · No closed days", image: bangwhasuryujeongPicnicImg },
+    { no: "04", emoji: "🧱", title: "Haenggung-dong Mural Village", subtitle: "The alley of the flustering wall-kiss scene",
+      scene: "A mural alley along the fortress wall. Where Sun-jae and Sol's wall-kiss scene was filmed.",
+      coord: "경기 수원시 팔달구 화서문로72번길 9-7", move: "Haenggung-dong Mural Village → Hwaseong Haenggung Palace, 13 min walk [estimated, needs confirmation]",
+      goldenHour: "The alley itself is open 24 hours, so any time of day works.",
+      caution: "Check individual shop hours on visit", image: haenggungdongMuralImg },
+    { no: "05", emoji: "🏯", title: "Hwaseong Haenggung Palace", subtitle: "Time-slip into the Joseon era",
+      scene: "Walk out of the alley into a palace. A relaxed stroll through the palace where King Jeongjo once stayed.",
+      coord: "경기 수원시 팔달구 정조로 825", move: "Hwaseong Haenggung Palace → Suwon Wang-galbi Tongdak, 11 min walk [estimated, needs confirmation]",
+      goldenHour: "During the night-opening season (May–Nov, Fri–Sun & holidays 18:00–21:30, last entry 21:00) you can see it lit up at night. There are several halls, so budget plenty of time (90 min).",
+      caution: "Admission ₩2,000 · 09:00–18:00 (last entry 1 hr before close) · No closed days", image: suwonFortressWallImg },
+  ],
+  ja: [
+    { no: "01", emoji: "🎬", title: "モンテドカフェ", subtitle: "ソルの家のビデオ店前・黄色い傘のシーン",
+      scene: "ソンジェとソルの黄色い傘のシーンが撮影された路地前のカフェ。オープン時間に合わせてゆったり一日を始めましょう。",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "モンテドカフェ→華虹門、徒歩9分(確認済み)",
+      goldenHour: "10時オープンなので、その前に着けば路地の写真を撮ってから入れます。",
+      caution: "営業時間10:00–19:00 · 毎週水曜休み", image: sunjaeSiljaImg },
+    { no: "02", emoji: "💌", title: "華虹門", subtitle: "ソルがソンジェに告白した場所",
+      scene: "水原川に架かる石橋。19歳のソルがソンジェに気持ちを告白したシーンが撮影された場所です。",
+      coord: "경기 수원시 팔달구 북수동", move: "華虹門→訪花随柳亭、徒歩3分(確認済み)",
+      goldenHour: "OSTを聴きながらゆっくり渡ってみて — 橋を渡る後ろ姿と華虹門の楼閣を一つのアングルに収めるのがおすすめです。",
+      caution: "24時間開放 · 休みなし", image: suwonHongwhamunImg },
+    { no: "03", emoji: "🚲", title: "訪花随柳亭", subtitle: "自転車を教えてもらったその場所",
+      scene: "ソンジェがソルに自転車の乗り方を教えた場所。天気の良い日はちょっと座って休むのにいいビューです。",
+      coord: "경기 수원시 팔달구 매향동 151", move: "訪花随柳亭→行宮洞壁画村、徒歩3分[推定・確認要]",
+      goldenHour: "亭と龍淵池が一緒に収まる角度が定番です。",
+      caution: "24時間開放 · 休みなし", image: bangwhasuryujeongPicnicImg },
+    { no: "04", emoji: "🧱", title: "行宮洞壁画村", subtitle: "ドキドキする壁ドンシーンのあの路地",
+      scene: "城壁沿いを歩いて出会う壁画の路地。ソンジェとソルの壁ドンシーンが撮影された場所です。",
+      coord: "경기 수원시 팔달구 화서문로72번길 9-7", move: "行宮洞壁画村→華城行宮、徒歩13分[推定・確認要]",
+      goldenHour: "路地自体が24時間開放なので時間帯を気にせず立ち寄れます。",
+      caution: "個別の店舗は訪問時に営業確認が必要", image: haenggungdongMuralImg },
+    { no: "05", emoji: "🏯", title: "華城行宮", subtitle: "朝鮮時代へタイムスリップ",
+      scene: "路地を出て出会う宮殿。正祖が滞在した華城行宮をゆっくり見て回る区間です。",
+      coord: "경기 수원시 팔달구 정조로 825", move: "華城行宮→水原ワンガルビトンダク、徒歩11分[推定・確認要]",
+      goldenHour: "夜間開場期間(5〜11月金〜日・祝日18:00–21:30、最終入場21:00)は夜景も見られます。建物が多いので滞在時間を余裕を持って(90分)確保してください。",
+      caution: "入場料2,000ウォン · 09:00–18:00(入場締め切り1時間前) · 休みなし", image: suwonFortressWallImg },
+  ],
+  zh: [
+    { no: "01", emoji: "🎬", title: "Monde咖啡", subtitle: "Sol家录像店门前·黄色雨伞那场戏",
+      scene: "Sunjae和Sol的黄色雨伞场景取景地附近的咖啡店。配合开店时间，从容开始一天。",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde咖啡→花虹门，步行9分钟(已确认)",
+      goldenHour: "10点开门，提前到达可以先拍巷子照片再进店。",
+      caution: "营业时间10:00–19:00 · 每周三休息", image: sunjaeSiljaImg },
+    { no: "02", emoji: "💌", title: "花虹门", subtitle: "Sol向Sunjae表白的地方",
+      scene: "水原川上的石桥。19岁的Sol向Sunjae表白心意的场景取景地。",
+      coord: "경기 수원시 팔달구 북수동", move: "花虹门→访花随柳亭，步行3分钟(已确认)",
+      goldenHour: "边听OST边慢慢走过桥 — 背影配上花虹门楼阁的角度很出片。",
+      caution: "24小时开放 · 无休息日", image: suwonHongwhamunImg },
+    { no: "03", emoji: "🚲", title: "访花随柳亭", subtitle: "教她骑自行车的地方",
+      scene: "Sunjae教Sol骑自行车的地方。天气好的时候坐着休息一下也很不错。",
+      coord: "경기 수원시 팔달구 매향동 151", move: "访花随柳亭→行宫洞壁画村，步行3分钟[预估·待确认]",
+      goldenHour: "亭子和龙渊池一起入镜的角度是经典构图。",
+      caution: "24小时开放 · 无休息日", image: bangwhasuryujeongPicnicImg },
+    { no: "04", emoji: "🧱", title: "行宫洞壁画村", subtitle: "心动壁咚场景的那条巷子",
+      scene: "沿着城墙走会遇到的壁画小巷。Sunjae和Sol的壁咚场景取景地。",
+      coord: "경기 수원시 팔달구 화서문로72번길 9-7", move: "行宫洞壁画村→华城行宫，步行13分钟[预估·待确认]",
+      goldenHour: "巷子本身24小时开放，任何时间都能前往。",
+      caution: "个别店铺需现场确认营业情况", image: haenggungdongMuralImg },
+    { no: "05", emoji: "🏯", title: "华城行宫", subtitle: "穿越回朝鲜时代",
+      scene: "走出巷子就能看到的宫殿。悠闲地逛一逛正祖曾居住过的华城行宫。",
+      coord: "경기 수원시 팔달구 정조로 825", move: "华城行宫→水原王排骨炸鸡，步行11分钟[预估·待确认]",
+      goldenHour: "夜间开放期间(5~11月周五至周日及公休日18:00–21:30，最晚入场21:00)还能看夜景。殿阁较多，建议多留点时间(90分钟)。",
+      caution: "门票2,000韩元 · 09:00–18:00(截止入场为闭馆前1小时) · 无休息日", image: suwonFortressWallImg },
+  ],
+};
+
+type EatItem = {
+  section: "food" | "cafe"; emoji: string; category: string; title: string;
+  coord: string; menu: string; tip: string; view: string; image: string;
+};
+
+const EATS: Record<Lang, EatItem[]> = {
+  ko: [
+    { section: "food", emoji: "🍗", category: "점심 · 통닭", title: "수원 왕갈비 통닭",
+      coord: "경기 수원시 팔달구 정조로800번길 12", menu: "왕갈비 통닭 (워크인만 가능)",
+      tip: "라스트오더 21:00. 웨이팅 있는 편이니 여유 있게 방문하세요.",
+      view: "화성행궁에서 도보 11분 — 관람 끝나고 걸어갈 수 있는 로컬 맛집이에요.", image: nammanTongdakImg },
+    { section: "cafe", emoji: "☕", category: "루프탑 카페 · 마무리", title: "정지영 커피 로스터즈",
+      coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "시그니처 라떼 + 성곽 뷰 루프탑 좌석",
+      tip: "루프탑 좌석은 선착순이라 도착하자마자 자리부터 잡는 걸 추천해요.",
+      view: "행리단길 소품샵·골목을 구경하며 걸어오면 자연스럽게 도착하는 코스 마지막 스팟이에요.", image: jeongjiyoungStoreImg },
+  ],
+  en: [
+    { section: "food", emoji: "🍗", category: "Lunch · Fried chicken", title: "Suwon Wang-galbi Tongdak",
+      coord: "경기 수원시 팔달구 정조로800번길 12", menu: "Wang-galbi fried chicken (walk-ins only)",
+      tip: "Last order 21:00. Expect some wait, so visit with time to spare.",
+      view: "11-min walk from Hwaseong Haenggung Palace — a local favorite right after your visit.", image: nammanTongdakImg },
+    { section: "cafe", emoji: "☕", category: "Rooftop café · finale", title: "Jeong Jiyoung Coffee Roasters",
+      coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "Signature latte + rooftop seat with a fortress view",
+      tip: "Rooftop seats go first-come, first-served — grab one as soon as you arrive.",
+      view: "Wander through Haengridan-gil's shops and alleys on the way, and you'll naturally arrive at the final stop of the day.", image: jeongjiyoungStoreImg },
+  ],
+  ja: [
+    { section: "food", emoji: "🍗", category: "ランチ・フライドチキン", title: "水原ワンガルビトンダク",
+      coord: "경기 수원시 팔달구 정조로800번길 12", menu: "ワンガルビトンダク(ウォークインのみ)",
+      tip: "ラストオーダー21:00。待ち時間があるので余裕を持って訪問してください。",
+      view: "華城行宮から徒歩11分 — 観覧後にそのまま歩いて行けるローカルグルメです。", image: nammanTongdakImg },
+    { section: "cafe", emoji: "☕", category: "ルーフトップカフェ・締め", title: "ジョンジヨンコーヒーロースターズ",
+      coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "シグネチャーラテ+城郭ビューのルーフトップ席",
+      tip: "ルーフトップ席は早い者勝ちなので、着いたらすぐ席を確保するのがおすすめです。",
+      view: "行理団街の雑貨店・路地を眺めながら歩いてくると自然に到着する、一日の最後のスポットです。", image: jeongjiyoungStoreImg },
+  ],
+  zh: [
+    { section: "food", emoji: "🍗", category: "午餐·炸鸡", title: "水原王排骨炸鸡",
+      coord: "경기 수원시 팔달구 정조로800번길 12", menu: "王排骨炸鸡(仅接受现场排队)",
+      tip: "最后点餐时间21:00。等位情况较多，建议留出充足时间前往。",
+      view: "从华城行宫步行11分钟 — 逛完景点后可以直接走过去的本地美食。", image: nammanTongdakImg },
+    { section: "cafe", emoji: "☕", category: "屋顶咖啡厅·收尾", title: "Jeong Jiyoung咖啡烘焙坊",
+      coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "招牌拿铁+可看城墙景观的屋顶座位",
+      tip: "屋顶座位先到先得，建议到达后立刻去占座。",
+      view: "沿途逛逛行理团街的小店和巷子，自然就会走到这一天的最后一站。", image: jeongjiyoungStoreImg },
+  ],
+};
+
+type TimetableItem = { time: string; emoji: string; label: string; desc: string };
+
+const TIMETABLE: Record<Lang, TimetableItem[]> = {
+  ko: [
+    { time: "10:00", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
+    { time: "10:39", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
+    { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
+    { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
+    { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
+    { time: "14:09", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
+    { time: "15:14", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
+    { time: "16:17", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
+  ],
+  en: [
+    { time: "10:00", emoji: "☕", label: "Monde Café", desc: "Start the day at the yellow umbrella alley" },
+    { time: "10:39", emoji: "💌", label: "Hwahongmun", desc: "The confession bridge, crossed while listening to the OST" },
+    { time: "11:12", emoji: "🚲", label: "Banghwasuryujeong", desc: "A quick rest where he taught her to bike" },
+    { time: "11:45", emoji: "🧱", label: "Haenggung-dong Mural Village", desc: "Explore the wall-kiss alley" },
+    { time: "12:28", emoji: "🏯", label: "Hwaseong Haenggung Palace", desc: "Time-slip into the Joseon era (₩2,000 admission)" },
+    { time: "14:09", emoji: "🍗", label: "Wang-galbi Tongdak", desc: "A hearty lunch" },
+    { time: "15:14", emoji: "🛍️", label: "Haengridan-gil", desc: "Browse shops on the way" },
+    { time: "16:17", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Finish with rooftop tea and fortress views" },
+  ],
+  ja: [
+    { time: "10:00", emoji: "☕", label: "モンテドカフェ", desc: "黄色い傘の路地前で一日をスタート" },
+    { time: "10:39", emoji: "💌", label: "華虹門", desc: "告白シーンの石橋、OSTを聴きながら渡る" },
+    { time: "11:12", emoji: "🚲", label: "訪花随柳亭", desc: "自転車を教えてもらった場所でひと休み" },
+    { time: "11:45", emoji: "🧱", label: "行宮洞壁画村", desc: "壁ドンシーンの路地を散策" },
+    { time: "12:28", emoji: "🏯", label: "華城行宮", desc: "朝鮮時代へタイムスリップ(入場料2,000ウォン)" },
+    { time: "14:09", emoji: "🍗", label: "ワンガルビトンダク", desc: "しっかりランチ" },
+    { time: "15:14", emoji: "🛍️", label: "行理団街", desc: "雑貨店の路地を眺めながら移動" },
+    { time: "16:17", emoji: "🌇", label: "ジョンジヨンコーヒー", desc: "城郭ビューのルーフトップで締めのお茶時間" },
+  ],
+  zh: [
+    { time: "10:00", emoji: "☕", label: "Monde咖啡", desc: "在黄色雨伞的巷子前开启一天" },
+    { time: "10:39", emoji: "💌", label: "花虹门", desc: "边听OST边走过表白场景的石桥" },
+    { time: "11:12", emoji: "🚲", label: "访花随柳亭", desc: "在教骑车的地方稍作休息" },
+    { time: "11:45", emoji: "🧱", label: "行宫洞壁画村", desc: "逛壁咚场景的小巷" },
+    { time: "12:28", emoji: "🏯", label: "华城行宫", desc: "穿越回朝鲜时代(门票2,000韩元)" },
+    { time: "14:09", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
+    { time: "15:14", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
+    { time: "16:17", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
+  ],
+};
 
 export default function SuwonTour() {
+  const [lang, setLang] = useState<Lang>("ko");
+  const t = UI[lang];
+  const spots = SPOTS[lang];
+  const eats = EATS[lang];
+  const timetable = TIMETABLE[lang];
 
   return (
     <div
@@ -209,19 +457,35 @@ export default function SuwonTour() {
             style={{ color: INK }}
           >
             <ChevronLeft size={15} />
-            다른 투어 보기
+            {t.backLink}
           </Link>
           <span className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
-            KSPOT Travelog
+            {t.brand}
           </span>
-          <div style={{ width: 90 }} />
+          <div className="flex gap-1 rounded-full p-0.5" style={{ backgroundColor: PAPER_DEEP }}>
+            {LANGS.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setLang(l.code)}
+                className="text-[11px] px-2 py-1 rounded-full font-bold transition-colors"
+                style={
+                  lang === l.code
+                    ? { backgroundColor: STAMP, color: "#fff" }
+                    : { backgroundColor: "transparent", color: INK, opacity: 0.6 }
+                }
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
         </div>
       </nav>
 
       {/* HERO */}
       <header className="relative">
         <div className="relative aspect-[4/3] sm:aspect-[16/9] w-full overflow-hidden">
-          <img src={janganmunNightImg} alt="수원 화성 장안문 야경" className="w-full h-full object-cover" />
+          <img src={janganmunNightImg} alt={t.heroAlt} className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(20,51,43,0.75), rgba(20,51,43,0.05) 55%)" }} />
           <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 pb-8 sm:pb-10">
             <div className="max-w-2xl mx-auto">
@@ -229,13 +493,13 @@ export default function SuwonTour() {
                 className="inline-block text-[11px] font-bold tracking-[0.15em] uppercase px-3 py-1 rounded-full mb-4"
                 style={{ backgroundColor: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.35)" }}
               >
-                📍 수원 행궁동 · 당일치기 로드맵
+                {t.heroBadge}
               </span>
               <h1
                 className="text-[28px] sm:text-[38px] leading-[1.25] font-black text-white"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
-                수원에서 만나는<br />〈선재 업고 튀어〉 타임슬립 로드맵
+                {t.heroTitle1}<br />{t.heroTitle2}
               </h1>
             </div>
           </div>
@@ -245,7 +509,7 @@ export default function SuwonTour() {
       {/* INTRO */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
-          〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트
+          {t.introSub}
         </p>
 
         <blockquote
@@ -263,12 +527,11 @@ export default function SuwonTour() {
             className="text-[15px] sm:text-lg leading-relaxed"
             style={{ fontFamily: "'Noto Serif KR', serif", color: PINE }}
           >
-            인스타그램에서 다 알려주지 못한 〈선재 업고 튀어〉 속 진짜 촬영지 좌표부터, 현지인들도 몰래 숨겨둔
-            웨이팅 ZERO 찐맛집과 카페까지. 이 페이지 하나로 수원 당일치기 완벽 졸업하세요.
+            {t.blockquote}
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 — KSPOT 핵심 기능. "이 코스 진짜 하루에 되네" 를 증명하는 자리 */}
+        {/* 왕복 판단 프레임 */}
         <div
           className="rounded-md overflow-hidden mb-10"
           style={{ border: `1px solid ${HAIRLINE}` }}
@@ -277,49 +540,49 @@ export default function SuwonTour() {
             className="px-4 py-2.5 text-xs font-bold flex items-center gap-2"
             style={{ backgroundColor: PAPER_DEEP, color: PINE }}
           >
-            ☰ 이 하루, 한눈에
+            {t.frameHeading}
           </div>
           <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
             <div className="flex items-center gap-2 font-bold" style={{ color: GO_GREEN }}>
               <span>🚆</span>
               <span>
-                {ROUND_TRIP.departTime} {ROUND_TRIP.departNote}
+                {ROUND_TRIP.departTime} {t.departNote}
                 {!ROUND_TRIP.departConfirmed && (
-                  <span style={{ color: STAMP, fontWeight: 500 }}> [출발 허브 확정 필요]</span>
+                  <span style={{ color: STAMP, fontWeight: 500 }}>{t.hubWarning}</span>
                 )}
               </span>
             </div>
             <div className="pl-5 mt-1.5 space-y-1" style={{ borderLeft: `1.5px dashed ${HAIRLINE}`, marginLeft: 6 }}>
-              {timetable.map((t, idx) => (
+              {timetable.map((tt, idx) => (
                 <div key={idx} className="pl-3 text-[12px]" style={{ color: INK, opacity: 0.7 }}>
-                  {t.time} · {t.label}
+                  {tt.time} · {tt.label}
                 </div>
               ))}
             </div>
             <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
               <span>🚕</span>
-              <span>{ROUND_TRIP.stationTransferNote}</span>
+              <span>{t.transferNote}</span>
             </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: verdictMeta.color }}>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: VERDICT_COLOR[verdict] }}>
               <span>🕚</span>
               <span>
-                {ROUND_TRIP.estimatedStationArrival} 수원역 도착 → 서울행 막차{" "}
+                {ROUND_TRIP.estimatedStationArrival} {t.arrivalPrefix}{" "}
                 <b>{ROUND_TRIP.lastTrainTime}</b>
               </span>
             </div>
           </div>
           <div
             className="px-4 py-2.5 flex items-center justify-between text-white"
-            style={{ backgroundColor: verdictMeta.color }}
+            style={{ backgroundColor: VERDICT_COLOR[verdict] }}
           >
-            <span className="text-sm font-black">{verdictMeta.label}</span>
+            <span className="text-sm font-black">{VERDICT_LABEL[verdict]}</span>
             <span className="text-[11px] font-semibold opacity-90">
-              막차까지 여유 약 {ROUND_TRIP.bufferMinutes}분 · {verdictMeta.sub}
+              {ROUND_TRIP.bufferMinutes !== null ? t.bufferLine(ROUND_TRIP.bufferMinutes) : ""} · {VERDICT_SUB[lang][verdict]}
             </span>
           </div>
         </div>
         <p className="text-[10.5px] -mt-8 mb-10" style={{ color: INK, opacity: 0.55 }}>
-          ✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.
+          {t.confirmedNote}
         </p>
       </section>
 
@@ -328,13 +591,12 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 1</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>과몰입 촬영지 BEST 5</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>{t.ch1}</span>
         </div>
 
         <div className="space-y-16 sm:space-y-20">
           {spots.map((s) => (
             <article key={s.no}>
-              {/* 스크랩북 스타일 사진 프레임 */}
               <div className="relative mb-5">
                 <div
                   className="relative aspect-[4/3] overflow-hidden rounded-sm rotate-[-0.6deg]"
@@ -347,7 +609,6 @@ export default function SuwonTour() {
                     style={{ objectPosition: s.imgPosition ?? "center" }}
                   />
                 </div>
-                {/* 우표/도장 넘버 배지 */}
                 <div
                   className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
                   style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
@@ -369,17 +630,17 @@ export default function SuwonTour() {
                 className="text-[15px] leading-relaxed mb-5 italic"
                 style={{ fontFamily: "'Noto Serif KR', serif", color: INK }}
               >
-                “{s.scene}”
+                "{s.scene}"
               </p>
 
               <div className="space-y-3 text-[13px] leading-relaxed">
                 <div className="flex items-start gap-2.5">
                   <MapPin size={15} className="mt-0.5 shrink-0" style={{ color: STAMP }} />
-                  <span><b className="font-bold">시크릿 좌표.</b> {s.coord}</span>
+                  <span><b className="font-bold">{t.secretCoord}</b> {s.coord}</span>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <Car size={15} className="mt-0.5 shrink-0" style={{ color: STAMP }} />
-                  <span><b className="font-bold">이동 · 주차.</b> {s.move}</span>
+                  <span><b className="font-bold">{t.moveLabel}</b> {s.move}</span>
                 </div>
                 <div
                   className="flex items-start gap-2.5 p-4 rounded-md mt-4"
@@ -387,7 +648,7 @@ export default function SuwonTour() {
                 >
                   <Sparkles size={15} className="mt-0.5 shrink-0" style={{ color: TEAL }} />
                   <div>
-                    <p className="font-bold mb-1" style={{ color: PINE }}>에디터 시크릿 꿀팁</p>
+                    <p className="font-bold mb-1" style={{ color: PINE }}>{t.tipLabel}</p>
                     <p className="mb-1.5">{s.goldenHour}</p>
                     <p style={{ opacity: 0.75 }}>⚠️ {s.caution}</p>
                   </div>
@@ -403,7 +664,7 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 2</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>현지인 찐맛집</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>{t.ch2}</span>
         </div>
 
         {eats.filter((e) => e.section === "food").map((e, idx) => (
@@ -420,8 +681,8 @@ export default function SuwonTour() {
             </h4>
             <div className="space-y-2 text-[13px] leading-relaxed">
               <p><b className="font-bold">📍</b> {e.coord}</p>
-              <p><b className="font-bold">추천 메뉴.</b> {e.menu}</p>
-              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>꿀팁.</b> {e.tip}</p>
+              <p><b className="font-bold">{t.recommendedMenu}</b> {e.menu}</p>
+              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>{t.tipLabel2}</b> {e.tip}</p>
               <p style={{ opacity: 0.8 }}>{e.view}</p>
             </div>
           </div>
@@ -433,7 +694,7 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 3</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>카페</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>{t.ch3}</span>
         </div>
 
         {eats.filter((e) => e.section === "cafe").map((e, idx) => (
@@ -450,8 +711,8 @@ export default function SuwonTour() {
             </h4>
             <div className="space-y-2 text-[13px] leading-relaxed">
               <p><b className="font-bold">📍</b> {e.coord}</p>
-              <p><b className="font-bold">추천 메뉴.</b> {e.menu}</p>
-              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>꿀팁.</b> {e.tip}</p>
+              <p><b className="font-bold">{t.recommendedMenu}</b> {e.menu}</p>
+              <p style={{ opacity: 0.8 }}><b className="font-bold" style={{ opacity: 1 }}>{t.tipLabel2}</b> {e.tip}</p>
               <p style={{ opacity: 0.8 }}>{e.view}</p>
             </div>
           </div>
@@ -463,30 +724,30 @@ export default function SuwonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 4</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>한눈에 보는 당일치기 타임테이블</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>{t.ch4}</span>
         </div>
 
         <div className="relative pl-7">
           <div className="absolute top-1 bottom-1 left-[7px] w-px" style={{ backgroundColor: HAIRLINE }} />
           <div className="space-y-7">
-            {timetable.map((t, idx) => (
+            {timetable.map((tt, idx) => (
               <div key={idx} className="relative">
                 <div
                   className="absolute -left-7 top-0.5 w-3.5 h-3.5 rounded-full border-2"
                   style={{ backgroundColor: PAPER, borderColor: STAMP }}
                 />
                 <div className="flex items-baseline gap-3">
-                  <span className="text-sm font-black tabular-nums" style={{ color: STAMP, fontFamily: "'Noto Serif KR', serif" }}>{t.time}</span>
-                  <span className="text-base font-bold" style={{ color: PINE }}>{t.emoji} {t.label}</span>
+                  <span className="text-sm font-black tabular-nums" style={{ color: STAMP, fontFamily: "'Noto Serif KR', serif" }}>{tt.time}</span>
+                  <span className="text-base font-bold" style={{ color: PINE }}>{tt.emoji} {tt.label}</span>
                 </div>
-                <p className="text-[13px] mt-1" style={{ opacity: 0.75 }}>{t.desc}</p>
+                <p className="text-[13px] mt-1" style={{ opacity: 0.75 }}>{tt.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 저장 — 구글맵으로 코스 받기 (개발지시서: 구글맵 권장, 이미지 저장은 후순위) */}
+      {/* 저장 — 구글맵으로 코스 받기 */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-14">
         <a
           href={GOOGLE_MAPS_ROUTE_URL}
@@ -495,37 +756,37 @@ export default function SuwonTour() {
           className="flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm border transition-colors"
           style={{ borderColor: HAIRLINE, color: PINE, backgroundColor: "#fff" }}
         >
-          🗺️ 구글맵으로 코스 받기
+          {t.saveBtn}
         </a>
         <p className="text-[10.5px] text-center mt-2" style={{ color: INK, opacity: 0.5 }}>
-          몽테드 카페부터 정지영 커피까지, 스팟 7곳 순서대로 길찾기가 열려요.
+          {t.saveNote}
         </p>
       </section>
 
-      {/* CLOSING — 다른 지역도 궁금하면 수요조사로 연결 */}
+      {/* CLOSING */}
       <section className="max-w-xl mx-auto px-5 sm:px-8 mt-28 sm:mt-36 pb-40 sm:pb-44 text-center">
         <div className="w-10 h-px mx-auto mb-7" style={{ backgroundColor: STAMP }} />
         <p className="text-[11px] font-black tracking-[0.2em] uppercase mb-6" style={{ color: STAMP }}>
-          ✦ 여기 없는 지역도 궁금하신가요
+          {t.closingEyebrow}
         </p>
         <h3
           className="text-2xl sm:text-3xl font-black mb-6 leading-snug"
           style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}
         >
-          원하는 지역도 이 코스처럼<br className="hidden sm:block" /> 막차까지 계산해서 만들어 드려요
+          {t.closingTitle1}<br className="hidden sm:block" /> {t.closingTitle2}
         </h3>
         <p className="text-sm sm:text-[15px] leading-relaxed" style={{ color: INK, opacity: 0.65 }}>
-          가고 싶은 지역이 궁금하면 알려주세요.<br className="hidden sm:block" /> 신청 많은 곳부터 순서대로 다음 이야기를 만들어요.
+          {t.closingSub1}<br className="hidden sm:block" /> {t.closingSub2}
         </p>
       </section>
 
-      {/* BOTTOM FIXED CTA BAR — 수요조사 폼으로 연결 (개인정보 직접 수집 안 함) */}
+      {/* BOTTOM FIXED CTA BAR */}
       <div
         className="fixed bottom-0 left-0 right-0 z-50 px-5 py-4 shadow-2xl"
         style={{ backgroundColor: "#fff", borderTop: `1px solid ${HAIRLINE}` }}
       >
         <p className="text-center text-[11px] font-bold mb-2" style={{ color: PINE }}>
-          여기 없는 지역도 이 코스처럼 만들어 드려요
+          {t.stickyMsg}
         </p>
         <div className="flex items-center justify-center">
           <a
@@ -535,7 +796,7 @@ export default function SuwonTour() {
             className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
             style={{ backgroundColor: STAMP, color: "#fff" }}
           >
-            가고 싶은 곳 알려주기 →
+            {t.stickyBtn}
           </a>
         </div>
       </div>
