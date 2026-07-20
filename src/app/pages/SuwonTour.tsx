@@ -111,7 +111,7 @@ const UI: Record<Lang, {
   backLink: string; brand: string;
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
-  frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
+  frameEyebrow: string; frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
   arrivalPrefix: string; lastTrainPrefix: string; bufferLine: (n: number) => string; confirmedNote: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
@@ -127,7 +127,8 @@ const UI: Record<Lang, {
     heroAlt: "수원 화성 장안문 야경",
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
     blockquote: "인스타에도 없는 진짜 촬영지 좌표부터 웨이팅 ZERO 찐맛집까지, 이 페이지 하나로 완벽 졸업하세요.",
-    frameHeading: "☰ 오늘 일정 한눈에",
+    frameEyebrow: "⚡ KSPOT 판단 엔진",
+    frameHeading: "오늘 일정 한눈에",
     departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
     transferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
@@ -153,7 +154,8 @@ const UI: Record<Lang, {
     heroAlt: "Suwon Hwaseong Janganmun Gate at night",
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
     blockquote: "From real filming-spot coordinates Instagram never shows, to zero-wait local favorites — graduate Suwon day trips with this one page.",
-    frameHeading: "☰ Today's plan, at a glance",
+    frameEyebrow: "⚡ KSPOT Judgment Engine",
+    frameHeading: "Today's plan, at a glance",
     departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
     transferNote: "17:17 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min (confirmed)",
@@ -179,7 +181,8 @@ const UI: Record<Lang, {
     heroAlt: "水原華城 長安門の夜景",
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
     blockquote: "インスタにもない本物のロケ地座標から、待ち時間ゼロの名店まで。このページ一つで完全マスター。",
-    frameHeading: "☰ 今日の予定、ひと目で",
+    frameEyebrow: "⚡ KSPOT 判断エンジン",
+    frameHeading: "今日の予定、ひと目で",
     departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
     transferNote: "17:17 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分(確認済み)",
@@ -205,7 +208,8 @@ const UI: Record<Lang, {
     heroAlt: "水原华城长安门夜景",
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
     blockquote: "从Instagram都没有的真实取景地坐标，到零等待的本地美食——这一页带你完美征服。",
-    frameHeading: "☰ 今日行程一目了然",
+    frameEyebrow: "⚡ KSPOT 判断引擎",
+    frameHeading: "今日行程一目了然",
     departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
     transferNote: "17:17 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟(已确认)",
@@ -534,13 +538,19 @@ export default function SuwonTour() {
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 */}
+        {/* 왕복 판단 프레임 — KSPOT 판단 엔진, 서비스 핵심 차별점이라 시각적으로 강조 */}
+        <p
+          className="text-[11px] font-black tracking-[0.15em] uppercase mb-2"
+          style={{ color: STAMP }}
+        >
+          {t.frameEyebrow}
+        </p>
         <div
           className="rounded-md overflow-hidden mb-10"
-          style={{ border: `1px solid ${HAIRLINE}` }}
+          style={{ border: `2px solid ${VERDICT_COLOR[verdict]}`, boxShadow: `0 6px 24px ${VERDICT_COLOR[verdict]}33` }}
         >
           <div
-            className="px-4 py-2.5 text-xs font-bold flex items-center gap-2"
+            className="px-4 py-3 text-sm font-black flex items-center gap-2"
             style={{ backgroundColor: PAPER_DEEP, color: PINE }}
           >
             {t.frameHeading}
