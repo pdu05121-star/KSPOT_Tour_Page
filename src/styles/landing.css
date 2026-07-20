@@ -1186,15 +1186,6 @@
 }
 
 /* ---------- subscribe modal (뉴스레터 구독 + 수요조사) ---------- */
-.hero-subscribe-link{
-  margin-top:14px;
-  background:none;border:none;cursor:pointer;
-  font-size:13px;font-weight:600;color:var(--teal-dark);
-  text-decoration:underline;text-underline-offset:3px;
-  padding:0;
-}
-.hero-subscribe-link:hover{color:var(--teal-deep);}
-
 .subscribe-overlay{
   position:fixed;inset:0;z-index:1000;
   background:rgba(17,24,39,0.5);

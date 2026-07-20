@@ -224,12 +224,11 @@ export default function Landing() {
               <span className={`quote-mark hide-until-done ${typingDone ? "show" : ""}`}>”</span>
             </p>
             <div className="hero-foot seq" style={{ "--d": "0.2s" } as React.CSSProperties}>
-              <a href="#tour" className="btn-primary">투어 신청하기 →</a>
-              <a href="#problem" className="btn-ghost">더 알아보기</a>
+              <button type="button" className="btn-primary" onClick={openSubscribeModal}>
+                원하는 코스 알려주기 →
+              </button>
+              <a href="#tour" className="btn-ghost">수원 코스 먼저 보기</a>
             </div>
-            <button type="button" className="hero-subscribe-link" onClick={openSubscribeModal}>
-              📮 원하는 여행 코스 알려주고 뉴스레터 받기
-            </button>
           </div>
         </div>
       </section>
@@ -558,12 +557,12 @@ export default function Landing() {
           <div className="sec-eyebrow">KSPOT</div>
           <p className="cta-final-title">이제, <span className="accent">서울 밖으로</span><br />한 걸음 내딛을 시간입니다.</p>
           <div className="cta-actions">
-            <Link to="/tour/suwon" className="btn-primary-dark">
-              서비스 시작하기 →
-            </Link>
-            <button type="button" className="btn-ghost-dark" onClick={openSubscribeModal}>
-              원하는 코스 신청하고 뉴스레터 받기
+            <button type="button" className="btn-primary-dark" onClick={openSubscribeModal}>
+              원하는 코스 신청하기 →
             </button>
+            <Link to="/tour/suwon" className="btn-ghost-dark">
+              수원 코스 먼저 체험하기
+            </Link>
             <a href="mailto:kspot02026@gmail.com" className="btn-ghost-dark">팀에게 문의하기</a>
           </div>
         </div>
