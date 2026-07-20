@@ -35,7 +35,6 @@ const HAIRLINE = TOUR_BORDER;
 
 // 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차·귀환 이동 전부 확정
 // 정지영커피 → 수원역: 버스 35번·13번, 15분 확인됨. 서울행 막차 23:31 확인됨.
-// → 왕복 정보 전체 확인 완료. GO 판정.
 const ROUND_TRIP = {
   departTime: "08:40",
   departNote: "서울역 출발 · 1호선 약 55분",
@@ -45,12 +44,52 @@ const ROUND_TRIP = {
   estimatedStationArrival: "17:32",
   lastTrainTime: "23:31",
   lastTrainConfirmed: true,
-  bufferMinutes: 359,
-  returnStation: "수원역",
-  status: "go" as const, // draft | go | care | reconsider | not_now
+  bufferMinutes: 359 as number | null, // null = 아직 계산 불가(귀환 정보 미확정) → DRAFT
 };
-const WARN_AMBER = "#B8893A"; // DRAFT/미확정 상태 전용 — 서브 브랜드와 무관하게 공통
-const GO_GREEN = "#2F7D5B";   // 판정 확정 시 사용할 공통 GO 컬러
+
+// 판정 임계값 — 개발지시서 기준. 여기 숫자만 바꾸면 전 지역 코스에 동일 적용됨.
+const VERDICT_THRESHOLD_GO = 90;   // 90분 이상 여유 → GO
+const VERDICT_THRESHOLD_CARE = 45; // 45~90분 → GO WITH CARE, 45분 미만 → RECONSIDER, 0 이하 → NOT NOW
+
+type Verdict = "draft" | "go" | "care" | "reconsider" | "not_now";
+
+function computeVerdict(bufferMinutes: number | null): Verdict {
+  if (bufferMinutes === null) return "draft";
+  if (bufferMinutes <= 0) return "not_now";
+  if (bufferMinutes >= VERDICT_THRESHOLD_GO) return "go";
+  if (bufferMinutes >= VERDICT_THRESHOLD_CARE) return "care";
+  return "reconsider";
+}
+
+const GO_GREEN = "#2F7D5B";
+const WARN_AMBER = "#B8893A"; // DRAFT 전용
+const CARE_AMBER = "#B45309";
+const RECONSIDER_ORANGE = "#9A3412";
+const NOT_NOW_RED = "#922B21";
+
+const VERDICT_META: Record<Verdict, { label: string; color: string; sub: string }> = {
+  draft: { label: "◐ DRAFT", color: WARN_AMBER, sub: "판정 보류" },
+  go: { label: "✓ GO", color: GO_GREEN, sub: "무사히 귀환" },
+  care: { label: "⚠ GO WITH CARE", color: CARE_AMBER, sub: "시간 여유를 두고 움직이세요" },
+  reconsider: { label: "△ RECONSIDER", color: RECONSIDER_ORANGE, sub: "코스 축소를 권장해요" },
+  not_now: { label: "✕ NOT NOW", color: NOT_NOW_RED, sub: "지금 조건에서는 어려워요" },
+};
+
+const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
+const verdictMeta = VERDICT_META[verdict];
+
+// 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 8곳 중 좌표 확인된 7곳 순서대로.
+// 행리단길은 템플릿에 좌표 없음(출처 미확인) — 경로에서 제외.
+const ROUTE_COORDS = [
+  "37.2847710231129,127.013617036234", // 01 몽테드 카페
+  "37.2855291351344,127.01661296437",  // 02 화홍문
+  "37.2875267997459,127.018037812296", // 03 방화수류정
+  "37.285686283703,127.016560223438",  // 04 행궁동 벽화마을
+  "37.2818820191942,127.014394463798", // 05 화성행궁
+  "37.2794246460132,127.017499823481", // 06 수원 왕갈비 통닭
+  "37.2848962630143,127.014416125317", // 08 정지영 커피 (마지막 스팟)
+];
+const GOOGLE_MAPS_ROUTE_URL = `https://www.google.com/maps/dir/?api=1&origin=${ROUTE_COORDS[0]}&destination=${ROUTE_COORDS[ROUTE_COORDS.length - 1]}&waypoints=${ROUTE_COORDS.slice(1, -1).join("|")}&travelmode=walking`;
 
 // 촬영지 · 관광지 — Chapter 1 (v3 템플릿 SPOT 01~05)
 const spots = [
@@ -261,7 +300,7 @@ export default function SuwonTour() {
               <span>🚕</span>
               <span>{ROUND_TRIP.stationTransferNote}</span>
             </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: GO_GREEN }}>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: verdictMeta.color }}>
               <span>🕚</span>
               <span>
                 {ROUND_TRIP.estimatedStationArrival} 수원역 도착 → 서울행 막차{" "}
@@ -271,11 +310,11 @@ export default function SuwonTour() {
           </div>
           <div
             className="px-4 py-2.5 flex items-center justify-between text-white"
-            style={{ backgroundColor: GO_GREEN }}
+            style={{ backgroundColor: verdictMeta.color }}
           >
-            <span className="text-sm font-black">✓ GO</span>
+            <span className="text-sm font-black">{verdictMeta.label}</span>
             <span className="text-[11px] font-semibold opacity-90">
-              막차까지 여유 약 {ROUND_TRIP.bufferMinutes}분 · 무사히 귀환
+              막차까지 여유 약 {ROUND_TRIP.bufferMinutes}분 · {verdictMeta.sub}
             </span>
           </div>
         </div>
@@ -445,6 +484,22 @@ export default function SuwonTour() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* 저장 — 구글맵으로 코스 받기 (개발지시서: 구글맵 권장, 이미지 저장은 후순위) */}
+      <section className="max-w-2xl mx-auto px-5 sm:px-8 mt-14">
+        <a
+          href={GOOGLE_MAPS_ROUTE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm border transition-colors"
+          style={{ borderColor: HAIRLINE, color: PINE, backgroundColor: "#fff" }}
+        >
+          🗺️ 구글맵으로 코스 받기
+        </a>
+        <p className="text-[10.5px] text-center mt-2" style={{ color: INK, opacity: 0.5 }}>
+          몽테드 카페부터 정지영 커피까지, 스팟 7곳 순서대로 길찾기가 열려요.
+        </p>
       </section>
 
       {/* CLOSING — 다른 지역도 궁금하면 수요조사로 연결 */}
