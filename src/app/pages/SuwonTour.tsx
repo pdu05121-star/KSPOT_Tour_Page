@@ -132,7 +132,7 @@ const UI: Record<Lang, {
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
   frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
-  arrivalPrefix: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
+  arrivalPrefix: string; arrivalSuffix: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
   recommendedMenu: string; tipLabel2: string;
@@ -152,7 +152,7 @@ const UI: Record<Lang, {
     hubWarning: " [출발 허브 확정 필요]",
     startTransferNote: "10:00 수원역 도착 → 몽테드 카페, 약 20분",
     transferNote: "17:37 정지영커피 출발 → 수원역, 버스(35번·13번) 15분",
-    arrivalPrefix: "수원역 도착 → 서울행 막차",
+    arrivalPrefix: "수원역 도착 · 서울행 막차는", arrivalSuffix: "까지 있어요",
     lastTrainPrefix: "",
     bufferLabel: "막차까지 여유",
     confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
@@ -179,7 +179,7 @@ const UI: Record<Lang, {
     hubWarning: " [Departure hub not finalized]",
     startTransferNote: "10:00 Arrive Suwon Station → Monde Café, about 20 min",
     transferNote: "17:37 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min",
-    arrivalPrefix: "Arrive Suwon Station → Last train to Seoul",
+    arrivalPrefix: "Arrive Suwon Station · last train to Seoul runs until", arrivalSuffix: "",
     lastTrainPrefix: "",
     bufferLabel: "Time to spare before the last train",
     confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
@@ -206,7 +206,7 @@ const UI: Record<Lang, {
     hubWarning: " [出発ハブ未確定]",
     startTransferNote: "10:00 水原駅到着 → モンテドカフェ、約20分",
     transferNote: "17:37 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分",
-    arrivalPrefix: "水原駅到着 → ソウル行き終電",
+    arrivalPrefix: "水原駅到着 · ソウル行き終電は", arrivalSuffix: "まであります",
     lastTrainPrefix: "",
     bufferLabel: "終電までの余裕",
     confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
@@ -233,7 +233,7 @@ const UI: Record<Lang, {
     hubWarning: " [出发枢纽尚未确定]",
     startTransferNote: "10:00 到达水原站 → Monde咖啡，约20分钟",
     transferNote: "17:37 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟",
-    arrivalPrefix: "到达水原站 → 开往首尔的末班车",
+    arrivalPrefix: "到达水原站 · 开往首尔的末班车最晚是", arrivalSuffix: "",
     lastTrainPrefix: "",
     bufferLabel: "距末班车还有",
     confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
@@ -595,7 +595,7 @@ export default function SuwonTour() {
               <span>🕚</span>
               <span>
                 {ROUND_TRIP.estimatedStationArrival} {t.arrivalPrefix}{" "}
-                <b>{ROUND_TRIP.lastTrainTime}</b>
+                <b>{ROUND_TRIP.lastTrainTime}</b>{t.arrivalSuffix}
               </span>
             </div>
           </div>
