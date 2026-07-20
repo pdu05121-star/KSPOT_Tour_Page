@@ -10,7 +10,7 @@ import bangwhasuryujeongPicnicImg from "@/assets/suwon/bangwhasuryujeong_picnic.
 import haenggungdongMuralImg from "@/assets/suwon/haenggungdong_mural.png";
 import suwonFortressWallImg from "@/assets/suwon/suwon_fortress_wall.png";
 import nammanTongdakImg from "@/assets/suwon/namman_tongdak.jpg";
-import jeongjiyoungLatteImg from "@/assets/suwon/jeongjiyoung_latte.jpg";
+import jeongjiyoungStoreImg from "@/assets/suwon/jeongjiyoung_store.png";
 
 // ─────────────────────────────────────────────
 // 디자인 토큰 — "KSPOT 여행일기" 서브 브랜드 전용 팔레트
@@ -83,6 +83,7 @@ const spots = [
     goldenHour: "정자와 용연 연못이 함께 담기는 각도가 정석이에요.",
     caution: "24시간 개방 · 휴무 없음",
     image: bangwhasuryujeongPicnicImg,
+    imgPosition: "top",
   },
   {
     no: "04",
@@ -130,7 +131,7 @@ const eats = [
     menu: "시그니처 라떼 + 성곽 뷰 루프탑 좌석",
     tip: "루프탑 좌석은 선착순이라 도착하자마자 자리부터 잡는 걸 추천해요.",
     view: "행리단길 소품샵·골목을 구경하며 걸어오면 자연스럽게 도착하는 코스 마지막 스팟이에요.",
-    image: jeongjiyoungLatteImg,
+    image: jeongjiyoungStoreImg,
   },
 ];
 
@@ -289,7 +290,12 @@ export default function SuwonTour() {
                   className="relative aspect-[4/3] overflow-hidden rounded-sm rotate-[-0.6deg]"
                   style={{ boxShadow: "0 10px 30px rgba(20,51,43,0.18)", border: `6px solid #fff` }}
                 >
-                  <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
+                  <img
+                    src={s.image}
+                    alt={s.title}
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: s.imgPosition ?? "center" }}
+                  />
                 </div>
                 {/* 우표/도장 넘버 배지 */}
                 <div
