@@ -126,8 +126,8 @@ const UI: Record<Lang, {
     heroTitle1: "수원에서 만나는", heroTitle2: "〈선재 업고 튀어〉 타임슬립 로드맵",
     heroAlt: "수원 화성 장안문 야경",
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
-    blockquote: "인스타그램에서 다 알려주지 못한 〈선재 업고 튀어〉 속 진짜 촬영지 좌표부터, 현지인들도 몰래 숨겨둔 웨이팅 ZERO 찐맛집과 카페까지. 이 페이지 하나로 수원 당일치기 완벽 졸업하세요.",
-    frameHeading: "☰ 이 하루, 한눈에",
+    blockquote: "인스타에도 없는 진짜 촬영지 좌표부터 웨이팅 ZERO 찐맛집까지, 이 페이지 하나로 완벽 졸업하세요.",
+    frameHeading: "☰ 오늘 일정 한눈에",
     departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
     transferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분 (확인됨)",
@@ -152,8 +152,8 @@ const UI: Record<Lang, {
     heroTitle1: "A day in Suwon with", heroTitle2: "〈Lovely Runner〉's time-slip road",
     heroAlt: "Suwon Hwaseong Janganmun Gate at night",
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
-    blockquote: "From real filming-spot coordinates Instagram never fully shows, to zero-wait local restaurants and cafés only locals know — graduate Suwon day trips with this one page.",
-    frameHeading: "☰ Your day, at a glance",
+    blockquote: "From real filming-spot coordinates Instagram never shows, to zero-wait local favorites — graduate Suwon day trips with this one page.",
+    frameHeading: "☰ Today's plan, at a glance",
     departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
     transferNote: "17:17 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min (confirmed)",
@@ -178,8 +178,8 @@ const UI: Record<Lang, {
     heroTitle1: "水原で出会う", heroTitle2: "〈ソンジェ背負って走れ〉タイムスリップロードマップ",
     heroAlt: "水原華城 長安門の夜景",
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
-    blockquote: "インスタでは伝えきれない本物のロケ地座標から、現地の人だけが知る待ち時間ゼロの名店・カフェまで。このページ一つで水原日帰りを完全マスター。",
-    frameHeading: "☰ この一日、ひと目で",
+    blockquote: "インスタにもない本物のロケ地座標から、待ち時間ゼロの名店まで。このページ一つで完全マスター。",
+    frameHeading: "☰ 今日の予定、ひと目で",
     departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
     transferNote: "17:17 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分(確認済み)",
@@ -204,8 +204,8 @@ const UI: Record<Lang, {
     heroTitle1: "在水原邂逅", heroTitle2: "〈背着善宰跑〉穿越时空路线",
     heroAlt: "水原华城长安门夜景",
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
-    blockquote: "从Instagram都没能完全展示的真实取景地坐标，到只有本地人知道的零等待美食和咖啡店——这一页带你完美征服水原一日游。",
-    frameHeading: "☰ 一目了然的一天",
+    blockquote: "从Instagram都没有的真实取景地坐标，到零等待的本地美食——这一页带你完美征服。",
+    frameHeading: "☰ 今日行程一目了然",
     departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
     transferNote: "17:17 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟(已确认)",
@@ -450,25 +450,28 @@ export default function SuwonTour() {
     >
       {/* NAV */}
       <nav className="sticky top-0 z-40 backdrop-blur-md border-b" style={{ backgroundColor: `${PAPER}CC`, borderColor: HAIRLINE }}>
-        <div className="max-w-2xl mx-auto px-5 py-4 flex items-center justify-between">
+        <div className="max-w-2xl mx-auto px-3 sm:px-5 py-3 sm:py-4 flex items-center justify-between gap-2">
           <Link
             to="/tour"
-            className="flex items-center gap-1 text-xs font-bold tracking-wide hover:opacity-70 transition-opacity"
+            className="flex items-center gap-0.5 text-[11px] sm:text-xs font-bold tracking-wide hover:opacity-70 transition-opacity whitespace-nowrap shrink-0"
             style={{ color: INK }}
           >
-            <ChevronLeft size={15} />
-            {t.backLink}
+            <ChevronLeft size={14} />
+            <span className="hidden sm:inline">{t.backLink}</span>
           </Link>
-          <span className="text-sm font-black tracking-[0.2em] uppercase" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
-            {t.brand}
+          <span
+            className="text-xs sm:text-sm font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase whitespace-nowrap overflow-hidden text-ellipsis"
+            style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}
+          >
+            KSPOT<span className="hidden sm:inline"> Travelog</span>
           </span>
-          <div className="flex gap-1 rounded-full p-0.5" style={{ backgroundColor: PAPER_DEEP }}>
+          <div className="flex gap-0.5 sm:gap-1 rounded-full p-0.5 shrink-0" style={{ backgroundColor: PAPER_DEEP }}>
             {LANGS.map((l) => (
               <button
                 key={l.code}
                 type="button"
                 onClick={() => setLang(l.code)}
-                className="text-[11px] px-2 py-1 rounded-full font-bold transition-colors"
+                className="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-1 rounded-full font-bold transition-colors whitespace-nowrap"
                 style={
                   lang === l.code
                     ? { backgroundColor: STAMP, color: "#fff" }
