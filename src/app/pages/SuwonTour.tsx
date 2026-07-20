@@ -164,7 +164,7 @@ const UI: Record<Lang, {
     closingTitle1: "원하는 지역도 이 코스처럼", closingTitle2: "막차까지 계산해서 만들어 드려요",
     closingSub1: "가고 싶은 지역이 궁금하면 알려주세요.", closingSub2: "신청 많은 곳부터 순서대로 다음 이야기를 만들어요.",
     stickyMsg: "여기 없는 지역도 이 코스처럼 만들어 드려요",
-    stickyBtn: "가고 싶은 곳 알려주기 →",
+    stickyBtn: "요청하기 →",
   },
   en: {
     backLink: "See other tours", brand: "KSPOT Travelog",
@@ -190,7 +190,7 @@ const UI: Record<Lang, {
     closingTitle1: "We'll build your course too,", closingTitle2: "calculated down to the last train",
     closingSub1: "Tell us where you're curious about.", closingSub2: "We build the most-requested places next, in order.",
     stickyMsg: "We'll build a course for other regions too",
-    stickyBtn: "Tell us where →",
+    stickyBtn: "Request →",
   },
   ja: {
     backLink: "他のツアーを見る", brand: "KSPOT Travelog",
