@@ -112,7 +112,7 @@ export default function Landing() {
           <img src={logoWordmark} alt="KSPOT" className="logo-wordmark" />
         </Link>
         <Link to="/tour" className="cta-small">
-          투어 코스 보러가기
+          왕복 판단 코스 보기
         </Link>
       </nav>
 
@@ -162,7 +162,7 @@ export default function Landing() {
               <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
                 원하는 코스 받아보기 →
               </a>
-              <Link to="/tour" className="btn-ghost">투어 코스 보러가기</Link>
+              <Link to="/tour" className="btn-ghost">왕복 판단 코스 보기</Link>
             </div>
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function Landing() {
           <p className="mb-quote">정보는 다 찾아봤는데,<br />정류장 앞에 서니 또 막막해졌어요.</p>
           <div className="mb-cta">
             <Link to="/tour" className="btn-primary-dark">
-              투어 코스 보러가기 →
+              왕복 판단 코스 보기 →
             </Link>
           </div>
         </div>
@@ -444,7 +444,7 @@ export default function Landing() {
 
             <div className="tour-btn-wrap">
               <Link to="/tour" className="btn-primary">
-                투어 코스 보러가기 →
+                왕복 판단 코스 보기 →
               </Link>
             </div>
           </div>
