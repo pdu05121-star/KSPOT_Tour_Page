@@ -43,9 +43,9 @@ const LANGS: { code: Lang; label: string }[] = [
 const ROUND_TRIP = {
   departTime: "09:00",
   departConfirmed: false, // 출발 허브만 아직 팀 결정 안 남
-  estimatedStationArrival: "17:32",
+  estimatedStationArrival: "17:52",
   lastTrainTime: "23:31",
-  bufferMinutes: 359 as number | null, // null = 아직 계산 불가(귀환 정보 미확정) → DRAFT
+  bufferMinutes: 339 as number | null, // null = 아직 계산 불가(귀환 정보 미확정) → DRAFT
 };
 
 // 판정 임계값 — 개발지시서 기준. 여기 숫자만 바꾸면 전 지역 코스에 동일 적용됨.
@@ -131,7 +131,7 @@ const UI: Record<Lang, {
   backLink: string; brand: string;
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
-  frameHeading: string; departNote: string; hubWarning: string; transferNote: string;
+  frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
   arrivalPrefix: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
@@ -150,7 +150,8 @@ const UI: Record<Lang, {
     frameHeading: "오늘 일정 한눈에",
     departNote: "서울역 출발 · 1호선 약 1시간",
     hubWarning: " [출발 허브 확정 필요]",
-    transferNote: "17:17 정지영커피 출발 → 수원역, 버스(35번·13번) 15분",
+    startTransferNote: "10:00 수원역 도착 → 몽테드 카페, 약 20분",
+    transferNote: "17:37 정지영커피 출발 → 수원역, 버스(35번·13번) 15분",
     arrivalPrefix: "수원역 도착 → 서울행 막차",
     lastTrainPrefix: "",
     bufferLabel: "막차까지 여유",
@@ -176,7 +177,8 @@ const UI: Record<Lang, {
     frameHeading: "Today's plan, at a glance",
     departNote: "Depart Seoul Station · ~1 hr on Line 1",
     hubWarning: " [Departure hub not finalized]",
-    transferNote: "17:17 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min",
+    startTransferNote: "10:00 Arrive Suwon Station → Monde Café, about 20 min",
+    transferNote: "17:37 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min",
     arrivalPrefix: "Arrive Suwon Station → Last train to Seoul",
     lastTrainPrefix: "",
     bufferLabel: "Time to spare before the last train",
@@ -202,7 +204,8 @@ const UI: Record<Lang, {
     frameHeading: "今日の予定、ひと目で",
     departNote: "ソウル駅発 · 1号線約1時間",
     hubWarning: " [出発ハブ未確定]",
-    transferNote: "17:17 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分",
+    startTransferNote: "10:00 水原駅到着 → モンテドカフェ、約20分",
+    transferNote: "17:37 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分",
     arrivalPrefix: "水原駅到着 → ソウル行き終電",
     lastTrainPrefix: "",
     bufferLabel: "終電までの余裕",
@@ -228,7 +231,8 @@ const UI: Record<Lang, {
     frameHeading: "今日行程一目了然",
     departNote: "首尔站出发 · 1号线约1小时",
     hubWarning: " [出发枢纽尚未确定]",
-    transferNote: "17:17 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟",
+    startTransferNote: "10:00 到达水原站 → Monde咖啡，约20分钟",
+    transferNote: "17:37 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟",
     arrivalPrefix: "到达水原站 → 开往首尔的末班车",
     lastTrainPrefix: "",
     bufferLabel: "距末班车还有",
@@ -415,44 +419,44 @@ type TimetableItem = { time: string; emoji: string; label: string; desc: string 
 
 const TIMETABLE: Record<Lang, TimetableItem[]> = {
   ko: [
-    { time: "10:00", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
-    { time: "10:39", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
-    { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
-    { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
-    { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
-    { time: "14:09", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
-    { time: "15:14", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
-    { time: "16:17", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
+    { time: "10:20", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
+    { time: "10:59", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
+    { time: "11:32", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
+    { time: "12:05", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
+    { time: "12:48", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
+    { time: "14:29", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
+    { time: "15:34", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
+    { time: "16:37", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
   ],
   en: [
-    { time: "10:00", emoji: "☕", label: "Monde Café", desc: "Start the day at the yellow umbrella alley" },
-    { time: "10:39", emoji: "💌", label: "Hwahongmun", desc: "The confession bridge, crossed while listening to the OST" },
-    { time: "11:12", emoji: "🚲", label: "Banghwasuryujeong", desc: "A quick rest where he taught her to bike" },
-    { time: "11:45", emoji: "🧱", label: "Haenggung-dong Mural Village", desc: "Explore the wall-kiss alley" },
-    { time: "12:28", emoji: "🏯", label: "Hwaseong Haenggung Palace", desc: "Time-slip into the Joseon era (₩2,000 admission)" },
-    { time: "14:09", emoji: "🍗", label: "Wang-galbi Tongdak", desc: "A hearty lunch" },
-    { time: "15:14", emoji: "🛍️", label: "Haengridan-gil", desc: "Browse shops on the way" },
-    { time: "16:17", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Finish with rooftop tea and fortress views" },
+    { time: "10:20", emoji: "☕", label: "Monde Café", desc: "Start the day at the yellow umbrella alley" },
+    { time: "10:59", emoji: "💌", label: "Hwahongmun", desc: "The confession bridge, crossed while listening to the OST" },
+    { time: "11:32", emoji: "🚲", label: "Banghwasuryujeong", desc: "A quick rest where he taught her to bike" },
+    { time: "12:05", emoji: "🧱", label: "Haenggung-dong Mural Village", desc: "Explore the wall-kiss alley" },
+    { time: "12:48", emoji: "🏯", label: "Hwaseong Haenggung Palace", desc: "Time-slip into the Joseon era (₩2,000 admission)" },
+    { time: "14:29", emoji: "🍗", label: "Wang-galbi Tongdak", desc: "A hearty lunch" },
+    { time: "15:34", emoji: "🛍️", label: "Haengridan-gil", desc: "Browse shops on the way" },
+    { time: "16:37", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Finish with rooftop tea and fortress views" },
   ],
   ja: [
-    { time: "10:00", emoji: "☕", label: "モンテドカフェ", desc: "黄色い傘の路地前で一日をスタート" },
-    { time: "10:39", emoji: "💌", label: "華虹門", desc: "告白シーンの石橋、OSTを聴きながら渡る" },
-    { time: "11:12", emoji: "🚲", label: "訪花随柳亭", desc: "自転車を教えてもらった場所でひと休み" },
-    { time: "11:45", emoji: "🧱", label: "行宮洞壁画村", desc: "壁ドンシーンの路地を散策" },
-    { time: "12:28", emoji: "🏯", label: "華城行宮", desc: "朝鮮時代へタイムスリップ(入場料2,000ウォン)" },
-    { time: "14:09", emoji: "🍗", label: "ワンガルビトンダク", desc: "しっかりランチ" },
-    { time: "15:14", emoji: "🛍️", label: "行理団街", desc: "雑貨店の路地を眺めながら移動" },
-    { time: "16:17", emoji: "🌇", label: "ジョンジヨンコーヒー", desc: "城郭ビューのルーフトップで締めのお茶時間" },
+    { time: "10:20", emoji: "☕", label: "モンテドカフェ", desc: "黄色い傘の路地前で一日をスタート" },
+    { time: "10:59", emoji: "💌", label: "華虹門", desc: "告白シーンの石橋、OSTを聴きながら渡る" },
+    { time: "11:32", emoji: "🚲", label: "訪花随柳亭", desc: "自転車を教えてもらった場所でひと休み" },
+    { time: "12:05", emoji: "🧱", label: "行宮洞壁画村", desc: "壁ドンシーンの路地を散策" },
+    { time: "12:48", emoji: "🏯", label: "華城行宮", desc: "朝鮮時代へタイムスリップ(入場料2,000ウォン)" },
+    { time: "14:29", emoji: "🍗", label: "ワンガルビトンダク", desc: "しっかりランチ" },
+    { time: "15:34", emoji: "🛍️", label: "行理団街", desc: "雑貨店の路地を眺めながら移動" },
+    { time: "16:37", emoji: "🌇", label: "ジョンジヨンコーヒー", desc: "城郭ビューのルーフトップで締めのお茶時間" },
   ],
   zh: [
-    { time: "10:00", emoji: "☕", label: "Monde咖啡", desc: "在黄色雨伞的巷子前开启一天" },
-    { time: "10:39", emoji: "💌", label: "花虹门", desc: "边听OST边走过表白场景的石桥" },
-    { time: "11:12", emoji: "🚲", label: "访花随柳亭", desc: "在教骑车的地方稍作休息" },
-    { time: "11:45", emoji: "🧱", label: "行宫洞壁画村", desc: "逛壁咚场景的小巷" },
-    { time: "12:28", emoji: "🏯", label: "华城行宫", desc: "穿越回朝鲜时代(门票2,000韩元)" },
-    { time: "14:09", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
-    { time: "15:14", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
-    { time: "16:17", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
+    { time: "10:20", emoji: "☕", label: "Monde咖啡", desc: "在黄色雨伞的巷子前开启一天" },
+    { time: "10:59", emoji: "💌", label: "花虹门", desc: "边听OST边走过表白场景的石桥" },
+    { time: "11:32", emoji: "🚲", label: "访花随柳亭", desc: "在教骑车的地方稍作休息" },
+    { time: "12:05", emoji: "🧱", label: "行宫洞壁画村", desc: "逛壁咚场景的小巷" },
+    { time: "12:48", emoji: "🏯", label: "华城行宫", desc: "穿越回朝鲜时代(门票2,000韩元)" },
+    { time: "14:29", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
+    { time: "15:34", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
+    { time: "16:37", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
   ],
 };
 
@@ -571,6 +575,10 @@ export default function SuwonTour() {
               <span>
                 {ROUND_TRIP.departTime} {t.departNote}
               </span>
+            </div>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
+              <span>🚉</span>
+              <span>{t.startTransferNote}</span>
             </div>
             <div className="pl-5 mt-1.5 space-y-1" style={{ borderLeft: `1.5px dashed ${HAIRLINE}`, marginLeft: 6 }}>
               {timetable.map((tt, idx) => (
