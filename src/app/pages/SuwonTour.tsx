@@ -172,9 +172,9 @@ const UI: Record<Lang, {
       not_now: "오늘 이 코스, 지금은 어려워요",
       draft: "오늘 이 코스, 판정 확인 중이에요",
     },
-    evidenceItem1: "✓ 막차까지 여유 충분 (약 360분)",
-    evidenceItem2: "✓ 전 스팟 운영시간 확인됨 (휴무·마감시간 문제없음)",
-    evidenceItem3: "✓ 왕복 이동수단·소요시간 확인됨",
+    evidenceItem1: "✓ 08:40 서울역 출발 → 17:40 서울역 귀환 (1호선 왕복)",
+    evidenceItem2: "✓ 막차까지 여유 충분 (약 360분)",
+    evidenceItem3: "✓ 전 스팟 운영시간 확인됨 (휴무·마감시간 문제없음)",
     departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
     startTransferNote: "09:40 수원역 도착 → 몽테드 카페, 약 20분",
@@ -213,9 +213,9 @@ const UI: Record<Lang, {
       not_now: "This course isn't feasible today",
       draft: "Checking today's verdict...",
     },
-    evidenceItem1: "✓ Plenty of time before the last train (~360 min)",
-    evidenceItem2: "✓ All spot hours confirmed (no closures or cutoffs)",
-    evidenceItem3: "✓ Round-trip transport and travel times confirmed",
+    evidenceItem1: "✓ 08:40 Depart Seoul Station → 17:40 Return Seoul Station (Line 1)",
+    evidenceItem2: "✓ Plenty of time before the last train (~360 min)",
+    evidenceItem3: "✓ All spot hours confirmed (no closures or cutoffs)",
     departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
     startTransferNote: "09:40 Arrive Suwon Station → Monde Café, about 20 min",
@@ -254,9 +254,9 @@ const UI: Record<Lang, {
       not_now: "今日のコース、今は難しいです",
       draft: "今日のコース、判定確認中です",
     },
-    evidenceItem1: "✓ 終電まで十分な余裕（約360分）",
-    evidenceItem2: "✓ 全スポットの営業時間確認済み（休業・終了時間に問題なし）",
-    evidenceItem3: "✓ 往復の交通手段・所要時間確認済み",
+    evidenceItem1: "✓ 08:40 ソウル駅出発 → 17:40 ソウル駅帰着（1号線往復）",
+    evidenceItem2: "✓ 終電まで十分な余裕（約360分）",
+    evidenceItem3: "✓ 全スポットの営業時間確認済み（休業・終了時間に問題なし）",
     departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
     startTransferNote: "09:40 水原駅到着 → モンテドカフェ、約20分",
@@ -295,9 +295,9 @@ const UI: Record<Lang, {
       not_now: "今天这条路线，暂时有困难",
       draft: "今天这条路线，判定确认中",
     },
-    evidenceItem1: "✓ 距末班车还有充足时间（约360分钟）",
-    evidenceItem2: "✓ 所有景点营业时间已确认（无休息日或截止时间问题）",
-    evidenceItem3: "✓ 往返交通方式及所需时间已确认",
+    evidenceItem1: "✓ 08:40 首尔站出发 → 17:40 首尔站返回（1号线往返）",
+    evidenceItem2: "✓ 距末班车还有充足时间（约360分钟）",
+    evidenceItem3: "✓ 所有景点营业时间已确认（无休息日或截止时间问题）",
     departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
     startTransferNote: "09:40 到达水原站 → Monde咖啡，约20分钟",
@@ -336,9 +336,9 @@ const UI: Record<Lang, {
       not_now: "Lịch trình hôm nay, chưa khả thi",
       draft: "Đang xác nhận nhận định hôm nay...",
     },
-    evidenceItem1: "✓ Còn nhiều thời gian trước chuyến tàu cuối (khoảng 360 phút)",
-    evidenceItem2: "✓ Đã xác nhận giờ mở cửa tất cả các điểm (không có vấn đề đóng cửa)",
-    evidenceItem3: "✓ Đã xác nhận phương tiện và thời gian di chuyển khứ hồi",
+    evidenceItem1: "✓ 08:40 Xuất phát Ga Seoul → 17:40 Trở về Ga Seoul (Tuyến 1)",
+    evidenceItem2: "✓ Còn nhiều thời gian trước chuyến tàu cuối (khoảng 360 phút)",
+    evidenceItem3: "✓ Đã xác nhận giờ mở cửa tất cả các điểm (không có vấn đề đóng cửa)",
     departNote: "Ga Seoul khởi hành · Tuyến 1 khoảng 55 phút",
     hubWarning: " [Cần xác nhận trung tâm khởi hành]",
     startTransferNote: "09:40 Đến Ga Suwon → Monde Café, khoảng 20 phút",
@@ -740,32 +740,6 @@ export default function SuwonTour() {
           >
             {t.verdictTitle[verdict]}
           </div>
-          <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
-            <div className="flex items-center gap-2 font-bold" style={{ color: GO_GREEN }}>
-              <span>🚆</span>
-              <span>
-                {ROUND_TRIP.departTime} {t.departNote}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
-              <span>🚉</span>
-              <span>{t.startTransferNote}</span>
-            </div>
-            <p className="text-[11px] text-center my-2" style={{ color: STAMP, opacity: 0.8 }}>
-              {t.scrollHint}
-            </p>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
-              <span>🚕</span>
-              <span>{t.transferNote}</span>
-            </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: VERDICT_COLOR[verdict] }}>
-              <span>🕚</span>
-              <span>
-                {ROUND_TRIP.estimatedStationArrival} {t.arrivalLabel} — {VERDICT_ARRIVAL_HINT[lang][verdict]}
-              </span>
-            </div>
-          </div>
-
           {/* 판정 결과 — GO '도장'이 아니라 판단 입력값을 같이 노출하는 근거 카드 (2-2) */}
           <div className="px-4 py-2.5 text-white" style={{ backgroundColor: VERDICT_COLOR[verdict] }}>
             <div className="flex items-center justify-between">
