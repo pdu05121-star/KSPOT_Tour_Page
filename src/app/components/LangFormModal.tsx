@@ -121,7 +121,7 @@ export default function LangFormModal({ open, onClose }: Props) {
           </div>
 
           {/* 버튼 목록 */}
-          <div className="flex flex-col items-center gap-2 pb-8 px-8">
+          <div className="flex flex-col items-center gap-2.5 pb-10 px-10">
             {LANG_OPTIONS.map(({ code, flag, label }) => {
               const isRec = code === recommended;
               return (
@@ -130,22 +130,25 @@ export default function LangFormModal({ open, onClose }: Props) {
                   ref={isRec ? recBtnRef : undefined}
                   type="button"
                   onClick={() => handleSelect(code)}
-                  className="kspot-lang-btn inline-flex items-center gap-2.5 rounded-full px-6 py-2.5"
-                  style={isRec ? {
-                    backgroundColor: PINE,
-                    color: "#fff",
-                    boxShadow: "0 4px 12px rgba(32,54,47,0.22)",
-                  } : {
-                    backgroundColor: PAPER_DEEP,
-                    color: INK,
-                    border: `1px solid ${HAIRLINE}`,
+                  className="kspot-lang-btn flex items-center gap-3 rounded-xl px-5 py-3.5"
+                  style={{
+                    width: 220,
+                    ...(isRec ? {
+                      backgroundColor: PINE,
+                      color: "#fff",
+                      boxShadow: "0 4px 14px rgba(32,54,47,0.22)",
+                    } : {
+                      backgroundColor: PAPER_DEEP,
+                      color: INK,
+                      border: `1px solid ${HAIRLINE}`,
+                    }),
                   }}
                 >
-                  <span className="text-base leading-none">{flag}</span>
-                  <span className="font-bold text-[14px]">{label}</span>
+                  <span className="text-lg leading-none">{flag}</span>
+                  <span className="font-bold text-[15px] flex-1 text-left">{label}</span>
                   {isRec && (
                     <span
-                      className="text-[9px] font-black tracking-wide px-1.5 py-0.5 rounded-full ml-0.5"
+                      className="text-[9px] font-black tracking-wide px-1.5 py-0.5 rounded-full"
                       style={{ backgroundColor: RUST, color: "#fff" }}
                     >
                       추천
