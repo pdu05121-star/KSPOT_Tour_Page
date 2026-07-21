@@ -172,7 +172,7 @@ const UI: Record<Lang, {
     confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
     timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 1시간",
     timetableSuwonArriveDesc: "몽테드 카페까지 약 20분",
-    timetableEndLabel: "수원역 도착", timetableEndDesc: "서울행 막차 23:31 — 여유 있게 환승",
+    timetableEndLabel: "수원역 도착", timetableEndDesc: "여기서 서울행 열차로 환승",
     timetableSeoulArriveLabel: "서울역 도착", timetableSeoulArriveDesc: "1호선 타고 무사히 하루 마무리",
     ch1: "과몰입 촬영지 BEST 5", ch2: "현지인 찐맛집", ch3: "카페", ch4: "한눈에 보는 당일치기 타임테이블",
     secretCoord: "시크릿 좌표.", moveLabel: "이동 · 주차.", tipLabel: "에디터 시크릿 꿀팁",
@@ -203,7 +203,7 @@ const UI: Record<Lang, {
     confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
     timetableStartLabel: "Depart Seoul Station", timetableStartDesc: "About 1 hr to Suwon Station on Line 1",
     timetableSuwonArriveDesc: "About 20 min to Monde Café",
-    timetableEndLabel: "Arrive Suwon Station", timetableEndDesc: "Last train to Seoul at 23:31 — plenty of time to transfer",
+    timetableEndLabel: "Arrive Suwon Station", timetableEndDesc: "Transfer here for the train back to Seoul",
     timetableSeoulArriveLabel: "Arrive Seoul Station", timetableSeoulArriveDesc: "Back on Line 1 — day safely wrapped up",
     ch1: "Obsession-worthy filming spots BEST 5", ch2: "Local favorite restaurant", ch3: "Café", ch4: "Day-trip timetable at a glance",
     secretCoord: "Secret coordinates.", moveLabel: "Getting there / parking.", tipLabel: "Editor's secret tip",
@@ -234,7 +234,7 @@ const UI: Record<Lang, {
     confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
     timetableStartLabel: "ソウル駅出発", timetableStartDesc: "1号線で水原駅まで約1時間",
     timetableSuwonArriveDesc: "モンテドカフェまで約20分",
-    timetableEndLabel: "水原駅到着", timetableEndDesc: "ソウル行き終電23:31 — 余裕を持って乗り換え",
+    timetableEndLabel: "水原駅到着", timetableEndDesc: "ここでソウル行きの列車に乗り換え",
     timetableSeoulArriveLabel: "ソウル駅到着", timetableSeoulArriveDesc: "1号線で無事に一日を締めくくり",
     ch1: "過剰入魂ロケ地 BEST 5", ch2: "地元グルメ", ch3: "カフェ", ch4: "ひと目でわかる日帰りタイムテーブル",
     secretCoord: "シークレット座標.", moveLabel: "移動・駐車.", tipLabel: "エディター秘密の裏技",
@@ -265,7 +265,7 @@ const UI: Record<Lang, {
     confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
     timetableStartLabel: "首尔站出发", timetableStartDesc: "乘1号线到水原站约1小时",
     timetableSuwonArriveDesc: "到Monde咖啡约20分钟",
-    timetableEndLabel: "到达水原站", timetableEndDesc: "开往首尔的末班车23:31 — 从容换乘",
+    timetableEndLabel: "到达水原站", timetableEndDesc: "在这里换乘开往首尔的列车",
     timetableSeoulArriveLabel: "到达首尔站", timetableSeoulArriveDesc: "乘1号线平安结束一天",
     ch1: "沉浸式取景地 BEST 5", ch2: "本地人气美食", ch3: "咖啡店", ch4: "一目了然的一日游时间表",
     secretCoord: "秘密坐标.", moveLabel: "交通·停车.", tipLabel: "编辑私藏秘诀",
@@ -797,11 +797,9 @@ export default function SuwonTour() {
               <div key={idx} className="relative">
                 {tt.pin === "hub" ? (
                   <div
-                    className="absolute -left-[30px] top-[-3px] w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                    style={{ backgroundColor: PINE, borderColor: PAPER, boxShadow: `0 0 0 2px ${PINE}` }}
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: PAPER }} />
-                  </div>
+                    className="absolute -left-[29px] top-[1px] w-4 h-4 border-2 rotate-45"
+                    style={{ backgroundColor: STAMP, borderColor: PAPER, boxShadow: `0 0 0 1.5px ${STAMP}` }}
+                  />
                 ) : (
                   <div
                     className="absolute -left-7 top-0.5 w-3.5 h-3.5 rounded-full border-2"
