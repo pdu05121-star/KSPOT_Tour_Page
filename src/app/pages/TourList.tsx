@@ -47,9 +47,11 @@ const OPEN_ZH: TourCard = {
 };
 
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
+// 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
+// 나머지 5곳(경주·부산·대구·여수·순천)은 드라마 페어링 미확정 — CLAUDE.md 원칙상 AI가 임의로 못 붙여서 태그 생략 유지.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
-  { id: "chuncheon", order: "02", status: "next" },
-  { id: "gangneung", order: "03", status: "wait" },
+  { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가" },
+  { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
@@ -119,8 +121,7 @@ const COPY: Record<Lang, {
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "이 코스 열어보기 →",
-    nextBadge: "NEXT · 곧 열려요",
-    waitBadge: "대기 중",
+    nextBadge: "곧 오픈", waitBadge: "대기 중",
     notify: "알림받기",
     askH3: "가고 싶은 곳이 여기 없나요?",
     askP: "어디가 궁금한지 알려주시면, 그곳을 다음 이야기로 만들어 공개해요.",
@@ -137,8 +138,7 @@ const COPY: Record<Lang, {
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "Open this course →",
-    nextBadge: "NEXT · Coming soon",
-    waitBadge: "In queue",
+    nextBadge: "Opening soon", waitBadge: "In queue",
     notify: "Notify me",
     askH3: "Don't see where you want to go?",
     askP: "Tell us where you're curious about, and we'll make it the next story.",
@@ -155,8 +155,7 @@ const COPY: Record<Lang, {
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "このコースを開く →",
-    nextBadge: "NEXT · まもなく公開",
-    waitBadge: "準備中",
+    nextBadge: "まもなく公開", waitBadge: "準備中",
     notify: "通知を受け取る",
     askH3: "行きたい場所がここにない？",
     askP: "気になる場所を教えてください。次の物語としてお作りします。",
@@ -173,8 +172,7 @@ const COPY: Record<Lang, {
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "打开这条路线 →",
-    nextBadge: "NEXT · 即将开启",
-    waitBadge: "排队中",
+    nextBadge: "即将开放", waitBadge: "排队中",
     notify: "通知我",
     askH3: "想去的地方不在这里？",
     askP: "告诉我们你想去哪里，我们会把它做成下一个故事。",
