@@ -283,7 +283,7 @@ const UI: Record<Lang, {
 type SpotItem = {
   no: string; emoji: string; title: string; subtitle: string; scene: string;
   coord: string; move: string; goldenHour: string; caution: string;
-  image: string; imgPosition?: string;
+  image: string; imgPosition?: string; imgAspect?: string;
 };
 
 const SPOTS: Record<Lang, SpotItem[]> = {
@@ -292,7 +292,7 @@ const SPOTS: Record<Lang, SpotItem[]> = {
       scene: "선재와 솔이의 노란 우산 장면이 촬영된 그 골목 앞 카페. 오픈 시간에 맞춰 여유 있게 하루를 시작해요.",
       coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "몽테드 카페 → 화홍문, 도보 9분",
       goldenHour: "10시 오픈이라 그 전에 도착하면 골목 사진부터 찍고 들어가는 걸 추천해요.",
-      caution: "영업시간 10:00–19:00 · 매주 수요일 휴무", image: sunjaeSiljaImg },
+      caution: "영업시간 10:00–19:00 · 매주 수요일 휴무", image: sunjaeSiljaImg, imgAspect: "3 / 2" },
     { no: "02", emoji: "💌", title: "화홍문", subtitle: "솔이가 선재에게 고백한 곳",
       scene: "수원천 위 돌다리. 19살 솔이가 선재에게 마음을 고백하던 장면이 촬영된 곳이에요.",
       coord: "경기 수원시 팔달구 북수동", move: "화홍문 → 방화수류정, 도보 3분",
@@ -319,7 +319,7 @@ const SPOTS: Record<Lang, SpotItem[]> = {
       scene: "The café by the alley where Sun-jae and Sol's yellow umbrella scene was filmed. Start your day at an easy pace, at opening time.",
       coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde Café → Hwahongmun, 9 min walk",
       goldenHour: "It opens at 10, so arriving early lets you get alley photos before going in.",
-      caution: "Open 10:00–19:00 · Closed Wednesdays", image: sunjaeSiljaImg },
+      caution: "Open 10:00–19:00 · Closed Wednesdays", image: sunjaeSiljaImg, imgAspect: "3 / 2" },
     { no: "02", emoji: "💌", title: "Hwahongmun", subtitle: "Where Sol confessed to Sun-jae",
       scene: "The stone bridge over Suwoncheon. Where 19-year-old Sol confessed her feelings to Sun-jae.",
       coord: "경기 수원시 팔달구 북수동", move: "Hwahongmun → Banghwasuryujeong, 3 min walk",
@@ -346,7 +346,7 @@ const SPOTS: Record<Lang, SpotItem[]> = {
       scene: "ソンジェとソルの黄色い傘のシーンが撮影された路地前のカフェ。オープン時間に合わせてゆったり一日を始めましょう。",
       coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "モンテドカフェ→華虹門、徒歩9分",
       goldenHour: "10時オープンなので、その前に着けば路地の写真を撮ってから入れます。",
-      caution: "営業時間10:00–19:00 · 毎週水曜休み", image: sunjaeSiljaImg },
+      caution: "営業時間10:00–19:00 · 毎週水曜休み", image: sunjaeSiljaImg, imgAspect: "3 / 2" },
     { no: "02", emoji: "💌", title: "華虹門", subtitle: "ソルがソンジェに告白した場所",
       scene: "水原川に架かる石橋。19歳のソルがソンジェに気持ちを告白したシーンが撮影された場所です。",
       coord: "경기 수원시 팔달구 북수동", move: "華虹門→訪花随柳亭、徒歩3分",
@@ -373,7 +373,7 @@ const SPOTS: Record<Lang, SpotItem[]> = {
       scene: "Sunjae和Sol的黄色雨伞场景取景地附近的咖啡店。配合开店时间，从容开始一天。",
       coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde咖啡→花虹门，步行9分钟",
       goldenHour: "10点开门，提前到达可以先拍巷子照片再进店。",
-      caution: "营业时间10:00–19:00 · 每周三休息", image: sunjaeSiljaImg },
+      caution: "营业时间10:00–19:00 · 每周三休息", image: sunjaeSiljaImg, imgAspect: "3 / 2" },
     { no: "02", emoji: "💌", title: "花虹门", subtitle: "Sol向Sunjae表白的地方",
       scene: "水原川上的石桥。19岁的Sol向Sunjae表白心意的场景取景地。",
       coord: "경기 수원시 팔달구 북수동", move: "花虹门→访花随柳亭，步行3分钟",
@@ -662,8 +662,8 @@ export default function SuwonTour() {
             <article key={s.no}>
               <div className="relative mb-5">
                 <div
-                  className="relative aspect-[4/3] overflow-hidden rounded-sm rotate-[-0.6deg]"
-                  style={{ boxShadow: "0 10px 30px rgba(20,51,43,0.18)", border: `6px solid #fff` }}
+                  className="relative overflow-hidden rounded-sm rotate-[-0.6deg]"
+                  style={{ aspectRatio: s.imgAspect ?? "4 / 3", boxShadow: "0 10px 30px rgba(20,51,43,0.18)", border: `6px solid #fff` }}
                 >
                   <img
                     src={s.image}
