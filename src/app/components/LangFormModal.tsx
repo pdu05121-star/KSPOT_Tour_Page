@@ -84,7 +84,7 @@ export default function LangFormModal({ open, onClose }: Props) {
       `}</style>
 
       <div
-        className="kspot-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center px-0 sm:px-4"
+        className="kspot-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4"
         role="dialog"
         aria-modal="true"
         aria-label="언어 선택"
@@ -95,16 +95,11 @@ export default function LangFormModal({ open, onClose }: Props) {
 
         {/* 패널 */}
         <div
-          className="kspot-modal-panel relative w-full sm:max-w-[360px] mx-auto rounded-t-[20px] sm:rounded-[20px] overflow-hidden"
-          style={{ backgroundColor: PAPER }}
+          className="kspot-modal-panel relative w-full mx-auto rounded-[20px] overflow-hidden"
+          style={{ backgroundColor: PAPER, maxWidth: 400 }}
         >
-          {/* 핸들 바 (모바일) */}
-          <div className="flex justify-center pt-3 pb-1 sm:hidden">
-            <div className="w-8 h-[3px] rounded-full" style={{ backgroundColor: HAIRLINE }} />
-          </div>
-
           {/* 헤더 */}
-          <div className="flex items-center justify-between px-5 pt-4 pb-3 sm:pt-5">
+          <div className="flex items-center justify-between px-5 pt-5 pb-3">
             <div>
               <p className="text-[11px] font-bold tracking-[0.12em] uppercase opacity-50" style={{ color: INK }}>
                 KSPOT
@@ -131,7 +126,7 @@ export default function LangFormModal({ open, onClose }: Props) {
           <div style={{ height: 1, backgroundColor: HAIRLINE, margin: "0 20px" }} />
 
           {/* 언어 목록 */}
-          <div className="px-4 py-3 flex flex-col gap-1.5">
+          <div className="px-7 py-3 flex flex-col gap-1.5">
             {LANG_OPTIONS.map(({ code, flag, label, sub }) => {
               const isRec = code === recommended;
               return (
@@ -140,7 +135,7 @@ export default function LangFormModal({ open, onClose }: Props) {
                   ref={isRec ? recBtnRef : undefined}
                   type="button"
                   onClick={() => handleSelect(code)}
-                  className="kspot-lang-btn w-full flex items-center gap-3 rounded-xl px-4 py-3 text-left"
+                  className="kspot-lang-btn w-full flex items-center gap-3 rounded-xl px-4 py-2.5 text-left"
                   style={isRec ? {
                     backgroundColor: PINE,
                     color: "#fff",
