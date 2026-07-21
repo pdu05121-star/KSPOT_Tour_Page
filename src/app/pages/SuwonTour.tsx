@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles } from "lucide-react";
-import { SURVEY_FORM_URL } from "@/app/surveyConfig";
+import LangFormModal from "@/app/components/LangFormModal";
 
 // Local Image Imports (동일한 수원 에셋 재사용)
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
@@ -623,6 +623,7 @@ const TIMETABLE: Record<Lang, TimetableItem[]> = {
 
 export default function SuwonTour() {
   const [lang, setLang] = useState<Lang>("ko");
+  const [formModalOpen, setFormModalOpen] = useState(false);
   const t = UI[lang];
   const spots = SPOTS[lang];
   const eats = EATS[lang];
@@ -977,18 +978,19 @@ export default function SuwonTour() {
             >
               {t.stickySaveBtn}
             </a>
-            <a
-              href={SURVEY_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setFormModalOpen(true)}
               className="py-3 px-4 sm:px-5 rounded-xl font-bold text-[11px] sm:text-sm shadow-md transition-opacity hover:opacity-90 text-center whitespace-nowrap"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >
               {t.stickyBtn}
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
     </div>
   );
 }

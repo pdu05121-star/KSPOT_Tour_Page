@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Sparkles } from "lucide-react";
-import { SURVEY_FORM_URL } from "@/app/surveyConfig";
+import LangFormModal from "@/app/components/LangFormModal";
 
 // TODO: 실제 강릉 스팟/맛집/카페 사진으로 교체 필요. 현재는 임시 placeholder 이미지 사용.
 import gangneungPlaceholderImg from "@/assets/gangneung/placeholder.png";
@@ -111,6 +112,7 @@ const TIMETABLE: TimetableItem[] = [
 ];
 
 export default function GangneungTour() {
+  const [formModalOpen, setFormModalOpen] = useState(false);
   return (
     <div
       className="min-h-screen"
@@ -405,17 +407,18 @@ export default function GangneungTour() {
           여기 없는 지역도 이 코스처럼 만들어 드려요
         </p>
         <div className="flex items-center justify-center">
-          <a
-            href={SURVEY_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => setFormModalOpen(true)}
             className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
             style={{ backgroundColor: STAMP, color: "#fff" }}
           >
             요청하기 →
-          </a>
+          </button>
         </div>
       </div>
+
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
     </div>
   );
 }

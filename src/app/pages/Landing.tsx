@@ -4,9 +4,11 @@ import "@/styles/landing.css";
 import logoEmblem from "@/assets/logo.png";
 import logoWordmark from "@/assets/landing_img_1.png";
 import kspotBrandingVideo from "@/assets/kspot-branding.mp4";
-import { SURVEY_FORM_URL } from "@/app/surveyConfig";
+import LangFormModal from "@/app/components/LangFormModal";
 
 export default function Landing() {
+  const [formModalOpen, setFormModalOpen] = useState(false);
+
   // Scrolled Navbar State
   const [scrolled, setScrolled] = useState(false);
 
@@ -159,9 +161,9 @@ export default function Landing() {
               <span className={`quote-mark hide-until-done ${typingDone ? "show" : ""}`}>”</span>
             </p>
             <div className="hero-foot seq" style={{ "--d": "0.2s" } as React.CSSProperties}>
-              <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              <button type="button" className="btn-primary" onClick={() => setFormModalOpen(true)}>
                 원하는 코스 받아보기 →
-              </a>
+              </button>
               <Link to="/tour" className="btn-ghost">안심 코스 보기</Link>
             </div>
           </div>
@@ -492,9 +494,9 @@ export default function Landing() {
           <div className="sec-eyebrow">KSPOT</div>
           <p className="cta-final-title">이제, <span className="accent">서울 밖으로</span><br />한 걸음 내딛을 시간입니다.</p>
           <div className="cta-actions">
-            <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer" className="btn-primary-dark">
+            <button type="button" className="btn-primary-dark" onClick={() => setFormModalOpen(true)}>
               원하는 코스 받아보기 →
-            </a>
+            </button>
             <a href="mailto:kspot02026@gmail.com" className="btn-ghost-dark">팀에게 문의하기</a>
           </div>
         </div>
@@ -514,6 +516,8 @@ export default function Landing() {
           <div className="footer-brand"><span className="footer-copy">KSPOT © 2026</span></div>
         </div>
       </footer>
+
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
     </div>
   );
 }

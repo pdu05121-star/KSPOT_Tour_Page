@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import "@/styles/router.css";
-import { SURVEY_FORM_URL } from "@/app/surveyConfig";
+import LangFormModal from "@/app/components/LangFormModal";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 
-type Lang = "ko" | "en" | "ja" | "zh";
+type Lang = "ko" | "en" | "ja" | "zh" | "vi";
 
 // 도시 카드 데이터 — 배열로 관리 (개발지시서 지시사항: 하드코딩 금지, 도시 추가 잦을 예정)
 // COMING SOON 목록은 RE_PRD_v1.1의 타겟 10개 지역(경주·포항·부산·대구·전주·강릉·제주·여수·순천·춘천) +
@@ -45,6 +45,12 @@ const OPEN_ZH: TourCard = {
   desc: "剧中那条小巷、本地炸鸡名店、夕阳下的天台 — 从首尔出发的一日游。",
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
+const OPEN_VI: TourCard = {
+  id: "suwon", status: "open", order: "01", cityline: "SUWON Suwon",
+  kTag: "◉ Cõng anh mà chạy", title: "Ngõ phố du hành thời gian & View thành quách",
+  desc: "Từ con hẻm nhỏ trong phim, thánh địa gà rán địa phương, đến sân thượng ngắm hoàng hôn — chuyến đi trong ngày từ Seoul.",
+  thumb: janganmunNightImg, link: "/tour/suwon",
+};
 
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
 // 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
@@ -63,29 +69,29 @@ const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: 
 ];
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
-  chuncheon: { ko: "CHUNCHEON 춘천", en: "CHUNCHEON", ja: "CHUNCHEON 春川", zh: "CHUNCHEON 春川" },
-  gangneung: { ko: "GANGNEUNG 강릉", en: "GANGNEUNG", ja: "GANGNEUNG 江陵", zh: "GANGNEUNG 江陵" },
-  jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州" },
-  pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项" },
-  jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州" },
-  gyeongju: { ko: "GYEONGJU 경주", en: "GYEONGJU", ja: "GYEONGJU 慶州", zh: "GYEONGJU 庆州" },
-  busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山" },
-  daegu: { ko: "DAEGU 대구", en: "DAEGU", ja: "DAEGU 大邱", zh: "DAEGU 大邱" },
-  yeosu: { ko: "YEOSU 여수", en: "YEOSU", ja: "YEOSU 麗水", zh: "YEOSU 丽水" },
-  suncheon: { ko: "SUNCHEON 순천", en: "SUNCHEON", ja: "SUNCHEON 順天", zh: "SUNCHEON 顺天" },
+  chuncheon: { ko: "CHUNCHEON 춘천", en: "CHUNCHEON", ja: "CHUNCHEON 春川", zh: "CHUNCHEON 春川", vi: "CHUNCHEON Chuncheon" },
+  gangneung: { ko: "GANGNEUNG 강릉", en: "GANGNEUNG", ja: "GANGNEUNG 江陵", zh: "GANGNEUNG 江陵", vi: "GANGNEUNG Gangneung" },
+  jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州", vi: "JEONJU Jeonju" },
+  pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
+  jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
+  gyeongju: { ko: "GYEONGJU 경주", en: "GYEONGJU", ja: "GYEONGJU 慶州", zh: "GYEONGJU 庆州", vi: "GYEONGJU Gyeongju" },
+  busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山", vi: "BUSAN Busan" },
+  daegu: { ko: "DAEGU 대구", en: "DAEGU", ja: "DAEGU 大邱", zh: "DAEGU 大邱", vi: "DAEGU Daegu" },
+  yeosu: { ko: "YEOSU 여수", en: "YEOSU", ja: "YEOSU 麗水", zh: "YEOSU 丽水", vi: "YEOSU Yeosu" },
+  suncheon: { ko: "SUNCHEON 순천", en: "SUNCHEON", ja: "SUNCHEON 順天", zh: "SUNCHEON 顺天", vi: "SUNCHEON Suncheon" },
 };
 
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
-  chuncheon: { ko: "호수 따라 달리는 자전거길", en: "Lakeside cycling route", ja: "湖畔のサイクリングロード", zh: "沿湖骑行路线" },
-  gangneung: { ko: "파도 소리 들리는 커피 해변", en: "Coffee beach by the waves", ja: "波音が聞こえるコーヒー海辺", zh: "听着海浪的咖啡海边" },
-  jeonju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  pohang: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  jeju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  gyeongju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  busan: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  daegu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  yeosu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
-  suncheon: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中" },
+  chuncheon: { ko: "호수 따라 달리는 자전거길", en: "Lakeside cycling route", ja: "湖畔のサイクリングロード", zh: "沿湖骑行路线", vi: "Đường xe đạp chạy dọc theo hồ" },
+  gangneung: { ko: "파도 소리 들리는 커피 해변", en: "Coffee beach by the waves", ja: "波音が聞こえるコーヒー海辺", zh: "听着海浪的咖啡海边", vi: "Bãi biển cà phê vang tiếng sóng vỗ" },
+  jeonju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  pohang: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  jeju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  gyeongju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  busan: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  daegu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  yeosu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  suncheon: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
 };
 
 function buildLockedCards(lang: Lang): TourCard[] {
@@ -105,6 +111,7 @@ const TOURS: Record<Lang, TourCard[]> = {
   en: [OPEN_EN, ...buildLockedCards("en")],
   ja: [OPEN_JA, ...buildLockedCards("ja")],
   zh: [OPEN_ZH, ...buildLockedCards("zh")],
+  vi: [OPEN_VI, ...buildLockedCards("vi")],
 };
 
 const COPY: Record<Lang, {
@@ -180,6 +187,23 @@ const COPY: Record<Lang, {
     askFine: "30秒完成 · 从最多人想去的城市开始公开",
     stickyBtn: "提交请求 →",
   },
+  vi: {
+    eyebrow: "🔓 MỞ KHÓA BÍ MẬT KSPOT",
+    heroTitle: "Hàn Quốc có một nơi như THẾ NÀY sao? — Chúng tôi đã kiểm tra xem nơi đó có an toàn để đi trước đã.",
+    heroPre: "Từ ",
+    heroKk: "địa điểm bạn thấy trên màn ảnh",
+    heroPost: " đến những góc phố địa phương ít ai biết, chúng tôi chỉ mở khóa những lộ trình mà bạn có thể quay về an toàn.",
+    nowOpen: "NOW OPEN",
+    comingSoon: "COMING SOON",
+    openCta: "Mở khóa lộ trình này →",
+    nextBadge: "Sắp mở", waitBadge: "Đang chờ",
+    notify: "Nhận thông báo",
+    askH3: "Không tìm thấy nơi bạn muốn đi?",
+    askP: "Hãy cho chúng tôi biết nơi bạn tò mò, chúng tôi sẽ biến nó thành câu chuyện tiếp theo.",
+    askBtn: "Cho biết nơi bạn muốn đi →",
+    askFine: "Chỉ mất 30 giây · Nơi được yêu cầu nhiều nhất sẽ mở trước",
+    stickyBtn: "Yêu cầu →",
+  },
 };
 
 const LANGS: { code: Lang; label: string }[] = [
@@ -187,10 +211,12 @@ const LANGS: { code: Lang; label: string }[] = [
   { code: "en", label: "EN" },
   { code: "ja", label: "日" },
   { code: "zh", label: "中" },
+  { code: "vi", label: "VI" },
 ];
 
 export default function TourList() {
   const [lang, setLang] = useState<Lang>("ko");
+  const [formModalOpen, setFormModalOpen] = useState(false);
   const t = COPY[lang];
   const cards = TOURS[lang];
 
@@ -257,14 +283,13 @@ export default function TourList() {
                 <div className="router-cityline">{c.order} · {c.cityline}</div>
                 {c.kTag && <div className="router-ktag">{c.kTag}</div>}
                 <h2>{c.title}</h2>
-                <a
+                <button
+                  type="button"
                   className="router-notify"
-                  href={SURVEY_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={() => setFormModalOpen(true)}
                 >
                   🔔 {t.notify}
-                </a>
+                </button>
               </div>
             </div>
           ))}
@@ -279,11 +304,13 @@ export default function TourList() {
       <div className="router-sticky-cta">
         <div className="router-sticky-cta-inner">
           <span className="msg"><b>{t.askH3}</b></span>
-          <a href={SURVEY_FORM_URL} target="_blank" rel="noopener noreferrer">
+          <button type="button" onClick={() => setFormModalOpen(true)}>
             {t.stickyBtn}
-          </a>
+          </button>
         </div>
       </div>
+
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
     </div>
   );
 }
