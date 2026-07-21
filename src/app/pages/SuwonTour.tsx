@@ -141,6 +141,7 @@ const UI: Record<Lang, {
   introSub: string; blockquote: string;
   frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
   arrivalLabel: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
+  timetableStartLabel: string; timetableStartDesc: string; timetableEndLabel: string; timetableEndDesc: string;
   ch1: string; ch2: string; ch3: string; ch4: string;
   secretCoord: string; moveLabel: string; tipLabel: string;
   recommendedMenu: string; tipLabel2: string;
@@ -164,6 +165,8 @@ const UI: Record<Lang, {
     lastTrainPrefix: "",
     bufferLabel: "막차까지 여유",
     confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
+    timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 1시간",
+    timetableEndLabel: "수원역 도착", timetableEndDesc: "서울행 막차 23:31 — 여유 있게 귀환",
     ch1: "과몰입 촬영지 BEST 5", ch2: "현지인 찐맛집", ch3: "카페", ch4: "한눈에 보는 당일치기 타임테이블",
     secretCoord: "시크릿 좌표.", moveLabel: "이동 · 주차.", tipLabel: "에디터 시크릿 꿀팁",
     recommendedMenu: "추천 메뉴.", tipLabel2: "꿀팁.",
@@ -191,6 +194,8 @@ const UI: Record<Lang, {
     lastTrainPrefix: "",
     bufferLabel: "Time to spare before the last train",
     confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
+    timetableStartLabel: "Depart Seoul Station", timetableStartDesc: "About 1 hr to Suwon Station on Line 1",
+    timetableEndLabel: "Arrive Suwon Station", timetableEndDesc: "Last train to Seoul at 23:31 — plenty of time to head back",
     ch1: "Obsession-worthy filming spots BEST 5", ch2: "Local favorite restaurant", ch3: "Café", ch4: "Day-trip timetable at a glance",
     secretCoord: "Secret coordinates.", moveLabel: "Getting there / parking.", tipLabel: "Editor's secret tip",
     recommendedMenu: "Recommended.", tipLabel2: "Tip.",
@@ -218,6 +223,8 @@ const UI: Record<Lang, {
     lastTrainPrefix: "",
     bufferLabel: "終電までの余裕",
     confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
+    timetableStartLabel: "ソウル駅出発", timetableStartDesc: "1号線で水原駅まで約1時間",
+    timetableEndLabel: "水原駅到着", timetableEndDesc: "ソウル行き終電23:31 — 余裕を持って帰れます",
     ch1: "過剰入魂ロケ地 BEST 5", ch2: "地元グルメ", ch3: "カフェ", ch4: "ひと目でわかる日帰りタイムテーブル",
     secretCoord: "シークレット座標.", moveLabel: "移動・駐車.", tipLabel: "エディター秘密の裏技",
     recommendedMenu: "おすすめ.", tipLabel2: "裏技.",
@@ -245,6 +252,8 @@ const UI: Record<Lang, {
     lastTrainPrefix: "",
     bufferLabel: "距末班车还有",
     confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
+    timetableStartLabel: "首尔站出发", timetableStartDesc: "乘1号线到水原站约1小时",
+    timetableEndLabel: "到达水原站", timetableEndDesc: "开往首尔的末班车23:31 — 从容返回",
     ch1: "沉浸式取景地 BEST 5", ch2: "本地人气美食", ch3: "咖啡店", ch4: "一目了然的一日游时间表",
     secretCoord: "秘密坐标.", moveLabel: "交通·停车.", tipLabel: "编辑私藏秘诀",
     recommendedMenu: "推荐.", tipLabel2: "小贴士.",
@@ -474,6 +483,11 @@ export default function SuwonTour() {
   const spots = SPOTS[lang];
   const eats = EATS[lang];
   const timetable = TIMETABLE[lang];
+  const fullTimetable: TimetableItem[] = [
+    { time: ROUND_TRIP.departTime, emoji: "🚆", label: t.timetableStartLabel, desc: t.timetableStartDesc },
+    ...timetable,
+    { time: ROUND_TRIP.estimatedStationArrival, emoji: "🕚", label: t.timetableEndLabel, desc: t.timetableEndDesc },
+  ];
 
   return (
     <div
@@ -764,7 +778,7 @@ export default function SuwonTour() {
         <div className="relative pl-7">
           <div className="absolute top-1 bottom-1 left-[7px] w-px" style={{ backgroundColor: HAIRLINE }} />
           <div className="space-y-7">
-            {timetable.map((tt, idx) => (
+            {fullTimetable.map((tt, idx) => (
               <div key={idx} className="relative">
                 <div
                   className="absolute -left-7 top-0.5 w-3.5 h-3.5 rounded-full border-2"
