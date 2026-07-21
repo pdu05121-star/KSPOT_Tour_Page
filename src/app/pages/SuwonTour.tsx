@@ -31,12 +31,13 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
-type Lang = "ko" | "en" | "ja" | "zh";
+type Lang = "ko" | "en" | "ja" | "zh" | "vi";
 const LANGS: { code: Lang; label: string }[] = [
   { code: "ko", label: "한" },
   { code: "en", label: "EN" },
   { code: "ja", label: "日" },
   { code: "zh", label: "中" },
+  { code: "vi", label: "VI" },
 ];
 
 // 왕복 판단 프레임 — 코스템플릿_수원_선재_v4.md 기준 (2026-07-21, 판정 CONFIRMED)
@@ -89,6 +90,7 @@ const VERDICT_SUB: Record<Lang, Record<Verdict, string>> = {
   en: { draft: "Verdict on hold", go: "Safe return", care: "Leave some extra time", reconsider: "Consider trimming the course", not_now: "Difficult under current conditions" },
   ja: { draft: "判定保留", go: "無事帰還できます", care: "時間に余裕を持って", reconsider: "コースを減らすことをお勧めします", not_now: "今の条件では難しいです" },
   zh: { draft: "判定暂缓", go: "可以安全返回", care: "请留出充足时间", reconsider: "建议精简行程", not_now: "目前条件下有困难" },
+  vi: { draft: "Đang chờ xác nhận", go: "Về lại an toàn", care: "Hãy di chuyển với thời gian dư dả", reconsider: "Nên rút gọn lịch trình", not_now: "Khó khăn với điều kiện hiện tại" },
 };
 
 // 도착 시각 바로 뒤에 붙는 한 줄 결론 — 숫자(막차시각) 대신 "왜 안심해도 되는지"를 바로 말해줌
@@ -97,6 +99,7 @@ const VERDICT_ARRIVAL_HINT: Record<Lang, Record<Verdict, string>> = {
   en: { draft: "Checking the last train info", go: "plenty of time before the last train", care: "you'll need to keep moving before the last train", reconsider: "cutting it close for the last train", not_now: "you may miss the last train" },
   ja: { draft: "終電情報を確認中です", go: "終電まで余裕があります", care: "終電まで少し急いだ方がいいです", reconsider: "終電まで時間がぎりぎりです", not_now: "終電に間に合わないかもしれません" },
   zh: { draft: "末班车信息确认中", go: "距末班车还很宽裕", care: "赶末班车需要抓紧时间", reconsider: "赶末班车时间比较紧", not_now: "可能赶不上末班车" },
+  vi: { draft: "Đang xác nhận thông tin chuyến tàu cuối", go: "còn nhiều thời gian trước chuyến tàu cuối", care: "cần di chuyển nhanh trước chuyến tàu cuối", reconsider: "khá sát giờ chuyến tàu cuối", not_now: "có thể lỡ chuyến tàu cuối" },
 };
 
 const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
@@ -107,6 +110,7 @@ const BUFFER_APPROX: Record<Lang, { prefix: string; unit: string }> = {
   en: { prefix: "about ", unit: " min" },
   ja: { prefix: "約", unit: "分" },
   zh: { prefix: "约", unit: "分钟" },
+  vi: { prefix: "khoảng ", unit: " phút" },
 };
 function formatBufferApprox(minutes: number, lang: Lang): string {
   const u = BUFFER_APPROX[lang];
@@ -138,8 +142,10 @@ const UI: Record<Lang, {
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
   frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
-  arrivalLabel: string; bufferLabel: string;
-  evidenceDepart: string; evidenceLastSpot: string; evidenceLastTrain: string; lastTrainApprox: string;
+  arrivalLabel: string; scrollHint: string;
+  verdictTitle: Record<Verdict, string>;
+  verdictReasonPre: string; verdictReasonPost: string;
+  evidenceItem1: string; evidenceItem2: string; evidenceItem3: string;
   timetableStartLabel: string; timetableStartDesc: string;
   timetableSuwonArriveDesc: string;
   timetableEndLabel: string; timetableEndDesc: string;
@@ -148,7 +154,7 @@ const UI: Record<Lang, {
   secretCoord: string; moveLabel: string; tipLabel: string;
   recommendedMenu: string; tipLabel2: string;
   closingEyebrow: string; closingTitle1: string; closingTitle2: string; closingSub1: string; closingSub2: string;
-  stickyBtn: string; stickySaveBtn: string; disclaimerText: string;
+  stickyBtn: string; stickySaveBtn: string; stickyHook: string;
   breakHeading: string; breakCond1: string;
 }> = {
   ko: {
@@ -158,14 +164,24 @@ const UI: Record<Lang, {
     heroAlt: "수원 화성 장안문 야경",
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
     blockquote: "인스타에도 없는 진짜 좌표, 현지인 보장 찐 맛집까지 — 이 페이지 하나로 수원 완전 정복.",
-    frameHeading: "오늘 일정 한눈에",
+    frameHeading: "왕복 이동, 한눈에",
+    verdictTitle: {
+      go: "오늘 이 코스, 가도 됩니다",
+      care: "오늘 이 코스, 서두르면 갈 수 있어요",
+      reconsider: "오늘 이 코스, 축소가 필요해요",
+      not_now: "오늘 이 코스, 지금은 어려워요",
+      draft: "오늘 이 코스, 판정 확인 중이에요",
+    },
+    evidenceItem1: "✓ 막차까지 여유 충분 (약 360분)",
+    evidenceItem2: "✓ 전 스팟 운영시간 확인됨 (휴무·마감시간 문제없음)",
+    evidenceItem3: "✓ 왕복 이동수단·소요시간 확인됨",
     departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
     startTransferNote: "09:40 수원역 도착 → 몽테드 카페, 약 20분",
     transferNote: "16:47 정지영커피 출발 → 수원역, 약 20분",
     arrivalLabel: "수원역 도착",
-    bufferLabel: "막차까지 여유",
-    evidenceDepart: "출발", evidenceLastSpot: "마지막 스팟 종료", evidenceLastTrain: "막차", lastTrainApprox: "자정 무렵",
+    scrollHint: "↓ 스팟별 자세한 일정은 아래로 스크롤",
+    verdictReasonPre: "그래서 막차(자정 무렵)까지 여유 ", verdictReasonPost: " — 걱정 없이 돌아갈 수 있어요.",
     timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 55분",
     timetableSuwonArriveDesc: "몽테드 카페까지 약 20분",
     timetableEndLabel: "수원역 도착", timetableEndDesc: "여기서 서울행 열차로 환승",
@@ -177,7 +193,7 @@ const UI: Record<Lang, {
     closingTitle1: "내 날짜에 맞춘 정확한 판단은", closingTitle2: "지금 요청해야 받을 수 있어요",
     closingSub1: "위 코스는 날짜를 정하지 않은 예시 시나리오예요.", closingSub2: "가고 싶은 지역과 날짜를 알려주시면, 막차까지 딱 맞게 새로 계산해드려요.",
     stickySaveBtn: "🗺️ 지도 저장",
-    disclaimerText: "위 판단은 특정 날짜·시간을 입력하지 않은 예시 시나리오입니다. 내 날짜·시간 기준 정확한 판단이 필요하면 요청하기를 눌러주세요.",
+    stickyHook: "내 날짜엔 다를 수 있어요",
     breakHeading: "⚠ 이 판단이 깨지는 조건",
     breakCond1: "수요일은 첫 스팟 휴무 — 평일(수요일 제외)·주말 방문 권장",
     stickyBtn: "요청하기 →",
@@ -189,14 +205,24 @@ const UI: Record<Lang, {
     heroAlt: "Suwon Hwaseong Janganmun Gate at night",
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
     blockquote: "Real coordinates Instagram doesn't have, local-guaranteed favorites — conquer Suwon completely with this one page.",
-    frameHeading: "Today's plan, at a glance",
+    frameHeading: "Round trip, at a glance",
+    verdictTitle: {
+      go: "This course is a go today",
+      care: "You can make it — just keep moving",
+      reconsider: "This course needs trimming today",
+      not_now: "This course isn't feasible today",
+      draft: "Checking today's verdict...",
+    },
+    evidenceItem1: "✓ Plenty of time before the last train (~360 min)",
+    evidenceItem2: "✓ All spot hours confirmed (no closures or cutoffs)",
+    evidenceItem3: "✓ Round-trip transport and travel times confirmed",
     departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
     startTransferNote: "09:40 Arrive Suwon Station → Monde Café, about 20 min",
     transferNote: "16:47 Depart Jeong Jiyoung Coffee → Suwon Station, about 20 min",
     arrivalLabel: "Arrive Suwon Station",
-    bufferLabel: "Time to spare before the last train",
-    evidenceDepart: "Depart", evidenceLastSpot: "Last spot ends", evidenceLastTrain: "Last train", lastTrainApprox: "around midnight",
+    scrollHint: "↓ Scroll down for the spot-by-spot schedule",
+    verdictReasonPre: "So you'll have ", verdictReasonPost: " before the last train (around midnight) — plenty of room to get back safely.",
     timetableStartLabel: "Depart Seoul Station", timetableStartDesc: "About 55 min to Suwon Station on Line 1",
     timetableSuwonArriveDesc: "About 20 min to Monde Café",
     timetableEndLabel: "Arrive Suwon Station", timetableEndDesc: "Transfer here for the train back to Seoul",
@@ -208,7 +234,7 @@ const UI: Record<Lang, {
     closingTitle1: "An accurate verdict for your own dates", closingTitle2: "only comes when you request it",
     closingSub1: "The course above is a sample scenario with no date set.", closingSub2: "Tell us your dates and destination, and we'll recalculate it down to the last train — just for you.",
     stickySaveBtn: "🗺️ Save map",
-    disclaimerText: "This verdict is a sample scenario without a specific date or time entered. For an accurate judgment based on your own schedule, tap Request.",
+    stickyHook: "Your dates might change this",
     breakHeading: "⚠ When this verdict breaks down",
     breakCond1: "The first spot is closed on Wednesdays — visit on a weekday (except Wed.) or weekend",
     stickyBtn: "Request →",
@@ -220,14 +246,24 @@ const UI: Record<Lang, {
     heroAlt: "水原華城 長安門の夜景",
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
     blockquote: "インスタにもない本物の座標、地元民保証の名店まで — このページ一つで水原を完全制覇。",
-    frameHeading: "今日の予定、ひと目で",
+    frameHeading: "往復の移動、ひと目で",
+    verdictTitle: {
+      go: "今日のコース、行けます",
+      care: "今日のコース、急げば行けます",
+      reconsider: "今日のコース、短縮が必要です",
+      not_now: "今日のコース、今は難しいです",
+      draft: "今日のコース、判定確認中です",
+    },
+    evidenceItem1: "✓ 終電まで十分な余裕（約360分）",
+    evidenceItem2: "✓ 全スポットの営業時間確認済み（休業・終了時間に問題なし）",
+    evidenceItem3: "✓ 往復の交通手段・所要時間確認済み",
     departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
     startTransferNote: "09:40 水原駅到着 → モンテドカフェ、約20分",
     transferNote: "16:47 ジョンジヨンコーヒー出発 → 水原駅、約20分",
     arrivalLabel: "水原駅到着",
-    bufferLabel: "終電までの余裕",
-    evidenceDepart: "出発", evidenceLastSpot: "最後のスポット終了", evidenceLastTrain: "終電", lastTrainApprox: "深夜0時ごろ",
+    scrollHint: "↓ スポットごとの詳しい時間は下にスクロール",
+    verdictReasonPre: "だから終電（深夜0時ごろ）まで", verdictReasonPost: "の余裕があります — 安心して帰れます。",
     timetableStartLabel: "ソウル駅出発", timetableStartDesc: "1号線で水原駅まで約55分",
     timetableSuwonArriveDesc: "モンテドカフェまで約20分",
     timetableEndLabel: "水原駅到着", timetableEndDesc: "ここでソウル行きの列車に乗り換え",
@@ -239,7 +275,7 @@ const UI: Record<Lang, {
     closingTitle1: "自分の日程に合わせた正確な判定は", closingTitle2: "リクエストしないと受け取れません",
     closingSub1: "上記のコースは日付を指定していないサンプルシナリオです。", closingSub2: "行きたい地域と日程を教えてください。終電まで正確に計算し直します。",
     stickySaveBtn: "🗺️ 地図を保存",
-    disclaimerText: "上記の判定は特定の日付・時間を入力していないサンプルシナリオです。ご自身の日程に基づいた正確な判定が必要な場合は「リクエストする」をタップしてください。",
+    stickyHook: "自分の日程では変わるかも",
     breakHeading: "⚠ この判定が崩れる条件",
     breakCond1: "水曜日は最初のスポットが休み — 平日(水曜以外)か週末の訪問がおすすめです",
     stickyBtn: "リクエストする →",
@@ -251,14 +287,24 @@ const UI: Record<Lang, {
     heroAlt: "水原华城长安门夜景",
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
     blockquote: "连Instagram都没有的真实坐标，本地人认证的美食——这一页带你彻底征服水原。",
-    frameHeading: "今日行程一目了然",
+    frameHeading: "往返交通一目了然",
+    verdictTitle: {
+      go: "今天这条路线，可以出发",
+      care: "今天这条路线，抓紧时间能走",
+      reconsider: "今天这条路线，需要缩减",
+      not_now: "今天这条路线，暂时有困难",
+      draft: "今天这条路线，判定确认中",
+    },
+    evidenceItem1: "✓ 距末班车还有充足时间（约360分钟）",
+    evidenceItem2: "✓ 所有景点营业时间已确认（无休息日或截止时间问题）",
+    evidenceItem3: "✓ 往返交通方式及所需时间已确认",
     departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
     startTransferNote: "09:40 到达水原站 → Monde咖啡，约20分钟",
     transferNote: "16:47 从Jeong Jiyoung咖啡出发 → 水原站，约20分钟",
     arrivalLabel: "到达水原站",
-    bufferLabel: "距末班车还有",
-    evidenceDepart: "出发", evidenceLastSpot: "最后一站结束", evidenceLastTrain: "末班车", lastTrainApprox: "接近午夜",
+    scrollHint: "↓ 各景点详细时间请向下滚动查看",
+    verdictReasonPre: "所以距末班车（接近午夜）还有", verdictReasonPost: "——可以放心返回。",
     timetableStartLabel: "首尔站出发", timetableStartDesc: "乘1号线到水原站约55分钟",
     timetableSuwonArriveDesc: "到Monde咖啡约20分钟",
     timetableEndLabel: "到达水原站", timetableEndDesc: "在这里换乘开往首尔的列车",
@@ -270,10 +316,51 @@ const UI: Record<Lang, {
     closingTitle1: "根据你的日期做出的准确判断", closingTitle2: "只有提交请求才能获得",
     closingSub1: "以上路线是没有设定具体日期的示例场景。", closingSub2: "告诉我们你想去的地区和日期，我们会重新精确计算到末班车。",
     stickySaveBtn: "🗺️ 保存地图",
-    disclaimerText: "以上判定是未输入具体日期·时间的示例场景。如需根据你的日期·时间获得准确判断，请点击“提交请求”。",
+    stickyHook: "你的日期可能不同",
     breakHeading: "⚠ 这个判断会失效的情况",
     breakCond1: "周三第一站休息 — 建议选平日(周三除外)或周末前往",
     stickyBtn: "提交请求 →",
+  },
+  vi: {
+    backLink: "Xem các tour khác", brand: "KSPOT Travelog",
+    heroBadge: "📍 Suwon Haenggung-dong · Lịch trình 1 ngày",
+    heroTitle1: "Gặp gỡ tại Suwon", heroTitle2: "Lịch trình du hành thời gian của 〈Cõng anh mà chạy〉",
+    heroAlt: "Cảnh đêm Janganmun của Thành Suwon Hwaseong",
+    introSub: "Lộ trình hành hương đến vùng thánh địa du hành thời gian của Sol♥Sun-jae mà chỉ fan cứng 〈Cõng anh mà chạy〉 mới biết",
+    blockquote: "Tọa độ thực tế không có trên Instagram, các món ăn ngon địa phương được đảm bảo — chinh phục hoàn toàn Suwon chỉ với một trang này.",
+    frameHeading: "Khứ hồi, trong nháy mắt",
+    verdictTitle: {
+      go: "Lịch trình hôm nay, được rồi đấy",
+      care: "Lịch trình hôm nay, đi nhanh là được",
+      reconsider: "Lịch trình hôm nay, cần rút gọn",
+      not_now: "Lịch trình hôm nay, chưa khả thi",
+      draft: "Đang xác nhận nhận định hôm nay...",
+    },
+    evidenceItem1: "✓ Còn nhiều thời gian trước chuyến tàu cuối (khoảng 360 phút)",
+    evidenceItem2: "✓ Đã xác nhận giờ mở cửa tất cả các điểm (không có vấn đề đóng cửa)",
+    evidenceItem3: "✓ Đã xác nhận phương tiện và thời gian di chuyển khứ hồi",
+    departNote: "Ga Seoul khởi hành · Tuyến 1 khoảng 55 phút",
+    hubWarning: " [Cần xác nhận trung tâm khởi hành]",
+    startTransferNote: "09:40 Đến Ga Suwon → Monde Café, khoảng 20 phút",
+    transferNote: "16:47 Cà phê Jeong Jiyoung khởi hành → Ga Suwon, khoảng 20 phút",
+    arrivalLabel: "Đến Ga Suwon",
+    scrollHint: "↓ Cuộn xuống để xem lịch trình từng địa điểm",
+    verdictReasonPre: "Vì vậy bạn còn ", verdictReasonPost: " trước chuyến tàu cuối (khoảng nửa đêm) — có thể yên tâm quay về.",
+    timetableStartLabel: "Khởi hành từ Ga Seoul", timetableStartDesc: "Đi Tuyến 1 đến Ga Suwon mất khoảng 55 phút",
+    timetableSuwonArriveDesc: "Đến Monde Café khoảng 20 phút",
+    timetableEndLabel: "Đến Ga Suwon", timetableEndDesc: "Chuyển tàu tại đây để về Seoul",
+    timetableSeoulArriveLabel: "Đến Ga Seoul", timetableSeoulArriveDesc: "Đi Tuyến 1 kết thúc một ngày an toàn",
+    ch1: "5 Điểm quay phim ấn tượng nhất", ch2: "Món ngon địa phương", ch3: "Quán cà phê", ch4: "Bảng giờ giấc đi trong ngày trong nháy mắt",
+    secretCoord: "Tọa độ bí mật.", moveLabel: "Di chuyển · Đỗ xe.", tipLabel: "Mẹo bí mật từ Biên tập viên",
+    recommendedMenu: "Món ăn khuyên dùng.", tipLabel2: "Mẹo.",
+    closingEyebrow: "✦ Vẫn chưa kết thúc đâu",
+    closingTitle1: "Nhận định chính xác cho ngày đi của bạn", closingTitle2: "chỉ có được khi bạn gửi yêu cầu",
+    closingSub1: "Lịch trình trên là kịch bản mẫu không chỉ định ngày.", closingSub2: "Hãy cho chúng tôi biết ngày và khu vực bạn muốn đi, chúng tôi sẽ tính toán chính xác lại đến tận chuyến tàu cuối.",
+    stickySaveBtn: "🗺️ Lưu bản đồ",
+    stickyHook: "Lịch trình của tôi có thể khác",
+    breakHeading: "⚠ Điều kiện nhận định này bị phá vỡ",
+    breakCond1: "Thứ Tư điểm đầu tiên đóng cửa — Khuyên bạn nên ghé thăm vào ngày thường (trừ thứ Tư) hoặc cuối tuần",
+    stickyBtn: "Yêu cầu →",
   },
 };
 
@@ -392,6 +479,33 @@ const SPOTS: Record<Lang, SpotItem[]> = {
       goldenHour: "夜间开放期间(5~11月周五至周日及公休日18:00–21:30，最晚入场21:00)还能看夜景。殿阁较多，建议多留点时间(90分钟)。",
       caution: "门票2,000韩元 · 09:00–18:00(截止入场为闭馆前1小时) · 无休息日", image: suwonFortressWallImg },
   ],
+  vi: [
+    { no: "01", emoji: "🎬", title: "Monde Café", subtitle: "Trước tiệm băng đĩa của Sol · Cảnh ô vàng",
+      scene: "Quán cà phê trước con hẻm nơi cảnh che ô màu vàng của Sun-jae và Sol được quay. Hãy bắt đầu một ngày thảnh thơi theo giờ mở cửa của quán.",
+      coord: "경기 수원시 팔달구 화서문로48번길 14 1층", move: "Monde Café → Hwahongmun, đi bộ 9 phút",
+      goldenHour: "Vì quán mở lúc 10h, nên nếu đến sớm hơn, bạn nên chụp ảnh con hẻm trước rồi mới vào quán.",
+      caution: "Giờ mở cửa 10:00–19:00 · Đóng cửa thứ Tư hàng tuần", image: sunjaeSiljaImg, imgAspect: "3 / 2" },
+    { no: "02", emoji: "💌", title: "Cổng Hwahongmun", subtitle: "Nơi Sol tỏ tình với Sun-jae",
+      scene: "Cây cầu đá bắc qua Suwoncheon. Đây là nơi Sol 19 tuổi tỏ tình với Sun-jae.",
+      coord: "경기 수원시 팔달구 북수동", move: "Hwahongmun → Banghwasuryujeong, đi bộ 3 phút",
+      goldenHour: "Hãy vừa nghe OST vừa thong thả băng qua cầu — Góc chụp bắt trọn lưng bạn cùng lầu gác Hwahongmun rất đẹp.",
+      caution: "Mở cửa 24/24 · Không ngày nghỉ", image: suwonHongwhamunImg, imgPosition: "top" },
+    { no: "03", emoji: "🚲", title: "Banghwasuryujeong", subtitle: "Nơi anh ấy dạy cô đi xe đạp",
+      scene: "Nơi Sun-jae dạy Sol cách đi xe đạp. Vào ngày đẹp trời, ngồi nghỉ một chút ngắm view rất tuyệt.",
+      coord: "경기 수원시 팔달구 매향동 151", move: "Banghwasuryujeong → Làng bích họa Haenggung-dong, đi bộ 3 phút",
+      goldenHour: "Góc chụp lấy trọn cả đình và hồ Yongyeon là góc chuẩn nhất.",
+      caution: "Mở cửa 24/24 · Không ngày nghỉ", image: bangwhasuryujeongPicnicImg },
+    { no: "04", emoji: "🧱", title: "Làng bích họa Haenggung-dong", subtitle: "Con hẻm nhỏ với cảnh ép tường lãng mạn",
+      scene: "Con hẻm bích họa chạy dọc theo thành lũy. Đây là nơi quay cảnh ép tường của Sun-jae và Sol.",
+      coord: "경기 수원시 팔달구 화서문로72번길 9-7", move: "Làng bích họa Haenggung-dong → Cung điện Hwaseong Haenggung, đi bộ 13 phút",
+      goldenHour: "Con hẻm mở cửa 24/24 nên bạn có thể ghé thăm bất cứ lúc nào.",
+      caution: "Cần xác nhận giờ mở cửa của từng cửa hàng riêng lẻ khi ghé thăm", image: haenggungdongMuralImg },
+    { no: "05", emoji: "🏯", title: "Cung điện Hwaseong Haenggung", subtitle: "Du hành thời gian về thời Joseon",
+      scene: "Cung điện mở ra ngay khi bạn bước khỏi hẻm. Thong thả đi dạo qua cung điện nơi Vua Jeongjo từng nghỉ lại.",
+      coord: "경기 수원시 팔달구 정조로 825", move: "Hwaseong Haenggung → Gà rán Wanggalbi Suwon, đi bộ 11 phút",
+      goldenHour: "Vào đợt mở cửa ban đêm (Tháng 5~11, Thứ Sáu~Chủ Nhật và ngày lễ 18:00–21:30, lượt vào cuối 21:00) bạn có thể ngắm cảnh đêm rất đẹp. Có nhiều điện thờ nên hãy chừa thời gian tham quan rộng rãi (90 phút).",
+      caution: "Vé vào cửa 2,000 KRW · 09:00–18:00 (Ngừng đón khách 1 tiếng trước khi đóng cửa) · Không ngày nghỉ", image: suwonFortressWallImg },
+  ],
 };
 
 type EatItem = {
@@ -440,6 +554,16 @@ const EATS: Record<Lang, EatItem[]> = {
       tip: "屋顶座位先到先得，建议到达后立刻去占座。",
       view: "沿途逛逛行理团街的小店和巷子，自然就会走到这一天的最后一站。", image: jeongjiyoungStoreImg },
   ],
+  vi: [
+    { section: "food", emoji: "🍗", category: "Bữa trưa · Gà rán", title: "Gà rán Wanggalbi Suwon",
+      coord: "경기 수원시 팔달구 정조로800번길 12", menu: "Gà rán Wanggalbi (chỉ đón khách vãng lai)",
+      tip: "Nhận order cuối cùng lúc 21:00. Thường phải chờ, nên hãy ghé với thời gian dư dả.",
+      view: "Đi bộ 11 phút từ Hwaseong Haenggung — quán địa phương được yêu thích ngay sau khi tham quan.", image: nammanTongdakImg },
+    { section: "cafe", emoji: "☕", category: "Café sân thượng · Kết thúc", title: "Jeong Jiyoung Coffee Roasters",
+      coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "Latte đặc trưng + chỗ ngồi sân thượng view thành quách",
+      tip: "Chỗ ngồi sân thượng theo thứ tự đến trước — hãy giữ chỗ ngay khi vừa tới.",
+      view: "Dạo qua các cửa hàng, con hẻm ở Haengridan-gil trên đường đi, bạn sẽ tự nhiên đến điểm dừng cuối cùng trong ngày.", image: jeongjiyoungStoreImg },
+  ],
 };
 
 type TimetableItem = { time: string; emoji: string; label: string; desc: string; pin?: "hub" };
@@ -484,6 +608,16 @@ const TIMETABLE: Record<Lang, TimetableItem[]> = {
     { time: "13:39", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
     { time: "14:44", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
     { time: "15:47", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
+  ],
+  vi: [
+    { time: "10:00", emoji: "☕", label: "Monde Café", desc: "Bắt đầu ngày mới tại con hẻm nhỏ của cảnh ô vàng" },
+    { time: "10:39", emoji: "💌", label: "Cổng Hwahongmun", desc: "Vừa nghe OST vừa bước qua cầu đá tỏ tình" },
+    { time: "11:12", emoji: "🚲", label: "Banghwasuryujeong", desc: "Nghỉ ngơi một lát tại nơi anh ấy dạy xe đạp" },
+    { time: "11:45", emoji: "🧱", label: "Làng bích họa Haenggung-dong", desc: "Dạo quanh con hẻm của cảnh ép tường" },
+    { time: "12:28", emoji: "🏯", label: "Hwaseong Haenggung", desc: "Du hành thời gian về thời Joseon (Vé vào cửa 2,000 KRW)" },
+    { time: "13:39", emoji: "🍗", label: "Gà rán Wanggalbi Suwon", desc: "Ăn trưa thật no nê" },
+    { time: "14:44", emoji: "🛍️", label: "Đường Haengridan-gil", desc: "Di chuyển và ngắm các cửa hàng lưu niệm" },
+    { time: "15:47", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Thời gian thưởng trà cuối ngày tại sân thượng view thành quách" },
   ],
 };
 
@@ -567,74 +701,8 @@ export default function SuwonTour() {
         </div>
       </header>
 
-      {/* EVIDENCE — 무사귀환 판단, 히어로 바로 아래 첫 스크린에 노출 (2-5) */}
-      <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-6 sm:pt-8">
-        {/* 왕복 판단 프레임 */}
-        <div
-          className="rounded-md overflow-hidden mb-10"
-          style={{ border: `1px solid ${HAIRLINE}` }}
-        >
-          <div
-            className="px-4 py-3 text-sm font-black flex items-center gap-2"
-            style={{ backgroundColor: PAPER_DEEP, color: PINE }}
-          >
-            {t.frameHeading}
-          </div>
-          <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
-            <div className="flex items-center gap-2 font-bold" style={{ color: GO_GREEN }}>
-              <span>🚆</span>
-              <span>
-                {ROUND_TRIP.departTime} {t.departNote}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
-              <span>🚉</span>
-              <span>{t.startTransferNote}</span>
-            </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
-              <span>🚕</span>
-              <span>{t.transferNote}</span>
-            </div>
-            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: VERDICT_COLOR[verdict] }}>
-              <span>🕚</span>
-              <span>
-                {ROUND_TRIP.estimatedStationArrival} {t.arrivalLabel} — {VERDICT_ARRIVAL_HINT[lang][verdict]}
-              </span>
-            </div>
-          </div>
-
-          {/* 판정 결과 — GO '도장'이 아니라 판단 입력값을 같이 노출하는 근거 카드 (2-2) */}
-          <div className="px-4 py-2.5 text-white" style={{ backgroundColor: VERDICT_COLOR[verdict] }}>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-black">{VERDICT_LABEL[verdict]}</span>
-              <span className="text-[11px] font-semibold opacity-90">{VERDICT_SUB[lang][verdict]}</span>
-            </div>
-            <div
-              className="text-[10.5px] font-semibold opacity-90 mt-1.5 pt-1.5"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
-            >
-              {t.evidenceDepart} {ROUND_TRIP.departTime} · {t.evidenceLastSpot} {ROUND_TRIP.lastSpotDepartTime} · {t.evidenceLastTrain} {t.lastTrainApprox} · {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferApprox(ROUND_TRIP.bufferMinutes, lang) : ""}
-            </div>
-          </div>
-        </div>
-
-        {/* 이 판단이 깨지는 조건 (2-1) — 코스템플릿 v4 확정 문구. 화성행궁 입장마감은 팀이 "이 코스는 문제없음"으로 확인해 제외 */}
-        <div
-          className="rounded-md px-4 py-3 mb-6 text-[12px] leading-relaxed"
-          style={{ backgroundColor: PAPER_DEEP, border: `1px solid ${HAIRLINE}` }}
-        >
-          <p className="font-black" style={{ color: CARE_AMBER }}>{t.breakHeading}</p>
-          <p style={{ color: INK, opacity: 0.85 }}>· {t.breakCond1}</p>
-        </div>
-
-        {/* 가상 시나리오 디스클레이머 (3-1) */}
-        <p className="text-[11px] text-center mb-10" style={{ color: INK, opacity: 0.45 }}>
-          {t.disclaimerText}
-        </p>
-      </section>
-
-      {/* INTRO */}
-      <section className="max-w-2xl mx-auto px-5 sm:px-8">
+      {/* INTRO — 감성 후킹을 히어로 바로 아래로, 판단 근거는 그 다음에 */}
+      <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
           {t.introSub}
         </p>
@@ -657,6 +725,75 @@ export default function SuwonTour() {
             {t.blockquote}
           </p>
         </blockquote>
+      </section>
+
+      {/* EVIDENCE — 무사귀환 판단 (2-5) */}
+      <section className="max-w-2xl mx-auto px-5 sm:px-8">
+        {/* 왕복 판단 프레임 */}
+        <div
+          className="rounded-md overflow-hidden mb-10"
+          style={{ border: `1px solid ${HAIRLINE}` }}
+        >
+          <div
+            className="px-4 py-3 text-sm font-black flex items-center gap-2"
+            style={{ backgroundColor: PAPER_DEEP, color: PINE }}
+          >
+            {t.verdictTitle[verdict]}
+          </div>
+          <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
+            <div className="flex items-center gap-2 font-bold" style={{ color: GO_GREEN }}>
+              <span>🚆</span>
+              <span>
+                {ROUND_TRIP.departTime} {t.departNote}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
+              <span>🚉</span>
+              <span>{t.startTransferNote}</span>
+            </div>
+            <p className="text-[11px] text-center my-2" style={{ color: STAMP, opacity: 0.8 }}>
+              {t.scrollHint}
+            </p>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: INK, opacity: 0.7 }}>
+              <span>🚕</span>
+              <span>{t.transferNote}</span>
+            </div>
+            <div className="flex items-center gap-2 font-bold mt-1.5" style={{ color: VERDICT_COLOR[verdict] }}>
+              <span>🕚</span>
+              <span>
+                {ROUND_TRIP.estimatedStationArrival} {t.arrivalLabel} — {VERDICT_ARRIVAL_HINT[lang][verdict]}
+              </span>
+            </div>
+          </div>
+
+          {/* 판정 결과 — GO '도장'이 아니라 판단 입력값을 같이 노출하는 근거 카드 (2-2) */}
+          <div className="px-4 py-2.5 text-white" style={{ backgroundColor: VERDICT_COLOR[verdict] }}>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-black">{VERDICT_LABEL[verdict]}</span>
+              <span className="text-[11px] font-semibold opacity-90">{VERDICT_SUB[lang][verdict]}</span>
+            </div>
+            <div
+              className="text-[11px] font-semibold opacity-95 mt-1.5 pt-1.5 leading-relaxed"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
+            >
+              {t.verdictReasonPre}
+              {ROUND_TRIP.bufferMinutes !== null ? formatBufferApprox(ROUND_TRIP.bufferMinutes, lang) : ""}
+              {t.verdictReasonPost}
+            </div>
+            <p className="text-[11px] text-white/90 mt-1.5">{t.evidenceItem1}</p>
+            <p className="text-[11px] text-white/90 mt-1">{t.evidenceItem2}</p>
+            <p className="text-[11px] text-white/90 mt-1">{t.evidenceItem3}</p>
+          </div>
+
+          {/* 이 판단이 깨지는 조건 (2-1) — 코스템플릿 v4 확정 문구. 화성행궁 입장마감은 팀이 "이 코스는 문제없음"으로 확인해 제외 */}
+          <div
+            className="px-4 py-3 text-[12px] leading-relaxed"
+            style={{ backgroundColor: PAPER_DEEP, borderTop: `1px solid ${HAIRLINE}` }}
+          >
+            <p className="font-black" style={{ color: CARE_AMBER }}>{t.breakHeading}</p>
+            <p style={{ color: INK, opacity: 0.85 }}>· {t.breakCond1}</p>
+          </div>
+        </div>
       </section>
 
       {/* SPOTS */}
@@ -852,8 +989,8 @@ export default function SuwonTour() {
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-2 sm:gap-3">
           <div className="text-[11px] sm:text-xs leading-tight min-w-0">
             <span className="font-black" style={{ color: VERDICT_COLOR[verdict] }}>{VERDICT_LABEL[verdict]}</span>
-            <span className="font-semibold ml-1" style={{ color: INK, opacity: 0.65 }}>
-              {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferApprox(ROUND_TRIP.bufferMinutes, lang) : ""}
+            <span className="font-semibold ml-1" style={{ color: STAMP, opacity: 0.9 }}>
+              · {t.stickyHook}
             </span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
