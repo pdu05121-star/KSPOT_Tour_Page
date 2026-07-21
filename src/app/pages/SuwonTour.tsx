@@ -39,16 +39,15 @@ const LANGS: { code: Lang; label: string }[] = [
   { code: "zh", label: "中" },
 ];
 
-// 왕복 판단 프레임 — 코스템플릿_수원_선재_v3.md 기준 (2026-07-20) + 막차·귀환 이동 전부 확정
+// 왕복 판단 프레임 — 코스템플릿_수원_선재_v4.md 기준 (2026-07-21, 판정 CONFIRMED)
 const ROUND_TRIP = {
-  departTime: "09:00",
-  departConfirmed: false, // 출발 허브만 아직 팀 결정 안 남
-  suwonArriveTime: "10:00", // 서울역 출발 → 수원역 도착, 1호선 약 1시간
-  lastSpotDepartTime: "17:37", // 정지영커피 출발 (transferNote와 동일 값)
-  estimatedStationArrival: "17:52",
-  lastTrainTime: "23:31",
-  homeArriveTime: "18:22", // 수원역(17:52) → 서울역, 약 30분
-  bufferMinutes: 339 as number | null, // null = 아직 계산 불가(귀환 정보 미확정) → DRAFT
+  departTime: "08:40", // 몽테드 카페 오픈(10:00) 기준 역산
+  departConfirmed: false, // 출발 허브(서울역)는 v4에서도 "임시 확정 — 팀 최종 확인 권장" 상태
+  suwonArriveTime: "09:40", // 서울역 출발 → 수원역 도착, 1호선 약 55분
+  lastSpotDepartTime: "16:47", // 정지영커피 출발 = 코스 종료 시각
+  estimatedStationArrival: "17:10",
+  homeArriveTime: "17:40", // 수원역(17:10) → 서울역, 약 30분(팀 확인값)
+  bufferMinutes: 360 as number | null, // v4 판정 근거: 여유 약 360분 → GO. 막차 정확 시각은 표시용 디테일이라 페이지에 노출 안 함.
 };
 
 // 판정 임계값 — 개발지시서 기준. 여기 숫자만 바꾸면 전 지역 코스에 동일 적용됨.
@@ -102,20 +101,16 @@ const VERDICT_ARRIVAL_HINT: Record<Lang, Record<Verdict, string>> = {
 
 const verdict = computeVerdict(ROUND_TRIP.bufferMinutes);
 
-// 여유시간을 "5시간 59분" 형태로 변환 (언어별 단위)
-const BUFFER_UNIT: Record<Lang, { h: string; m: string; sep: string }> = {
-  ko: { h: "시간", m: "분", sep: " " },
-  en: { h: "hr", m: "min", sep: " " },
-  ja: { h: "時間", m: "分", sep: "" },
-  zh: { h: "小时", m: "分钟", sep: "" },
+// 여유시간 표기 — v4 지시서: "가짜 정밀값(예: 5시간 39분) 금지, 여유 약 360분 형식(분 단위 + 라벨)으로 통일"
+const BUFFER_APPROX: Record<Lang, { prefix: string; unit: string }> = {
+  ko: { prefix: "약 ", unit: "분" },
+  en: { prefix: "about ", unit: " min" },
+  ja: { prefix: "約", unit: "分" },
+  zh: { prefix: "约", unit: "分钟" },
 };
-function formatBufferHM(minutes: number, lang: Lang): string {
-  const u = BUFFER_UNIT[lang];
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  if (h > 0 && m > 0) return `${h}${u.h}${u.sep}${m}${u.m}`;
-  if (h > 0) return `${h}${u.h}`;
-  return `${m}${u.m}`;
+function formatBufferApprox(minutes: number, lang: Lang): string {
+  const u = BUFFER_APPROX[lang];
+  return `${u.prefix}${minutes}${u.unit}`;
 }
 
 // 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 7곳 (행리단길은 좌표 미확인이라 제외)
@@ -143,8 +138,8 @@ const UI: Record<Lang, {
   heroBadge: string; heroTitle1: string; heroTitle2: string; heroAlt: string;
   introSub: string; blockquote: string;
   frameHeading: string; departNote: string; hubWarning: string; startTransferNote: string; transferNote: string;
-  arrivalLabel: string; lastTrainPrefix: string; bufferLabel: string; confirmedNote: string;
-  evidenceDepart: string; evidenceLastSpot: string; evidenceLastTrain: string;
+  arrivalLabel: string; bufferLabel: string;
+  evidenceDepart: string; evidenceLastSpot: string; evidenceLastTrain: string; lastTrainApprox: string;
   timetableStartLabel: string; timetableStartDesc: string;
   timetableSuwonArriveDesc: string;
   timetableEndLabel: string; timetableEndDesc: string;
@@ -154,7 +149,7 @@ const UI: Record<Lang, {
   recommendedMenu: string; tipLabel2: string;
   closingEyebrow: string; closingTitle1: string; closingTitle2: string; closingSub1: string; closingSub2: string;
   stickyBtn: string; stickySaveBtn: string; disclaimerText: string;
-  breakHeading: string; breakCond1: string; breakCond2: string;
+  breakHeading: string; breakCond1: string;
 }> = {
   ko: {
     backLink: "다른 투어 보기", brand: "KSPOT Travelog",
@@ -164,16 +159,14 @@ const UI: Record<Lang, {
     introSub: "〈선재 업고 튀어〉 찐팬들만 아는 임솔♥류선재 타임슬립 성지 루트",
     blockquote: "인스타에도 없는 진짜 좌표, 현지인 보장 찐 맛집까지 — 이 페이지 하나로 수원 완전 정복.",
     frameHeading: "오늘 일정 한눈에",
-    departNote: "서울역 출발 · 1호선 약 1시간",
+    departNote: "서울역 출발 · 1호선 약 55분",
     hubWarning: " [출발 허브 확정 필요]",
-    startTransferNote: "10:00 수원역 도착 → 몽테드 카페, 약 20분",
-    transferNote: "17:37 정지영커피 출발 → 수원역, 버스(35번·13번) 15분",
+    startTransferNote: "09:40 수원역 도착 → 몽테드 카페, 약 20분",
+    transferNote: "16:47 정지영커피 출발 → 수원역, 약 20분",
     arrivalLabel: "수원역 도착",
-    lastTrainPrefix: "",
     bufferLabel: "막차까지 여유",
-    confirmedNote: "✓ 왕복 정보 전체 확인 완료 — 서울행 막차(23:31), 정지영커피→수원역 버스 15분(35번·13번) 전부 확정된 값입니다.",
-    evidenceDepart: "출발", evidenceLastSpot: "마지막 스팟 종료", evidenceLastTrain: "막차",
-    timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 1시간",
+    evidenceDepart: "출발", evidenceLastSpot: "마지막 스팟 종료", evidenceLastTrain: "막차", lastTrainApprox: "자정 무렵",
+    timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 55분",
     timetableSuwonArriveDesc: "몽테드 카페까지 약 20분",
     timetableEndLabel: "수원역 도착", timetableEndDesc: "여기서 서울행 열차로 환승",
     timetableSeoulArriveLabel: "서울역 도착", timetableSeoulArriveDesc: "1호선 타고 무사히 하루 마무리",
@@ -186,8 +179,7 @@ const UI: Record<Lang, {
     stickySaveBtn: "🗺️ 지도 저장",
     disclaimerText: "위 판단은 특정 날짜·시간을 입력하지 않은 예시 시나리오입니다. 내 날짜·시간 기준 정확한 판단이 필요하면 요청하기를 눌러주세요.",
     breakHeading: "⚠ 이 판단이 깨지는 조건",
-    breakCond1: "수요일 방문 — 몽테드 카페 휴무로 코스 시작이 흔들려요",
-    breakCond2: "출발이 크게 늦어지면 — 화성행궁 입장마감(17:00)을 놓칠 수 있어요",
+    breakCond1: "수요일은 첫 스팟 휴무 — 평일(수요일 제외)·주말 방문 권장",
     stickyBtn: "요청하기 →",
   },
   en: {
@@ -198,16 +190,14 @@ const UI: Record<Lang, {
     introSub: "The time-slip pilgrimage route only 〈Lovely Runner〉 diehards know — Sol ♥ Sun-jae",
     blockquote: "Real coordinates Instagram doesn't have, local-guaranteed favorites — conquer Suwon completely with this one page.",
     frameHeading: "Today's plan, at a glance",
-    departNote: "Depart Seoul Station · ~1 hr on Line 1",
+    departNote: "Depart Seoul Station · ~55 min on Line 1",
     hubWarning: " [Departure hub not finalized]",
-    startTransferNote: "10:00 Arrive Suwon Station → Monde Café, about 20 min",
-    transferNote: "17:37 Depart Jeong Jiyoung Coffee → Suwon Station, bus (No. 35/13) 15 min",
+    startTransferNote: "09:40 Arrive Suwon Station → Monde Café, about 20 min",
+    transferNote: "16:47 Depart Jeong Jiyoung Coffee → Suwon Station, about 20 min",
     arrivalLabel: "Arrive Suwon Station",
-    lastTrainPrefix: "",
     bufferLabel: "Time to spare before the last train",
-    confirmedNote: "✓ All round-trip details confirmed — the last train (23:31) and the 15-min bus (No. 35/13) from Jeong Jiyoung Coffee to Suwon Station are both confirmed.",
-    evidenceDepart: "Depart", evidenceLastSpot: "Last spot ends", evidenceLastTrain: "Last train",
-    timetableStartLabel: "Depart Seoul Station", timetableStartDesc: "About 1 hr to Suwon Station on Line 1",
+    evidenceDepart: "Depart", evidenceLastSpot: "Last spot ends", evidenceLastTrain: "Last train", lastTrainApprox: "around midnight",
+    timetableStartLabel: "Depart Seoul Station", timetableStartDesc: "About 55 min to Suwon Station on Line 1",
     timetableSuwonArriveDesc: "About 20 min to Monde Café",
     timetableEndLabel: "Arrive Suwon Station", timetableEndDesc: "Transfer here for the train back to Seoul",
     timetableSeoulArriveLabel: "Arrive Seoul Station", timetableSeoulArriveDesc: "Back on Line 1 — day safely wrapped up",
@@ -220,8 +210,7 @@ const UI: Record<Lang, {
     stickySaveBtn: "🗺️ Save map",
     disclaimerText: "This verdict is a sample scenario without a specific date or time entered. For an accurate judgment based on your own schedule, tap Request.",
     breakHeading: "⚠ When this verdict breaks down",
-    breakCond1: "Visiting on a Wednesday — Monde Café is closed, so the start of the course falls apart",
-    breakCond2: "A much later start — you may miss Hwaseong Haenggung Palace's last entry (17:00)",
+    breakCond1: "The first spot is closed on Wednesdays — visit on a weekday (except Wed.) or weekend",
     stickyBtn: "Request →",
   },
   ja: {
@@ -232,16 +221,14 @@ const UI: Record<Lang, {
     introSub: "〈ソンジェ背負って走れ〉ガチ勢だけが知るソル♥ソンジェのタイムスリップ聖地ルート",
     blockquote: "インスタにもない本物の座標、地元民保証の名店まで — このページ一つで水原を完全制覇。",
     frameHeading: "今日の予定、ひと目で",
-    departNote: "ソウル駅発 · 1号線約1時間",
+    departNote: "ソウル駅発 · 1号線約55分",
     hubWarning: " [出発ハブ未確定]",
-    startTransferNote: "10:00 水原駅到着 → モンテドカフェ、約20分",
-    transferNote: "17:37 ジョンジヨンコーヒー出発 → 水原駅、バス(35番・13番)15分",
+    startTransferNote: "09:40 水原駅到着 → モンテドカフェ、約20分",
+    transferNote: "16:47 ジョンジヨンコーヒー出発 → 水原駅、約20分",
     arrivalLabel: "水原駅到着",
-    lastTrainPrefix: "",
     bufferLabel: "終電までの余裕",
-    confirmedNote: "✓ 往復情報すべて確認完了 — ソウル行き終電(23:31)、ジョンジヨンコーヒー→水原駅のバス15分(35番・13番)、すべて確定した数値です。",
-    evidenceDepart: "出発", evidenceLastSpot: "最後のスポット終了", evidenceLastTrain: "終電",
-    timetableStartLabel: "ソウル駅出発", timetableStartDesc: "1号線で水原駅まで約1時間",
+    evidenceDepart: "出発", evidenceLastSpot: "最後のスポット終了", evidenceLastTrain: "終電", lastTrainApprox: "深夜0時ごろ",
+    timetableStartLabel: "ソウル駅出発", timetableStartDesc: "1号線で水原駅まで約55分",
     timetableSuwonArriveDesc: "モンテドカフェまで約20分",
     timetableEndLabel: "水原駅到着", timetableEndDesc: "ここでソウル行きの列車に乗り換え",
     timetableSeoulArriveLabel: "ソウル駅到着", timetableSeoulArriveDesc: "1号線で無事に一日を締めくくり",
@@ -254,8 +241,7 @@ const UI: Record<Lang, {
     stickySaveBtn: "🗺️ 地図を保存",
     disclaimerText: "上記の判定は特定の日付・時間を入力していないサンプルシナリオです。ご自身の日程に基づいた正確な判定が必要な場合は「リクエストする」をタップしてください。",
     breakHeading: "⚠ この判定が崩れる条件",
-    breakCond1: "水曜日に訪問 — モンテドカフェが休みでコースの出だしが崩れます",
-    breakCond2: "出発が大幅に遅れる — 華城行宮の入場締め切り(17:00)に間に合わないことがあります",
+    breakCond1: "水曜日は最初のスポットが休み — 平日(水曜以外)か週末の訪問がおすすめです",
     stickyBtn: "リクエストする →",
   },
   zh: {
@@ -266,16 +252,14 @@ const UI: Record<Lang, {
     introSub: "只有〈背着善宰跑〉真爱粉才知道的Sol♥Sunjae穿越时空圣地路线",
     blockquote: "连Instagram都没有的真实坐标，本地人认证的美食——这一页带你彻底征服水原。",
     frameHeading: "今日行程一目了然",
-    departNote: "首尔站出发 · 1号线约1小时",
+    departNote: "首尔站出发 · 1号线约55分钟",
     hubWarning: " [出发枢纽尚未确定]",
-    startTransferNote: "10:00 到达水原站 → Monde咖啡，约20分钟",
-    transferNote: "17:37 从Jeong Jiyoung咖啡出发 → 水原站，公交车(35路·13路)15分钟",
+    startTransferNote: "09:40 到达水原站 → Monde咖啡，约20分钟",
+    transferNote: "16:47 从Jeong Jiyoung咖啡出发 → 水原站，约20分钟",
     arrivalLabel: "到达水原站",
-    lastTrainPrefix: "",
     bufferLabel: "距末班车还有",
-    confirmedNote: "✓ 往返信息已全部确认 — 开往首尔的末班车(23:31)、从Jeong Jiyoung咖啡到水原站的公交15分钟(35路·13路)，均为确认数值。",
-    evidenceDepart: "出发", evidenceLastSpot: "最后一站结束", evidenceLastTrain: "末班车",
-    timetableStartLabel: "首尔站出发", timetableStartDesc: "乘1号线到水原站约1小时",
+    evidenceDepart: "出发", evidenceLastSpot: "最后一站结束", evidenceLastTrain: "末班车", lastTrainApprox: "接近午夜",
+    timetableStartLabel: "首尔站出发", timetableStartDesc: "乘1号线到水原站约55分钟",
     timetableSuwonArriveDesc: "到Monde咖啡约20分钟",
     timetableEndLabel: "到达水原站", timetableEndDesc: "在这里换乘开往首尔的列车",
     timetableSeoulArriveLabel: "到达首尔站", timetableSeoulArriveDesc: "乘1号线平安结束一天",
@@ -288,8 +272,7 @@ const UI: Record<Lang, {
     stickySaveBtn: "🗺️ 保存地图",
     disclaimerText: "以上判定是未输入具体日期·时间的示例场景。如需根据你的日期·时间获得准确判断，请点击“提交请求”。",
     breakHeading: "⚠ 这个判断会失效的情况",
-    breakCond1: "周三前往 — Monde咖啡休息，行程开头会受影响",
-    breakCond2: "出发时间大幅延迟 — 可能赶不上华城行宫的入场截止时间(17:00)",
+    breakCond1: "周三第一站休息 — 建议选平日(周三除外)或周末前往",
     stickyBtn: "提交请求 →",
   },
 };
@@ -463,44 +446,44 @@ type TimetableItem = { time: string; emoji: string; label: string; desc: string;
 
 const TIMETABLE: Record<Lang, TimetableItem[]> = {
   ko: [
-    { time: "10:20", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
-    { time: "10:59", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
-    { time: "11:32", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
-    { time: "12:05", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
-    { time: "12:48", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
-    { time: "14:29", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
-    { time: "15:34", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
-    { time: "16:37", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
+    { time: "10:00", emoji: "☕", label: "몽테드 카페", desc: "노란 우산씬 그 골목 앞에서 하루 시작" },
+    { time: "10:39", emoji: "💌", label: "화홍문", desc: "고백씬 돌다리, OST 들으며 건너기" },
+    { time: "11:12", emoji: "🚲", label: "방화수류정", desc: "자전거 가르쳐주던 그 자리에서 잠깐 휴식" },
+    { time: "11:45", emoji: "🧱", label: "행궁동 벽화마을", desc: "벽쿵씬 골목 구경" },
+    { time: "12:28", emoji: "🏯", label: "화성행궁", desc: "조선시대로 타임슬립 (입장료 2,000원)" },
+    { time: "13:39", emoji: "🍗", label: "왕갈비 통닭", desc: "든든한 점심" },
+    { time: "14:44", emoji: "🛍️", label: "행리단길", desc: "소품샵 골목 구경하며 이동" },
+    { time: "15:47", emoji: "🌇", label: "정지영 커피", desc: "성곽 뷰 루프탑에서 마무리 티타임" },
   ],
   en: [
-    { time: "10:20", emoji: "☕", label: "Monde Café", desc: "Start the day at the yellow umbrella alley" },
-    { time: "10:59", emoji: "💌", label: "Hwahongmun", desc: "The confession bridge, crossed while listening to the OST" },
-    { time: "11:32", emoji: "🚲", label: "Banghwasuryujeong", desc: "A quick rest where he taught her to bike" },
-    { time: "12:05", emoji: "🧱", label: "Haenggung-dong Mural Village", desc: "Explore the wall-kiss alley" },
-    { time: "12:48", emoji: "🏯", label: "Hwaseong Haenggung Palace", desc: "Time-slip into the Joseon era (₩2,000 admission)" },
-    { time: "14:29", emoji: "🍗", label: "Wang-galbi Tongdak", desc: "A hearty lunch" },
-    { time: "15:34", emoji: "🛍️", label: "Haengridan-gil", desc: "Browse shops on the way" },
-    { time: "16:37", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Finish with rooftop tea and fortress views" },
+    { time: "10:00", emoji: "☕", label: "Monde Café", desc: "Start the day at the yellow umbrella alley" },
+    { time: "10:39", emoji: "💌", label: "Hwahongmun", desc: "The confession bridge, crossed while listening to the OST" },
+    { time: "11:12", emoji: "🚲", label: "Banghwasuryujeong", desc: "A quick rest where he taught her to bike" },
+    { time: "11:45", emoji: "🧱", label: "Haenggung-dong Mural Village", desc: "Explore the wall-kiss alley" },
+    { time: "12:28", emoji: "🏯", label: "Hwaseong Haenggung Palace", desc: "Time-slip into the Joseon era (₩2,000 admission)" },
+    { time: "13:39", emoji: "🍗", label: "Wang-galbi Tongdak", desc: "A hearty lunch" },
+    { time: "14:44", emoji: "🛍️", label: "Haengridan-gil", desc: "Browse shops on the way" },
+    { time: "15:47", emoji: "🌇", label: "Jeong Jiyoung Coffee", desc: "Finish with rooftop tea and fortress views" },
   ],
   ja: [
-    { time: "10:20", emoji: "☕", label: "モンテドカフェ", desc: "黄色い傘の路地前で一日をスタート" },
-    { time: "10:59", emoji: "💌", label: "華虹門", desc: "告白シーンの石橋、OSTを聴きながら渡る" },
-    { time: "11:32", emoji: "🚲", label: "訪花随柳亭", desc: "自転車を教えてもらった場所でひと休み" },
-    { time: "12:05", emoji: "🧱", label: "行宮洞壁画村", desc: "壁ドンシーンの路地を散策" },
-    { time: "12:48", emoji: "🏯", label: "華城行宮", desc: "朝鮮時代へタイムスリップ(入場料2,000ウォン)" },
-    { time: "14:29", emoji: "🍗", label: "ワンガルビトンダク", desc: "しっかりランチ" },
-    { time: "15:34", emoji: "🛍️", label: "行理団街", desc: "雑貨店の路地を眺めながら移動" },
-    { time: "16:37", emoji: "🌇", label: "ジョンジヨンコーヒー", desc: "城郭ビューのルーフトップで締めのお茶時間" },
+    { time: "10:00", emoji: "☕", label: "モンテドカフェ", desc: "黄色い傘の路地前で一日をスタート" },
+    { time: "10:39", emoji: "💌", label: "華虹門", desc: "告白シーンの石橋、OSTを聴きながら渡る" },
+    { time: "11:12", emoji: "🚲", label: "訪花随柳亭", desc: "自転車を教えてもらった場所でひと休み" },
+    { time: "11:45", emoji: "🧱", label: "行宮洞壁画村", desc: "壁ドンシーンの路地を散策" },
+    { time: "12:28", emoji: "🏯", label: "華城行宮", desc: "朝鮮時代へタイムスリップ(入場料2,000ウォン)" },
+    { time: "13:39", emoji: "🍗", label: "ワンガルビトンダク", desc: "しっかりランチ" },
+    { time: "14:44", emoji: "🛍️", label: "行理団街", desc: "雑貨店の路地を眺めながら移動" },
+    { time: "15:47", emoji: "🌇", label: "ジョンジヨンコーヒー", desc: "城郭ビューのルーフトップで締めのお茶時間" },
   ],
   zh: [
-    { time: "10:20", emoji: "☕", label: "Monde咖啡", desc: "在黄色雨伞的巷子前开启一天" },
-    { time: "10:59", emoji: "💌", label: "花虹门", desc: "边听OST边走过表白场景的石桥" },
-    { time: "11:32", emoji: "🚲", label: "访花随柳亭", desc: "在教骑车的地方稍作休息" },
-    { time: "12:05", emoji: "🧱", label: "行宫洞壁画村", desc: "逛壁咚场景的小巷" },
-    { time: "12:48", emoji: "🏯", label: "华城行宫", desc: "穿越回朝鲜时代(门票2,000韩元)" },
-    { time: "14:29", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
-    { time: "15:34", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
-    { time: "16:37", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
+    { time: "10:00", emoji: "☕", label: "Monde咖啡", desc: "在黄色雨伞的巷子前开启一天" },
+    { time: "10:39", emoji: "💌", label: "花虹门", desc: "边听OST边走过表白场景的石桥" },
+    { time: "11:12", emoji: "🚲", label: "访花随柳亭", desc: "在教骑车的地方稍作休息" },
+    { time: "11:45", emoji: "🧱", label: "行宫洞壁画村", desc: "逛壁咚场景的小巷" },
+    { time: "12:28", emoji: "🏯", label: "华城行宫", desc: "穿越回朝鲜时代(门票2,000韩元)" },
+    { time: "13:39", emoji: "🍗", label: "王排骨炸鸡", desc: "吃一顿丰盛的午餐" },
+    { time: "14:44", emoji: "🛍️", label: "行理团街", desc: "边逛小店边移动" },
+    { time: "15:47", emoji: "🌇", label: "Jeong Jiyoung咖啡", desc: "在城墙景观屋顶座位享用收尾茶点" },
   ],
 };
 
@@ -630,21 +613,18 @@ export default function SuwonTour() {
               className="text-[10.5px] font-semibold opacity-90 mt-1.5 pt-1.5"
               style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
             >
-              {t.evidenceDepart} {ROUND_TRIP.departTime} · {t.evidenceLastSpot} {ROUND_TRIP.lastSpotDepartTime} · {t.evidenceLastTrain} {ROUND_TRIP.lastTrainTime} · {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferHM(ROUND_TRIP.bufferMinutes, lang) : ""}
+              {t.evidenceDepart} {ROUND_TRIP.departTime} · {t.evidenceLastSpot} {ROUND_TRIP.lastSpotDepartTime} · {t.evidenceLastTrain} {t.lastTrainApprox} · {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferApprox(ROUND_TRIP.bufferMinutes, lang) : ""}
             </div>
           </div>
         </div>
 
-        {/* 이 판단이 깨지는 조건 (2-1) — 스팟 데이터에 이미 확정된 값만 사용 */}
+        {/* 이 판단이 깨지는 조건 (2-1) — 코스템플릿 v4 확정 문구. 화성행궁 입장마감은 팀이 "이 코스는 문제없음"으로 확인해 제외 */}
         <div
           className="rounded-md px-4 py-3 mb-6 text-[12px] leading-relaxed"
           style={{ backgroundColor: PAPER_DEEP, border: `1px solid ${HAIRLINE}` }}
         >
-          <p className="font-black mb-1.5" style={{ color: CARE_AMBER }}>{t.breakHeading}</p>
-          <ul className="space-y-1" style={{ color: INK, opacity: 0.85 }}>
-            <li>· {t.breakCond1}</li>
-            <li>· {t.breakCond2}</li>
-          </ul>
+          <p className="font-black" style={{ color: CARE_AMBER }}>{t.breakHeading}</p>
+          <p style={{ color: INK, opacity: 0.85 }}>· {t.breakCond1}</p>
         </div>
 
         {/* 가상 시나리오 디스클레이머 (3-1) */}
@@ -873,7 +853,7 @@ export default function SuwonTour() {
           <div className="text-[11px] sm:text-xs leading-tight min-w-0">
             <span className="font-black" style={{ color: VERDICT_COLOR[verdict] }}>{VERDICT_LABEL[verdict]}</span>
             <span className="font-semibold ml-1" style={{ color: INK, opacity: 0.65 }}>
-              {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferHM(ROUND_TRIP.bufferMinutes, lang) : ""}
+              {t.bufferLabel} {ROUND_TRIP.bufferMinutes !== null ? formatBufferApprox(ROUND_TRIP.bufferMinutes, lang) : ""}
             </span>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
