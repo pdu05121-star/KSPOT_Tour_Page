@@ -54,14 +54,15 @@ const OPEN_VI: TourCard = {
 
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
 // 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
-// 전주·포항·제주: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22) — 태그 없는 나머지 5곳(경주·부산·대구·여수·순천)은
-// 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
+// 전주·포항·제주·부산: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22, 부산=쌈,마이웨이 팀 확인 완료) —
+// 태그 없는 나머지 4곳(경주·대구·여수·순천)은 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
   { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가" },
   { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
+  { id: "busan", order: "07", status: "wait", kTag: "◉ 쌈, 마이웨이" },
 ];
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
@@ -70,6 +71,7 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州", vi: "JEONJU Jeonju" },
   pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
+  busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山", vi: "BUSAN Busan" },
 };
 
 // 미공개 코스 타이틀 — "곧 열려요/공개 준비 중" 같은 오픈 예고 문구는 status 배지가 이미 담당하므로
@@ -80,6 +82,7 @@ const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
   jeonju: { ko: "달빛 아래 그 궁궐 골목", en: "That palace alley under the moonlight", ja: "月明かりの下、あの宮殿の路地", zh: "月光下，那条宫殿小巷", vi: "Con hẻm cung điện dưới ánh trăng năm ấy" },
   pohang: { ko: "바닷마을 그 벤치, 방파제의 온기", en: "That seaside bench, warmth of the breakwater", ja: "海辺の村のあのベンチ、防波堤のぬくもり", zh: "海边小镇那张长椅，防波堤的温度", vi: "Chiếc ghế bên bờ biển, hơi ấm của con đê" },
   jeju: { ko: "섬마을 골목과 그 해안도로", en: "That island alley and coastal road", ja: "島の村の路地と、あの海岸道路", zh: "海岛小巷与那条海岸公路", vi: "Con hẻm làng đảo và con đường ven biển đó" },
+  busan: { ko: "그 옥탑방 동네, 골목 계단 사이", en: "That rooftop neighborhood, between alley stairs", ja: "あの屋上部屋の町、路地の階段の間", zh: "那个屋顶房社区，巷子台阶之间", vi: "Khu xóm gác thượng đó, giữa những bậc thang trong hẻm" },
 };
 
 function buildLockedCards(lang: Lang): TourCard[] {
