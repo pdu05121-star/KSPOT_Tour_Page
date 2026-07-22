@@ -195,7 +195,7 @@ const UI: Record<Lang, {
     closingTitle1: "내 날짜에 맞춘 정확한 판단은", closingTitle2: "지금 요청해야 받을 수 있어요",
     closingSub1: "위 코스는 날짜를 정하지 않은 예시 시나리오예요.", closingSub2: "가고 싶은 지역과 날짜를 알려주시면, 막차까지 딱 맞게 새로 계산해드려요.",
     stickySaveBtn: "🗺️ 지도 저장",
-    stickyHook: "내 날짜엔 다를 수 있어요",
+    stickyHook: "이 판단, 내가 가는 날엔 다를 수 있어요",
     breakHeading: "⚠ 이 판단이 깨지는 조건",
     breakCond1: "수요일은 첫 스팟 휴무 — 평일(수요일 제외)·주말 방문 권장",
     stickyBtn: "요청하기 →",
