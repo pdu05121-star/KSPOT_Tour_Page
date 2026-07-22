@@ -87,21 +87,21 @@ export default function LangFormModal({ open, onClose }: Props) {
       `}</style>
 
       <div
-        className="kspot-backdrop fixed inset-0 z-50 flex items-center justify-center px-8 py-10"
+        className="kspot-backdrop fixed inset-0 z-50 flex items-center justify-center"
         role="dialog"
         aria-modal="true"
         aria-label="언어 선택"
-        style={{ backgroundColor: "rgba(16,28,24,0.45)", backdropFilter: "blur(3px)" }}
+        style={{ backgroundColor: "rgba(16,28,24,0.45)", backdropFilter: "blur(3px)", padding: "48px 32px" }}
       >
         <div className="absolute inset-0" onClick={onClose} />
 
         <div
           className="kspot-modal-panel relative w-full mx-auto rounded-2xl overflow-hidden"
-          style={{ backgroundColor: PAPER, maxWidth: 380 }}
+          style={{ backgroundColor: PAPER, maxWidth: 440 }}
         >
           {/* 타이틀 */}
-          <div className="px-8 pt-8 pb-5">
-            <p className="text-[18px] font-bold" style={{ color: INK }}>
+          <div style={{ padding: "44px 44px 28px" }}>
+            <p className="font-bold" style={{ color: INK, fontSize: 20 }}>
               {PROMPT[recommended]}
             </p>
           </div>
@@ -118,8 +118,8 @@ export default function LangFormModal({ open, onClose }: Props) {
                   role="radio"
                   aria-checked={isSelected}
                   onClick={() => setSelected(code)}
-                  className="kspot-radio-row w-full flex items-center gap-4 px-8"
-                  style={{ height: 54, color: INK }}
+                  className="kspot-radio-row w-full flex items-center"
+                  style={{ height: 68, color: INK, padding: "0 44px", gap: 20 }}
                 >
                   {/* 라디오 서클 */}
                   <span
@@ -132,8 +132,8 @@ export default function LangFormModal({ open, onClose }: Props) {
                       transition: "border 0.12s ease",
                     }}
                   />
-                  <span className="text-lg leading-none">{flag}</span>
-                  <span className="text-[15px] font-medium">{label}</span>
+                  <span className="leading-none" style={{ fontSize: 20 }}>{flag}</span>
+                  <span className="font-medium" style={{ fontSize: 16 }}>{label}</span>
                 </button>
               );
             })}
@@ -141,22 +141,22 @@ export default function LangFormModal({ open, onClose }: Props) {
 
           {/* 하단 버튼 */}
           <div
-            className="flex justify-end gap-2 px-6 py-4"
-            style={{ borderTop: `1px solid ${HAIRLINE}`, marginTop: 12 }}
+            className="flex justify-end"
+            style={{ borderTop: `1px solid ${HAIRLINE}`, marginTop: 20, padding: "20px 36px", gap: 12 }}
           >
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-lg text-[13px] font-bold tracking-wide uppercase transition-opacity hover:opacity-60"
-              style={{ color: PINE, opacity: 0.55 }}
+              className="rounded-lg font-bold tracking-wide uppercase transition-opacity hover:opacity-60"
+              style={{ color: PINE, opacity: 0.55, fontSize: 13, padding: "10px 20px" }}
             >
               취소
             </button>
             <button
               type="button"
               onClick={handleConfirm}
-              className="px-5 py-2.5 rounded-lg text-[13px] font-bold tracking-wide uppercase transition-opacity hover:opacity-80"
-              style={{ color: PINE }}
+              className="rounded-lg font-bold tracking-wide uppercase transition-opacity hover:opacity-80"
+              style={{ color: PINE, fontSize: 13, padding: "10px 20px" }}
             >
               확인
             </button>
