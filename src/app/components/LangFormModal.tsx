@@ -87,7 +87,7 @@ export default function LangFormModal({ open, onClose }: Props) {
       `}</style>
 
       <div
-        className="kspot-backdrop fixed inset-0 z-50 flex items-center justify-center px-6"
+        className="kspot-backdrop fixed inset-0 z-50 flex items-center justify-center px-8 py-10"
         role="dialog"
         aria-modal="true"
         aria-label="언어 선택"
@@ -97,10 +97,10 @@ export default function LangFormModal({ open, onClose }: Props) {
 
         <div
           className="kspot-modal-panel relative w-full mx-auto rounded-2xl overflow-hidden"
-          style={{ backgroundColor: PAPER, maxWidth: 340 }}
+          style={{ backgroundColor: PAPER, maxWidth: 380 }}
         >
           {/* 타이틀 */}
-          <div className="px-6 pt-7 pb-5">
+          <div className="px-8 pt-8 pb-5">
             <p className="text-[18px] font-bold" style={{ color: INK }}>
               {PROMPT[recommended]}
             </p>
@@ -118,8 +118,8 @@ export default function LangFormModal({ open, onClose }: Props) {
                   role="radio"
                   aria-checked={isSelected}
                   onClick={() => setSelected(code)}
-                  className="kspot-radio-row w-full flex items-center gap-4 px-6"
-                  style={{ height: 52, color: INK }}
+                  className="kspot-radio-row w-full flex items-center gap-4 px-8"
+                  style={{ height: 54, color: INK }}
                 >
                   {/* 라디오 서클 */}
                   <span
@@ -141,8 +141,8 @@ export default function LangFormModal({ open, onClose }: Props) {
 
           {/* 하단 버튼 */}
           <div
-            className="flex justify-end gap-1 px-4 py-3"
-            style={{ borderTop: `1px solid ${HAIRLINE}`, marginTop: 8 }}
+            className="flex justify-end gap-2 px-6 py-4"
+            style={{ borderTop: `1px solid ${HAIRLINE}`, marginTop: 12 }}
           >
             <button
               type="button"
