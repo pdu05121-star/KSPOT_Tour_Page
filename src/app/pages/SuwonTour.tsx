@@ -175,7 +175,7 @@ const UI: Record<Lang, {
       not_now: "오늘 이 코스, 지금은 어려워요",
       draft: "오늘 이 코스, 판정 확인 중이에요",
     },
-    courseSummary: "6개 스팟 · 도보 중심 당일치기",
+    courseSummary: "8개 스팟 · 도보 중심 당일치기",
     evidenceItem1: "✓ 08:40 서울역 출발 → 17:40 서울역 귀환 (1호선 왕복)",
     evidenceItem2: "✓ 막차까지 여유 충분 (약 360분)",
     evidenceItem3: "✓ 전 스팟 운영시간 확인됨 (휴무·마감시간 문제없음)",
@@ -217,7 +217,7 @@ const UI: Record<Lang, {
       not_now: "This course isn't feasible today",
       draft: "Checking today's verdict...",
     },
-    courseSummary: "6 spots · walk-friendly day trip",
+    courseSummary: "8 spots · walk-friendly day trip",
     evidenceItem1: "✓ 08:40 Depart Seoul Station → 17:40 Return Seoul Station (Line 1)",
     evidenceItem2: "✓ Plenty of time before the last train (~360 min)",
     evidenceItem3: "✓ All spot hours confirmed (no closures or cutoffs)",
@@ -259,7 +259,7 @@ const UI: Record<Lang, {
       not_now: "今日のコース、今は難しいです",
       draft: "今日のコース、判定確認中です",
     },
-    courseSummary: "6スポット・徒歩中心の日帰り",
+    courseSummary: "8スポット・徒歩中心の日帰り",
     evidenceItem1: "✓ 08:40 ソウル駅出発 → 17:40 ソウル駅帰着（1号線往復）",
     evidenceItem2: "✓ 終電まで十分な余裕（約360分）",
     evidenceItem3: "✓ 全スポットの営業時間確認済み（休業・終了時間に問題なし）",
@@ -301,7 +301,7 @@ const UI: Record<Lang, {
       not_now: "今天这条路线，暂时有困难",
       draft: "今天这条路线，判定确认中",
     },
-    courseSummary: "6个景点 · 以步行为主的一日游",
+    courseSummary: "8个景点 · 以步行为主的一日游",
     evidenceItem1: "✓ 08:40 首尔站出发 → 17:40 首尔站返回（1号线往返）",
     evidenceItem2: "✓ 距末班车还有充足时间（约360分钟）",
     evidenceItem3: "✓ 所有景点营业时间已确认（无休息日或截止时间问题）",
@@ -343,7 +343,7 @@ const UI: Record<Lang, {
       not_now: "Lịch trình hôm nay, chưa khả thi",
       draft: "Đang xác nhận nhận định hôm nay...",
     },
-    courseSummary: "6 điểm · lịch trình đi bộ trong ngày",
+    courseSummary: "8 điểm · lịch trình đi bộ trong ngày",
     evidenceItem1: "✓ 08:40 Xuất phát Ga Seoul → 17:40 Trở về Ga Seoul (Tuyến 1)",
     evidenceItem2: "✓ Còn nhiều thời gian trước chuyến tàu cuối (khoảng 360 phút)",
     evidenceItem3: "✓ Đã xác nhận giờ mở cửa tất cả các điểm (không có vấn đề đóng cửa)",
@@ -542,57 +542,57 @@ const SPOTS: Record<Lang, SpotItem[]> = {
 };
 
 type EatItem = {
-  section: "food" | "cafe"; emoji: string; category: string; title: string;
+  no: string; section: "food" | "cafe"; emoji: string; category: string; title: string;
   coord: string; menu: string; tip: string; view: string; image: string;
 };
 
 const EATS: Record<Lang, EatItem[]> = {
   ko: [
-    { section: "food", emoji: "🍗", category: "점심 · 통닭", title: "수원 왕갈비 통닭",
+    { no: "07", section: "food", emoji: "🍗", category: "점심 · 통닭", title: "수원 왕갈비 통닭",
       coord: "경기 수원시 팔달구 정조로800번길 12", menu: "왕갈비 통닭 (워크인만 가능)",
       tip: "라스트오더 21:00. 웨이팅 있는 편이니 여유 있게 방문하세요.",
       view: "화성행궁에서 도보 11분 — 관람 끝나고 걸어갈 수 있는 로컬 맛집이에요.", image: nammanTongdakImg },
-    { section: "cafe", emoji: "☕", category: "루프탑 카페 · 마무리", title: "정지영 커피 로스터즈",
+    { no: "08", section: "cafe", emoji: "☕", category: "루프탑 카페 · 마무리", title: "정지영 커피 로스터즈",
       coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "시그니처 라떼 + 성곽 뷰 루프탑 좌석",
       tip: "루프탑 좌석은 선착순이라 도착하자마자 자리부터 잡는 걸 추천해요.",
       view: "행리단길 소품샵·골목을 구경하며 걸어오면 자연스럽게 도착하는 코스 마지막 스팟이에요.", image: jeongjiyoungStoreImg },
   ],
   en: [
-    { section: "food", emoji: "🍗", category: "Lunch · Fried chicken", title: "Suwon Wang-galbi Tongdak",
+    { no: "07", section: "food", emoji: "🍗", category: "Lunch · Fried chicken", title: "Suwon Wang-galbi Tongdak",
       coord: "경기 수원시 팔달구 정조로800번길 12", menu: "Wang-galbi fried chicken (walk-ins only)",
       tip: "Last order 21:00. Expect some wait, so visit with time to spare.",
       view: "11-min walk from Hwaseong Haenggung Palace — a local favorite right after your visit.", image: nammanTongdakImg },
-    { section: "cafe", emoji: "☕", category: "Rooftop café · finale", title: "Jeong Jiyoung Coffee Roasters",
+    { no: "08", section: "cafe", emoji: "☕", category: "Rooftop café · finale", title: "Jeong Jiyoung Coffee Roasters",
       coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "Signature latte + rooftop seat with a fortress view",
       tip: "Rooftop seats go first-come, first-served — grab one as soon as you arrive.",
       view: "Wander through Haengridan-gil's shops and alleys on the way, and you'll naturally arrive at the final stop of the day.", image: jeongjiyoungStoreImg },
   ],
   ja: [
-    { section: "food", emoji: "🍗", category: "ランチ・フライドチキン", title: "水原ワンガルビトンダク",
+    { no: "07", section: "food", emoji: "🍗", category: "ランチ・フライドチキン", title: "水原ワンガルビトンダク",
       coord: "경기 수원시 팔달구 정조로800번길 12", menu: "ワンガルビトンダク(ウォークインのみ)",
       tip: "ラストオーダー21:00。待ち時間があるので余裕を持って訪問してください。",
       view: "華城行宮から徒歩11分 — 観覧後にそのまま歩いて行けるローカルグルメです。", image: nammanTongdakImg },
-    { section: "cafe", emoji: "☕", category: "ルーフトップカフェ・締め", title: "ジョンジヨンコーヒーロースターズ",
+    { no: "08", section: "cafe", emoji: "☕", category: "ルーフトップカフェ・締め", title: "ジョンジヨンコーヒーロースターズ",
       coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "シグネチャーラテ+城郭ビューのルーフトップ席",
       tip: "ルーフトップ席は早い者勝ちなので、着いたらすぐ席を確保するのがおすすめです。",
       view: "行理団街の雑貨店・路地を眺めながら歩いてくると自然に到着する、一日の最後のスポットです。", image: jeongjiyoungStoreImg },
   ],
   zh: [
-    { section: "food", emoji: "🍗", category: "午餐·炸鸡", title: "水原王排骨炸鸡",
+    { no: "07", section: "food", emoji: "🍗", category: "午餐·炸鸡", title: "水原王排骨炸鸡",
       coord: "경기 수원시 팔달구 정조로800번길 12", menu: "王排骨炸鸡(仅接受现场排队)",
       tip: "最后点餐时间21:00。等位情况较多，建议留出充足时间前往。",
       view: "从华城行宫步行11分钟 — 逛完景点后可以直接走过去的本地美食。", image: nammanTongdakImg },
-    { section: "cafe", emoji: "☕", category: "屋顶咖啡厅·收尾", title: "Jeong Jiyoung咖啡烘焙坊",
+    { no: "08", section: "cafe", emoji: "☕", category: "屋顶咖啡厅·收尾", title: "Jeong Jiyoung咖啡烘焙坊",
       coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "招牌拿铁+可看城墙景观的屋顶座位",
       tip: "屋顶座位先到先得，建议到达后立刻去占座。",
       view: "沿途逛逛行理团街的小店和巷子，自然就会走到这一天的最后一站。", image: jeongjiyoungStoreImg },
   ],
   vi: [
-    { section: "food", emoji: "🍗", category: "Bữa trưa · Gà rán", title: "Gà rán Wanggalbi Suwon",
+    { no: "07", section: "food", emoji: "🍗", category: "Bữa trưa · Gà rán", title: "Gà rán Wanggalbi Suwon",
       coord: "경기 수원시 팔달구 정조로800번길 12", menu: "Gà rán Wanggalbi (chỉ đón khách vãng lai)",
       tip: "Nhận order cuối cùng lúc 21:00. Thường phải chờ, nên hãy ghé với thời gian dư dả.",
       view: "Đi bộ 11 phút từ Hwaseong Haenggung — quán địa phương được yêu thích ngay sau khi tham quan.", image: nammanTongdakImg },
-    { section: "cafe", emoji: "☕", category: "Café sân thượng · Kết thúc", title: "Jeong Jiyoung Coffee Roasters",
+    { no: "08", section: "cafe", emoji: "☕", category: "Café sân thượng · Kết thúc", title: "Jeong Jiyoung Coffee Roasters",
       coord: "경기 수원시 팔달구 신풍로 42 (행궁본점)", menu: "Latte đặc trưng + chỗ ngồi sân thượng view thành quách",
       tip: "Chỗ ngồi sân thượng theo thứ tự đến trước — hãy giữ chỗ ngay khi vừa tới.",
       view: "Dạo qua các cửa hàng, con hẻm ở Haengridan-gil trên đường đi, bạn sẽ tự nhiên đến điểm dừng cuối cùng trong ngày.", image: jeongjiyoungStoreImg },
@@ -900,11 +900,20 @@ export default function SuwonTour() {
 
         {eats.filter((e) => e.section === "food").map((e, idx) => (
           <div key={idx}>
-            <div
-              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
-              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
-            >
-              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+            <div className="relative mb-4">
+              <div
+                className="relative aspect-[16/9] overflow-hidden rounded-sm"
+                style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+              >
+                <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+              </div>
+              <div
+                className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
+                style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
+              >
+                <span className="text-[9px] font-bold tracking-widest uppercase leading-none">SPOT</span>
+                <span className="text-xl font-black leading-none mt-0.5" style={{ fontFamily: "'Noto Serif KR', serif" }}>{e.no}</span>
+              </div>
             </div>
             <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
             <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
@@ -930,11 +939,20 @@ export default function SuwonTour() {
 
         {eats.filter((e) => e.section === "cafe").map((e, idx) => (
           <div key={idx}>
-            <div
-              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
-              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
-            >
-              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+            <div className="relative mb-4">
+              <div
+                className="relative aspect-[16/9] overflow-hidden rounded-sm"
+                style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+              >
+                <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+              </div>
+              <div
+                className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
+                style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
+              >
+                <span className="text-[9px] font-bold tracking-widest uppercase leading-none">SPOT</span>
+                <span className="text-xl font-black leading-none mt-0.5" style={{ fontFamily: "'Noto Serif KR', serif" }}>{e.no}</span>
+              </div>
             </div>
             <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
             <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
