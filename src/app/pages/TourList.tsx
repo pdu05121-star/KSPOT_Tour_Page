@@ -115,7 +115,7 @@ const COPY: Record<Lang, {
     heroTitle: "한국에 이런 곳이 있다고? — 가도 괜찮은 곳인지, 저희가 먼저 확인했어요.",
     heroPre: "화면 속에서 보던 ",
     heroKk: "그 장소",
-    heroPost: "부터 아무도 모르는 로컬 스팟까지, 무사히 다녀올 수 있는 코스만 열어드려요.",
+    heroPost: "부터 현지인들만 아는 스팟까지, 무사히 다녀올 수 있는 코스만 열어드려요.",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "이 코스 열어보기 →",
