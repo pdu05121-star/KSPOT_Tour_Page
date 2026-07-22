@@ -779,6 +779,14 @@ export default function SuwonTour() {
             <p className="font-black" style={{ color: CARE_AMBER }}>{t.breakHeading}</p>
             <p style={{ color: INK, opacity: 0.85 }}>· {t.breakCond1}</p>
           </div>
+
+          {/* 가상 시나리오 디스클레이머 (3-1) — 근거카드 바로 아래, 회색 작은 글씨 */}
+          <div
+            className="px-4 py-3 text-[11px] leading-relaxed"
+            style={{ backgroundColor: PAPER, borderTop: `1px solid ${HAIRLINE}`, color: INK, opacity: 0.55 }}
+          >
+            {t.closingSub1} {t.closingSub2}
+          </div>
         </div>
       </section>
 
@@ -957,14 +965,11 @@ export default function SuwonTour() {
           {t.closingEyebrow}
         </p>
         <h3
-          className="text-2xl sm:text-3xl font-black mb-6 leading-snug"
+          className="text-2xl sm:text-3xl font-black leading-snug"
           style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}
         >
           {t.closingTitle1}<br className="hidden sm:block" /> {t.closingTitle2}
         </h3>
-        <p className="text-sm sm:text-[15px] leading-relaxed" style={{ color: INK, opacity: 0.65 }}>
-          {t.closingSub1}<br className="hidden sm:block" /> {t.closingSub2}
-        </p>
       </section>
 
       {/* BOTTOM FIXED CTA BAR — 좌측 판단요약 + 우측 요청하기(메인)/구글맵저장(보조) (2-7) */}
