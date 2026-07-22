@@ -183,7 +183,7 @@ const UI: Record<Lang, {
     transferNote: "16:47 정지영커피 출발 → 수원역, 약 20분",
     arrivalLabel: "수원역 도착",
     scrollHint: "↓ 스팟별 자세한 일정은 아래로 스크롤",
-    verdictReasonPre: "그래서 막차(자정 무렵)까지 여유 ", verdictReasonPost: " — 걱정 없이 돌아갈 수 있어요.",
+    verdictReasonPre: "막차(자정 무렵)까지 여유 ", verdictReasonPost: " — 걱정 없이 돌아갈 수 있어요.",
     timetableStartLabel: "서울역 출발", timetableStartDesc: "1호선 타고 수원역까지 약 55분",
     timetableSuwonArriveDesc: "몽테드 카페까지 약 20분",
     timetableEndLabel: "수원역 도착", timetableEndDesc: "여기서 서울행 열차로 환승",
