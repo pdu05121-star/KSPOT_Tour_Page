@@ -114,14 +114,14 @@ export default function LangFormModal({ open, onClose }: Props) {
           </button>
 
           {/* 타이틀 */}
-          <div className="text-center pt-10 pb-8 px-8">
+          <div className="text-center pt-16 px-8" style={{ paddingBottom: 36 }}>
             <p className="text-[22px] font-black leading-snug" style={{ color: PINE }}>
               {PROMPT[recommended]}
             </p>
           </div>
 
           {/* 버튼 목록 */}
-          <div className="flex flex-col items-center gap-2.5 pb-10 px-10">
+          <div className="flex flex-col items-center gap-3 px-10" style={{ paddingBottom: 40 }}>
             {LANG_OPTIONS.map(({ code, flag, label }) => {
               const isRec = code === recommended;
               return (
