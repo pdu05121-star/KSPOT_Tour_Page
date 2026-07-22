@@ -1006,7 +1006,7 @@ export default function SuwonTour() {
         </div>
       </div>
 
-      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} pageLang={lang} />
     </div>
   );
 }

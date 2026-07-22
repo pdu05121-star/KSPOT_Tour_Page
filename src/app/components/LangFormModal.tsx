@@ -17,9 +17,18 @@ const PROMPT: Record<FormLang, string> = {
   vi: "Chọn ngôn ngữ của bạn",
 };
 
+const CANCEL_LABEL: Record<FormLang, string> = {
+  ko: "취소", en: "Cancel", ja: "キャンセル", zh: "取消", vi: "Hủy",
+};
+const CONFIRM_LABEL: Record<FormLang, string> = {
+  ko: "확인", en: "Confirm", ja: "確認", zh: "确认", vi: "Xác nhận",
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** 페이지에서 현재 보고 있는 언어. 전달하면 브라우저 언어 대신 이 언어를 우선 사용 */
+  pageLang?: FormLang;
 }
 
 const PINE = "#20362F";
@@ -27,8 +36,8 @@ const PAPER = "#F5F0E6";
 const INK = "#3A342C";
 const HAIRLINE = "#DED2B8";
 
-export default function LangFormModal({ open, onClose }: Props) {
-  const recommended = detectFormLang();
+export default function LangFormModal({ open, onClose, pageLang }: Props) {
+  const recommended = pageLang ?? detectFormLang();
   const [selected, setSelected] = useState<FormLang>(recommended);
   const firstRef = useRef<HTMLButtonElement>(null);
 
@@ -150,7 +159,7 @@ export default function LangFormModal({ open, onClose }: Props) {
               className="rounded-lg font-bold tracking-wide uppercase transition-opacity hover:opacity-60"
               style={{ color: PINE, opacity: 0.55, fontSize: 13, padding: "10px 20px" }}
             >
-              취소
+              {CANCEL_LABEL[recommended]}
             </button>
             <button
               type="button"
@@ -158,7 +167,7 @@ export default function LangFormModal({ open, onClose }: Props) {
               className="rounded-lg font-bold tracking-wide uppercase transition-opacity hover:opacity-80"
               style={{ color: PINE, fontSize: 13, padding: "10px 20px" }}
             >
-              확인
+              {CONFIRM_LABEL[recommended]}
             </button>
           </div>
         </div>
