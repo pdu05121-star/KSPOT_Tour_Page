@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FORM_URLS, FormLang, detectFormLang } from "@/app/surveyConfig";
 
 const LANG_OPTIONS: { code: FormLang; flag: string; label: string }[] = [
@@ -24,18 +24,20 @@ interface Props {
 
 const PINE = "#20362F";
 const PAPER = "#F5F0E6";
-const PAPER_DEEP = "#EAE1CC";
 const INK = "#3A342C";
 const HAIRLINE = "#DED2B8";
-const RUST = "#B5502F";
 
 export default function LangFormModal({ open, onClose }: Props) {
   const recommended = detectFormLang();
-  const recBtnRef = useRef<HTMLButtonElement>(null);
+  const [selected, setSelected] = useState<FormLang>(recommended);
+  const firstRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (open) recBtnRef.current?.focus();
-  }, [open]);
+    if (open) {
+      setSelected(recommended);
+      firstRef.current?.focus();
+    }
+  }, [open, recommended]);
 
   useEffect(() => {
     if (!open) return;
@@ -46,8 +48,8 @@ export default function LangFormModal({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  function handleSelect(lang: FormLang) {
-    window.open(FORM_URLS[lang], "_blank", "noopener");
+  function handleConfirm() {
+    window.open(FORM_URLS[selected], "_blank", "noopener");
     onClose();
   }
 
@@ -55,7 +57,7 @@ export default function LangFormModal({ open, onClose }: Props) {
     <>
       <style>{`
         @keyframes kspot-modal-up {
-          from { opacity: 0; transform: translateY(12px) scale(0.98); }
+          from { opacity: 0; transform: translateY(10px) scale(0.98); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         @keyframes kspot-backdrop-in {
@@ -63,26 +65,24 @@ export default function LangFormModal({ open, onClose }: Props) {
           to   { opacity: 1; }
         }
         .kspot-modal-panel {
-          animation: kspot-modal-up 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation: kspot-modal-up 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
         .kspot-backdrop {
           animation: kspot-backdrop-in 0.18s ease both;
         }
-        .kspot-lang-btn {
-          transition: background-color 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
+        .kspot-radio-row {
+          transition: background-color 0.1s ease;
         }
-        .kspot-lang-btn:hover {
-          transform: translateY(-1px);
+        .kspot-radio-row:hover {
+          background-color: rgba(32,54,47,0.05);
         }
-        .kspot-lang-btn:active {
-          transform: translateY(0);
-        }
-        .kspot-lang-btn:focus-visible {
-          outline: 2px solid ${RUST};
-          outline-offset: 2px;
+        .kspot-radio-row:focus-visible {
+          outline: 2px solid ${PINE};
+          outline-offset: -2px;
         }
         @media (prefers-reduced-motion: reduce) {
-          .kspot-modal-panel, .kspot-backdrop, .kspot-lang-btn { animation: none; transition: none; }
+          .kspot-modal-panel, .kspot-backdrop { animation: none; }
+          .kspot-radio-row { transition: none; }
         }
       `}</style>
 
@@ -91,83 +91,74 @@ export default function LangFormModal({ open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="언어 선택"
-        style={{ backgroundColor: "rgba(16,28,24,0.5)", backdropFilter: "blur(3px)" }}
+        style={{ backgroundColor: "rgba(16,28,24,0.45)", backdropFilter: "blur(3px)" }}
       >
         <div className="absolute inset-0" onClick={onClose} />
 
         <div
-          className="kspot-modal-panel relative w-full mx-auto rounded-2xl"
-          style={{ backgroundColor: PAPER, maxWidth: 360 }}
+          className="kspot-modal-panel relative w-full mx-auto rounded-2xl overflow-hidden"
+          style={{ backgroundColor: PAPER, maxWidth: 340 }}
         >
-          {/* 닫기 */}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="닫기"
-            className="absolute top-4 right-4 flex items-center justify-center w-7 h-7 rounded-full"
-            style={{ color: INK, opacity: 0.3 }}
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <line x1="1" y1="1" x2="11" y2="11" />
-              <line x1="11" y1="1" x2="1" y2="11" />
-            </svg>
-          </button>
-
           {/* 타이틀 */}
-          <div className="text-center pt-16 px-8" style={{ paddingBottom: 36 }}>
-            <p className="text-[22px] font-black leading-snug" style={{ color: PINE }}>
+          <div className="px-6 pt-7 pb-5">
+            <p className="text-[18px] font-bold" style={{ color: INK }}>
               {PROMPT[recommended]}
             </p>
           </div>
 
-          {/* 버튼 목록 */}
-          <div className="flex flex-col items-center gap-3 px-10" style={{ paddingBottom: 40 }}>
-            {LANG_OPTIONS.map(({ code, flag, label }) => {
-              const isRec = code === recommended;
+          {/* 라디오 목록 */}
+          <div>
+            {LANG_OPTIONS.map(({ code, flag, label }, i) => {
+              const isSelected = code === selected;
               return (
                 <button
                   key={code}
-                  ref={isRec ? recBtnRef : undefined}
+                  ref={i === 0 ? firstRef : undefined}
                   type="button"
-                  onClick={() => handleSelect(code)}
-                  className="kspot-lang-btn flex items-center gap-3 rounded-xl px-5 py-3.5"
-                  style={{
-                    width: 220,
-                    ...(isRec ? {
-                      backgroundColor: PINE,
-                      color: "#fff",
-                      boxShadow: "0 4px 14px rgba(32,54,47,0.22)",
-                    } : {
-                      backgroundColor: PAPER_DEEP,
-                      color: INK,
-                      border: `1px solid ${HAIRLINE}`,
-                    }),
-                  }}
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => setSelected(code)}
+                  className="kspot-radio-row w-full flex items-center gap-4 px-6"
+                  style={{ height: 52, color: INK }}
                 >
+                  {/* 라디오 서클 */}
+                  <span
+                    className="flex-shrink-0 flex items-center justify-center rounded-full"
+                    style={{
+                      width: 22,
+                      height: 22,
+                      border: isSelected ? `6px solid ${PINE}` : `2px solid ${HAIRLINE}`,
+                      backgroundColor: "transparent",
+                      transition: "border 0.12s ease",
+                    }}
+                  />
                   <span className="text-lg leading-none">{flag}</span>
-                  <span className="font-bold text-[15px] flex-1 text-left">{label}</span>
-                  {isRec && (
-                    <span
-                      className="text-[9px] font-black tracking-wide px-1.5 py-0.5 rounded-full"
-                      style={{ backgroundColor: RUST, color: "#fff" }}
-                    >
-                      추천
-                    </span>
-                  )}
+                  <span className="text-[15px] font-medium">{label}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* 구분선 + 취소 */}
-          <div style={{ borderTop: `1px solid ${HAIRLINE}` }}>
+          {/* 하단 버튼 */}
+          <div
+            className="flex justify-end gap-1 px-4 py-3"
+            style={{ borderTop: `1px solid ${HAIRLINE}`, marginTop: 8 }}
+          >
             <button
               type="button"
               onClick={onClose}
-              className="w-full py-4 text-[13px] font-semibold text-center transition-opacity hover:opacity-70"
-              style={{ color: INK, opacity: 0.45 }}
+              className="px-5 py-2.5 rounded-lg text-[13px] font-bold tracking-wide uppercase transition-opacity hover:opacity-60"
+              style={{ color: PINE, opacity: 0.55 }}
             >
-              닫기
+              취소
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="px-5 py-2.5 rounded-lg text-[13px] font-bold tracking-wide uppercase transition-opacity hover:opacity-80"
+              style={{ color: PINE }}
+            >
+              확인
             </button>
           </div>
         </div>
