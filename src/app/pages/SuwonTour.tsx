@@ -117,7 +117,7 @@ function formatBufferApprox(minutes: number, lang: Lang): string {
   return `${u.prefix}${minutes}${u.unit}`;
 }
 
-// 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 7곳 (행리단길은 좌표 미확인이라 제외)
+// 구글맵 저장 버튼용 좌표 — 코스템플릿_수원_선재_v3.md 7곳 + 행리단길 (좌표 팀 확인 완료, 2026-07-22)
 const ROUTE_COORDS = [
   "37.2847710231129,127.013617036234",
   "37.2855291351344,127.01661296437",
@@ -125,6 +125,7 @@ const ROUTE_COORDS = [
   "37.285686283703,127.016560223438",
   "37.2818820191942,127.014394463798",
   "37.2794246460132,127.017499823481",
+  "37.2853433683676,127.012760669406",
   "37.2848962630143,127.014416125317",
 ];
 const GOOGLE_MAPS_ROUTE_URL = `https://www.google.com/maps/dir/?api=1&origin=${ROUTE_COORDS[0]}&destination=${ROUTE_COORDS[ROUTE_COORDS.length - 1]}&waypoints=${ROUTE_COORDS.slice(1, -1).join("|")}&travelmode=walking`;
