@@ -685,9 +685,9 @@ export default function SuwonTour() {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* HERO — 뷰포트 높이 대비 과하게 길어지지 않도록 상한을 둬서, 첫 화면에 타이틀까지 보이게 함 */}
       <header className="relative">
-        <div className="relative aspect-[4/3] sm:aspect-[16/9] w-full overflow-hidden">
+        <div className="relative aspect-[4/3] sm:aspect-[16/9] w-full overflow-hidden" style={{ maxHeight: "52vh" }}>
           <img src={janganmunNightImg} alt={t.heroAlt} className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(20,51,43,0.75), rgba(20,51,43,0.05) 55%)" }} />
           <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 pb-8 sm:pb-10">
