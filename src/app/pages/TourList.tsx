@@ -54,18 +54,14 @@ const OPEN_VI: TourCard = {
 
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
 // 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
-// 나머지 5곳(경주·부산·대구·여수·순천)은 드라마 페어링 미확정 — CLAUDE.md 원칙상 AI가 임의로 못 붙여서 태그 생략 유지.
+// 전주·포항·제주: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22) — 태그 없는 나머지 5곳(경주·부산·대구·여수·순천)은
+// 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
   { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가" },
   { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
-  { id: "gyeongju", order: "07", status: "wait" },
-  { id: "busan", order: "08", status: "wait" },
-  { id: "daegu", order: "09", status: "wait" },
-  { id: "yeosu", order: "10", status: "wait" },
-  { id: "suncheon", order: "11", status: "wait" },
 ];
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
@@ -74,24 +70,16 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州", vi: "JEONJU Jeonju" },
   pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
-  gyeongju: { ko: "GYEONGJU 경주", en: "GYEONGJU", ja: "GYEONGJU 慶州", zh: "GYEONGJU 庆州", vi: "GYEONGJU Gyeongju" },
-  busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山", vi: "BUSAN Busan" },
-  daegu: { ko: "DAEGU 대구", en: "DAEGU", ja: "DAEGU 大邱", zh: "DAEGU 大邱", vi: "DAEGU Daegu" },
-  yeosu: { ko: "YEOSU 여수", en: "YEOSU", ja: "YEOSU 麗水", zh: "YEOSU 丽水", vi: "YEOSU Yeosu" },
-  suncheon: { ko: "SUNCHEON 순천", en: "SUNCHEON", ja: "SUNCHEON 順天", zh: "SUNCHEON 顺天", vi: "SUNCHEON Suncheon" },
 };
 
+// 미공개 코스 타이틀 — "다음 이야기 준비 중" 같은 밋밋한 플레이스홀더 대신,
+// 드라마 장면을 은근히 가리키는 티저 문구로 궁금증을 유발 (2026-07-22 결정)
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
   chuncheon: { ko: "호수 따라 달리는 자전거길", en: "Lakeside cycling route", ja: "湖畔のサイクリングロード", zh: "沿湖骑行路线", vi: "Đường xe đạp chạy dọc theo hồ" },
   gangneung: { ko: "파도 소리 들리는 커피 해변", en: "Coffee beach by the waves", ja: "波音が聞こえるコーヒー海辺", zh: "听着海浪的咖啡海边", vi: "Bãi biển cà phê vang tiếng sóng vỗ" },
-  jeonju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  pohang: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  jeju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  gyeongju: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  busan: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  daegu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  yeosu: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
-  suncheon: { ko: "다음 이야기, 준비 중이에요", en: "Next story, coming soon", ja: "次の物語、準備中です", zh: "下一个故事，准备中", vi: "Câu chuyện tiếp theo, đang được chuẩn bị" },
+  jeonju: { ko: "달빛 아래, 그 궁궐 골목은 아직 비밀이에요", en: "Under the moonlight, that palace alley is still a secret", ja: "月明かりの下、あの宮殿の路地はまだ秘密です", zh: "月光之下，那条宫殿小巷还是秘密", vi: "Dưới ánh trăng, con hẻm cung điện đó vẫn còn là bí mật" },
+  pohang: { ko: "그 바닷마을 벤치, 공개까지 조금만 기다려주세요", en: "That seaside bench — just a little longer until reveal", ja: "あの海辺の村のベンチ、公開まであと少しお待ちください", zh: "那个海边小镇的长椅，揭晓前请再等等", vi: "Chiếc ghế ở làng biển đó, chờ thêm chút nữa để được hé lộ" },
+  jeju: { ko: "그 섬마을 골목, 아직 문을 열지 않았어요", en: "That island alley hasn't opened its doors yet", ja: "あの島の村の路地、まだ扉を開けていません", zh: "那条海岛小巷，还没有开门", vi: "Con hẻm làng đảo đó vẫn chưa mở cửa" },
 };
 
 function buildLockedCards(lang: Lang): TourCard[] {
