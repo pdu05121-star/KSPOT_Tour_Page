@@ -72,14 +72,14 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
 };
 
-// 미공개 코스 타이틀 — "다음 이야기 준비 중" 같은 밋밋한 플레이스홀더 대신,
-// 드라마 장면을 은근히 가리키는 티저 문구로 궁금증을 유발 (2026-07-22 결정)
+// 미공개 코스 타이틀 — "곧 열려요/공개 준비 중" 같은 오픈 예고 문구는 status 배지가 이미 담당하므로
+// 여기서는 코스의 장면·분위기만 담아 궁금증을 유발 (2026-07-22 결정)
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
-  chuncheon: { ko: "호수 따라 달리는 자전거길", en: "Lakeside cycling route", ja: "湖畔のサイクリングロード", zh: "沿湖骑行路线", vi: "Đường xe đạp chạy dọc theo hồ" },
-  gangneung: { ko: "파도 소리 들리는 커피 해변", en: "Coffee beach by the waves", ja: "波音が聞こえるコーヒー海辺", zh: "听着海浪的咖啡海边", vi: "Bãi biển cà phê vang tiếng sóng vỗ" },
-  jeonju: { ko: "달빛 아래, 그 궁궐 골목은 아직 비밀이에요", en: "Under the moonlight, that palace alley is still a secret", ja: "月明かりの下、あの宮殿の路地はまだ秘密です", zh: "月光之下，那条宫殿小巷还是秘密", vi: "Dưới ánh trăng, con hẻm cung điện đó vẫn còn là bí mật" },
-  pohang: { ko: "그 바닷마을 벤치, 공개까지 조금만 기다려주세요", en: "That seaside bench — just a little longer until reveal", ja: "あの海辺の村のベンチ、公開まであと少しお待ちください", zh: "那个海边小镇的长椅，揭晓前请再等等", vi: "Chiếc ghế ở làng biển đó, chờ thêm chút nữa để được hé lộ" },
-  jeju: { ko: "그 섬마을 골목, 아직 문을 열지 않았어요", en: "That island alley hasn't opened its doors yet", ja: "あの島の村の路地、まだ扉を開けていません", zh: "那条海岛小巷，还没有开门", vi: "Con hẻm làng đảo đó vẫn chưa mở cửa" },
+  chuncheon: { ko: "눈 내리던 그 겨울, 호숫가 가로수길", en: "That lakeside road under falling winter snow", ja: "雪降るその冬、湖畔の並木道", zh: "那个飘雪的冬天，湖边林荫道", vi: "Con đường ven hồ mùa đông tuyết rơi năm ấy" },
+  gangneung: { ko: "파도 부서지던 그 방파제, 도깨비의 바다", en: "The breakwater where waves crash — Dokkaebi's sea", ja: "波が砕けるその防波堤、トッケビの海", zh: "浪花拍打的那道防波堤，鬼怪的大海", vi: "Con đê sóng vỗ, biển của Dokkaebi" },
+  jeonju: { ko: "달빛 아래 그 궁궐 골목", en: "That palace alley under the moonlight", ja: "月明かりの下、あの宮殿の路地", zh: "月光下，那条宫殿小巷", vi: "Con hẻm cung điện dưới ánh trăng năm ấy" },
+  pohang: { ko: "바닷마을 그 벤치, 방파제의 온기", en: "That seaside bench, warmth of the breakwater", ja: "海辺の村のあのベンチ、防波堤のぬくもり", zh: "海边小镇那张长椅，防波堤的温度", vi: "Chiếc ghế bên bờ biển, hơi ấm của con đê" },
+  jeju: { ko: "섬마을 골목과 그 해안도로", en: "That island alley and coastal road", ja: "島の村の路地と、あの海岸道路", zh: "海岛小巷与那条海岸公路", vi: "Con hẻm làng đảo và con đường ven biển đó" },
 };
 
 function buildLockedCards(lang: Lang): TourCard[] {
