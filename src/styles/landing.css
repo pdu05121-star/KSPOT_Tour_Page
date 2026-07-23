@@ -1088,6 +1088,52 @@
     font-size: 16.5px;
     color: var(--ink-soft);
   }
+  .tour-status-row{
+    display: flex;
+    gap: 12px;
+    max-width: 560px;
+    margin: 0 auto 32px;
+    flex-wrap: wrap;
+  }
+  .tour-status-item{
+    flex: 1 1 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+  }
+  .tour-status-item.open{
+    border-color: rgba(29, 158, 117, 0.3);
+    background: rgba(29, 158, 117, 0.06);
+  }
+  .tour-status-item .tsi-badge{
+    align-self: flex-start;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--teal);
+    color: #fff;
+  }
+  .tour-status-item.locked .tsi-badge{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--ink-faint, var(--ink-soft));
+  }
+  .tour-status-item .tsi-city{
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .tour-status-item .tsi-tag{
+    font-size: 12.5px;
+    color: var(--teal-dark);
+  }
   .tour-highlights{
     max-width: 480px;
     margin: 0 auto 40px;

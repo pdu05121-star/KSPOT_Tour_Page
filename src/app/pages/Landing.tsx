@@ -424,22 +424,34 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* TOUR APPLICATION (pilot) */}
+      {/* TOUR APPLICATION — /tour 허브 현황과 동기화 (2026-07-24) */}
       <section className="tour" id="tour">
         <div className="wrap fade-up">
-          <div className="sec-eyebrow">Pilot Program — 파일럿 프로그램</div>
+          <div className="sec-eyebrow">Now Open — 지금 열려 있는 코스</div>
           <h2 className="sec-title">🎬 K-드라마 로케이션 투어</h2>
-          
+
           <div className="tour-featured-card">
             <p className="sec-lead">
-              선재네 대문 앞부터 방화수류정 피크닉까지, <br />
-              드라마 속 명장면을 그대로 따라 걷는 맞춤 가이드북과 디테일한 투어 코스가 준비되어 있습니다.
+              화면 속에서 보던 그 장소부터 현지인들만 아는 스팟까지 — <br />
+              지금 가도 괜찮은지 저희가 먼저 판단하고, 무사히 다녀올 수 있는 코스만 열어드려요.
             </p>
-            
+
+            <div className="tour-status-row">
+              <div className="tour-status-item open">
+                <span className="tsi-badge">NOW OPEN</span>
+                <span className="tsi-city">01 · 수원</span>
+                <span className="tsi-tag">◉ 선재 업고 튀어</span>
+              </div>
+              <div className="tour-status-item locked">
+                <span className="tsi-badge">COMING SOON</span>
+                <span className="tsi-city">춘천 · 강릉 · 전주 · 포항 · 제주 · 부산</span>
+              </div>
+            </div>
+
             <div className="tour-highlights">
-              <div className="th-item">✨ 선재 업고 튀어 주요 촬영지 실물 코스 완벽 가이드</div>
-              <div className="th-item">🗺️ 행궁동 피크닉 & 명소 상세 분석 수제 가이드북 제공</div>
-              <div className="th-item">🚕 대중교통 배차 간격 및 이동 리스크 실시간 판단 연동</div>
+              <div className="th-item">🗺️ 수원 — 선재 업고 튀어 촬영지를 실제로 걷는 코스, 지금 바로 체험 가능</div>
+              <div className="th-item">🚕 이동 시간·배차 간격·귀환 동선까지, 판단 엔진이 미리 확인해요</div>
+              <div className="th-item">🌏 한국어·영어·일본어·중국어·베트남어 — 5개 언어로 안내</div>
             </div>
 
             <div className="tour-btn-wrap">
