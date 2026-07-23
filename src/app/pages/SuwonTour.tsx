@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles } from "lucide-react";
-import LangFormModal from "@/app/components/LangFormModal";
+import { FormLang, FORM_URLS, isFormLang, getStoredLang, setStoredLang } from "@/app/surveyConfig";
 
 // Local Image Imports (동일한 수원 에셋 재사용)
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
@@ -37,7 +37,18 @@ const PAPER = TOUR_PAPER;
 const PAPER_DEEP = TOUR_PAPER_DEEP;
 const HAIRLINE = TOUR_BORDER;
 
-type Lang = "ko" | "en" | "ja" | "zh" | "vi";
+type Lang = FormLang;
+
+// 언어 우선순위: query lang → localStorage kspot_lang → en (2026-07-23 흐름 개편 v2)
+function resolveInitialLang(searchParams: URLSearchParams): Lang {
+  const queryLang = searchParams.get("lang");
+  if (isFormLang(queryLang)) {
+    setStoredLang(queryLang);
+    return queryLang;
+  }
+  return getStoredLang() ?? "en";
+}
+
 const LANGS: { code: Lang; label: string }[] = [
   { code: "ko", label: "한" },
   { code: "en", label: "EN" },
@@ -660,8 +671,20 @@ const TIMETABLE: Record<Lang, TimetableItem[]> = {
 };
 
 export default function SuwonTour() {
-  const [lang, setLang] = useState<Lang>("ko");
-  const [formModalOpen, setFormModalOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [lang, setLang] = useState<Lang>(() => resolveInitialLang(searchParams));
+
+  function changeLang(l: Lang) {
+    setStoredLang(l);
+    setLang(l);
+    // URL도 함께 갱신 — 안 그러면 새로고침 시 쿼리의 예전 lang이 우선순위상 앞서서 방금 바꾼 언어를 덮어씀
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("lang", l);
+      return next;
+    }, { replace: true });
+  }
+
   const t = UI[lang];
   const spots = SPOTS[lang];
   const eats = EATS[lang];
@@ -701,7 +724,7 @@ export default function SuwonTour() {
               <button
                 key={l.code}
                 type="button"
-                onClick={() => setLang(l.code)}
+                onClick={() => changeLang(l.code)}
                 className="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-1 rounded-full font-bold transition-colors whitespace-nowrap"
                 style={
                   lang === l.code
@@ -1044,19 +1067,18 @@ export default function SuwonTour() {
             >
               {t.stickySaveBtn}
             </a>
-            <button
-              type="button"
-              onClick={() => setFormModalOpen(true)}
+            <a
+              href={FORM_URLS[lang]}
+              target="_blank"
+              rel="noopener noreferrer"
               className="py-3 px-4 sm:px-5 rounded-xl font-bold text-[11px] sm:text-sm shadow-md transition-opacity hover:opacity-90 text-center whitespace-nowrap"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >
               {t.stickyBtn}
-            </button>
+            </a>
           </div>
         </div>
       </div>
-
-      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} pageLang={lang} />
     </div>
   );
 }

@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router";
 import "@/styles/router.css";
 import LangFormModal from "@/app/components/LangFormModal";
+import BrandLogo from "@/app/components/BrandLogo";
+import { FormLang, FORM_URLS, getStoredLang, setStoredLang } from "@/app/surveyConfig";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
+import tourHeroImg from "@/assets/tour/hero_traveler_hanok.jpg";
 
-type Lang = "ko" | "en" | "ja" | "zh" | "vi";
+type Lang = FormLang;
 
 // 도시 카드 데이터 — 배열로 관리 (개발지시서 지시사항: 하드코딩 금지, 도시 추가 잦을 예정)
 // COMING SOON 목록은 RE_PRD_v1.1의 타겟 10개 지역(경주·포항·부산·대구·전주·강릉·제주·여수·순천·춘천) +
@@ -106,94 +109,78 @@ const TOURS: Record<Lang, TourCard[]> = {
 };
 
 const COPY: Record<Lang, {
-  eyebrow: string; heroTitle: string; heroPre: string; heroKk: string; heroPost: string;
+  eyebrow: string; heroTitleLine1: string; heroTitleLine2: string; heroPre: string; heroKk: string; heroPost: string; heroAlt: string;
   nowOpen: string; comingSoon: string; openCta: string; nextBadge: string; waitBadge: string; notify: string;
-  askH3: string; askP: string; askBtn: string; askFine: string; stickyBtn: string;
 }> = {
   ko: {
     eyebrow: "🔓 KSPOT 시크릿 언락",
-    heroTitle: "한국에 이런 곳이 있다고? — 가도 괜찮은 곳인지, 저희가 먼저 확인했어요.",
+    heroTitleLine1: "한국에 이런 곳이 있다고?",
+    heroTitleLine2: "— 가도 괜찮은 곳인지, 저희가 먼저 확인했어요.",
     heroPre: "화면 속에서 보던 ",
     heroKk: "그 장소",
     heroPost: "부터 현지인들만 아는 스팟까지, 무사히 다녀올 수 있는 코스만 열어드려요.",
+    heroAlt: "배낭을 멘 여행자가 한옥마을을 내려다보는 모습",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "이 코스 열어보기 →",
-    nextBadge: "판단 준비 중", waitBadge: "판단 전",
+    nextBadge: "곧 오픈", waitBadge: "오픈 예정",
     notify: "알림받기",
-    askH3: "가고 싶은 곳이 여기 없나요?",
-    askP: "어디가 궁금한지 알려주시면, 그곳을 다음 이야기로 만들어 공개해요.",
-    askBtn: "가고 싶은 곳 알려주기 →",
-    askFine: "30초면 끝나요 · 많이 찾는 곳부터 공개",
-    stickyBtn: "요청하기 →",
   },
   en: {
     eyebrow: "🔓 KSPOT SECRET UNLOCK",
-    heroTitle: "Korea has a place like THIS? — We checked if it's safe to visit, first.",
+    heroTitleLine1: "Korea has a place like THIS?",
+    heroTitleLine2: "— We checked if it's safe to visit, first.",
     heroPre: "From ",
     heroKk: "the places you saw on screen",
     heroPost: " to spots only locals know about, we only unlock courses you can safely make it back from.",
+    heroAlt: "A traveler with a backpack looking out over a hanok village",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "Open this course →",
-    nextBadge: "Verdict in progress", waitBadge: "Not yet judged",
+    nextBadge: "Opening soon", waitBadge: "Coming later",
     notify: "Notify me",
-    askH3: "Don't see where you want to go?",
-    askP: "Tell us where you're curious about, and we'll make it the next story.",
-    askBtn: "Tell us where →",
-    askFine: "Takes 30 seconds · Most-requested opens first",
-    stickyBtn: "Request →",
   },
   ja: {
     eyebrow: "🔓 KSPOT シークレット解禁",
-    heroTitle: "韓国にこんな場所が? — 行っても大丈夫か、先に確認しました。",
+    heroTitleLine1: "韓国にこんな場所が?",
+    heroTitleLine2: "— 行っても大丈夫か、先に確認しました。",
     heroPre: "画面で見た",
     heroKk: "あの場所",
     heroPost: "から地元の人だけが知るスポットまで、無事に楽しめるコースだけを解禁します。",
+    heroAlt: "リュックを背負った旅行者が韓屋村を見下ろす様子",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "このコースを開く →",
-    nextBadge: "判定準備中", waitBadge: "判定前",
+    nextBadge: "近日オープン", waitBadge: "今後公開予定",
     notify: "通知を受け取る",
-    askH3: "行きたい場所がここにない？",
-    askP: "気になる場所を教えてください。次の物語としてお作りします。",
-    askBtn: "行きたい場所を教える →",
-    askFine: "30秒で完了 · リクエストの多い街から公開",
-    stickyBtn: "リクエストする →",
   },
   zh: {
     eyebrow: "🔓 KSPOT 秘密解锁",
-    heroTitle: "韩国竟然有这种地方? — 能不能去，我们先帮你确认了。",
+    heroTitleLine1: "韩国竟然有这种地方?",
+    heroTitleLine2: "— 能不能去，我们先帮你确认了。",
     heroPre: "从",
     heroKk: "你在屏幕上看过的那个地方",
     heroPost: "到只有当地人才知道的秘境，只解锁能安全往返的路线。",
+    heroAlt: "背着背包的旅行者俯瞰韩屋村的景象",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "打开这条路线 →",
-    nextBadge: "判定准备中", waitBadge: "判定前",
+    nextBadge: "即将开放", waitBadge: "敬请期待",
     notify: "通知我",
-    askH3: "想去的地方不在这里？",
-    askP: "告诉我们你想去哪里，我们会把它做成下一个故事。",
-    askBtn: "告诉我们你想去哪 →",
-    askFine: "30秒完成 · 从最多人想去的城市开始公开",
-    stickyBtn: "提交请求 →",
   },
   vi: {
     eyebrow: "🔓 MỞ KHÓA BÍ MẬT KSPOT",
-    heroTitle: "Hàn Quốc có một nơi như THẾ NÀY sao? — Chúng tôi đã kiểm tra xem nơi đó có an toàn để đi trước đã.",
+    heroTitleLine1: "Hàn Quốc có một nơi như THẾ NÀY sao?",
+    heroTitleLine2: "— Chúng tôi đã kiểm tra xem nơi đó có an toàn để đi trước đã.",
     heroPre: "Từ ",
     heroKk: "địa điểm bạn thấy trên màn ảnh",
     heroPost: " đến những góc phố chỉ người dân địa phương mới biết, chúng tôi chỉ mở khóa những lộ trình mà bạn có thể quay về an toàn.",
+    heroAlt: "Một du khách đeo balo nhìn xuống ngôi làng hanok",
     nowOpen: "NOW OPEN",
     comingSoon: "COMING SOON",
     openCta: "Mở khóa lộ trình này →",
-    nextBadge: "Đang chuẩn bị nhận định", waitBadge: "Chưa nhận định",
+    nextBadge: "Sắp mở", waitBadge: "Dự kiến ra mắt",
     notify: "Nhận thông báo",
-    askH3: "Không tìm thấy nơi bạn muốn đi?",
-    askP: "Hãy cho chúng tôi biết nơi bạn tò mò, chúng tôi sẽ biến nó thành câu chuyện tiếp theo.",
-    askBtn: "Cho biết nơi bạn muốn đi →",
-    askFine: "Chỉ mất 30 giây · Nơi được yêu cầu nhiều nhất sẽ mở trước",
-    stickyBtn: "Yêu cầu →",
   },
 };
 
@@ -205,36 +192,180 @@ const LANGS: { code: Lang; label: string }[] = [
   { code: "vi", label: "VI" },
 ];
 
+// 최초 방문 언어 선택 게이트 — 신청서로 강제 이동시키지 않고, 언어부터 고르게 함 (2026-07-23 흐름 개편 v2)
+const LANG_GATE_OPTIONS: { code: Lang; flag: string; label: string }[] = [
+  { code: "ko", flag: "🇰🇷", label: "한국어" },
+  { code: "en", flag: "🇺🇸", label: "English" },
+  { code: "ja", flag: "🇯🇵", label: "日本語" },
+  { code: "zh", flag: "🇨🇳", label: "中文" },
+  { code: "vi", flag: "🇻🇳", label: "Tiếng Việt" },
+];
+
+// 언어 선택 직후 같은 페이지에 표시하는 "행동 선택" 2버튼 — A(메인: 구글폼) / B(보조: 수원 코스 예시)
+const ACTION_CTA: Record<Lang, { mainTitle: string; mainSub: string; secondaryTitle: string; secondarySub: string }> = {
+  ko: { mainTitle: "내 최애 장소, 다음 코스로 만들기", mainSub: "약 2분 · 많이 찾는 곳부터 열려요", secondaryTitle: "화면 속 그 골목, 수원에서 하루", secondarySub: "막차까지 완벽 계산 끝난 진짜 코스" },
+  en: { mainTitle: "Turn your bias's spot into the next course", mainSub: "About 2 min · Most-requested opens first", secondaryTitle: "That alley from the screen — a day in Suwon", secondarySub: "A real course, calculated down to the last train home" },
+  ja: { mainTitle: "推しの聖地を、次のコースにする", mainSub: "約2分・リクエストの多い街から先に公開", secondaryTitle: "画面で見たあの路地、水原で過ごす一日", secondarySub: "終電まで計算し尽くした、本物のコース" },
+  zh: { mainTitle: "把你的本命取景地，变成下一条路线", mainSub: "约2分钟 · 需求最多的地区优先开放", secondaryTitle: "屏幕里的那条小巷，水原的一天", secondarySub: "连末班车都算好的真实路线" },
+  vi: { mainTitle: "Biến địa điểm bias của bạn thành lộ trình tiếp theo", mainSub: "Khoảng 2 phút · Khu vực được yêu cầu nhiều nhất sẽ mở trước", secondaryTitle: "Con hẻm bạn thấy trên màn ảnh — một ngày ở Suwon", secondarySub: "Lộ trình thực tế, đã tính toán đến tận chuyến tàu cuối" },
+};
+
+// 섹션 헤더 — 랜딩페이지의 eyebrow(영문 키워드 — 한글 설명) + title + lead 공식을 그대로 차용 (2026-07-23 섹션 분리)
+const SECTIONS: Record<Lang, {
+  decisionEyebrow: string; decisionTitle: string; decisionLead: string;
+  routesEyebrow: string; routesTitle: string; routesLead: string;
+}> = {
+  ko: {
+    decisionEyebrow: "START — 무엇부터 시작할까요",
+    decisionTitle: "먼저, 하나만 골라주세요",
+    decisionLead: "당신이 찾는 '그곳'이 다음 코스가 될 수 있어요. 아니면 이미 검증된 수원부터 먼저 만나보세요.",
+    routesEyebrow: "ROUTES — 지역별 오픈 현황",
+    routesTitle: "수원 다음은, 어디일까요?",
+    routesLead: "정답은 당신이 정해요. 지금 열려 있는 곳부터, 곧 열릴 곳들까지 보여드릴게요.",
+  },
+  en: {
+    decisionEyebrow: "START — Where to begin",
+    decisionTitle: "Pick one to get started",
+    decisionLead: "That place you're dying to see could be our next course. Or meet Suwon first — it's already verified and ready.",
+    routesEyebrow: "ROUTES — Region rollout status",
+    routesTitle: "What comes after Suwon?",
+    routesLead: "You decide the answer. Here's what's open now, and what's opening next.",
+  },
+  ja: {
+    decisionEyebrow: "START — まず何から始めますか",
+    decisionTitle: "まず一つだけ選んでください",
+    decisionLead: "あなたの「あの場所」が、次のコースになるかもしれません。まずは、もう検証済みの水原から。",
+    routesEyebrow: "ROUTES — 地域別公開状況",
+    routesTitle: "水原の次は、どこでしょう?",
+    routesLead: "答えを決めるのは、あなたです。今開いている場所と、次に開く場所です。",
+  },
+  zh: {
+    decisionEyebrow: "START — 先从哪里开始",
+    decisionTitle: "先选一个开始吧",
+    decisionLead: "你心心念念的\"那个地方\"，可能就是下一条路线。不如先从已验证的水原开始。",
+    routesEyebrow: "ROUTES — 各地区开放状态",
+    routesTitle: "水原之后，会是哪里？",
+    routesLead: "答案由你决定。这里是现在开放的路线，和即将开放的路线。",
+  },
+  vi: {
+    decisionEyebrow: "START — Bắt đầu từ đâu",
+    decisionTitle: "Hãy chọn một cái để bắt đầu",
+    decisionLead: "Nơi bạn hằng mong ước có thể là lộ trình tiếp theo. Hoặc gặp Suwon trước — đã được kiểm chứng và sẵn sàng.",
+    routesEyebrow: "ROUTES — Tình trạng mở theo khu vực",
+    routesTitle: "Sau Suwon, sẽ là nơi nào?",
+    routesLead: "Câu trả lời do bạn quyết định. Đây là những nơi đang mở, và những nơi sắp mở.",
+  },
+};
+
 export default function TourList() {
-  const [lang, setLang] = useState<Lang>("ko");
+  // 재방문자는 저장된 언어가 있으면 언어 게이트를 건너뛰고 바로 행동 선택 화면(기존 콘텐츠+CTA)부터 봄
+  const [lang, setLang] = useState<Lang>(() => getStoredLang() ?? "ko");
+  const [langChosen, setLangChosen] = useState<boolean>(() => getStoredLang() !== null);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const t = COPY[lang];
   const cards = TOURS[lang];
 
+  function chooseLang(l: Lang) {
+    setStoredLang(l);
+    setLang(l);
+    setLangChosen(true);
+  }
+
+  function changeLang(l: Lang) {
+    setStoredLang(l);
+    setLang(l);
+  }
+
+  if (!langChosen) {
+    return (
+      <div className="router-page">
+        <div className="router-langgate">
+          <Link to="/"><BrandLogo /></Link>
+          <span className="caption">언어 선택 · Language · 言語 · 语言 · Ngôn ngữ</span>
+          <div className="router-langgate-grid">
+            {LANG_GATE_OPTIONS.map(({ code, flag, label }) => (
+              <button key={code} type="button" onClick={() => chooseLang(code)}>
+                <span>{flag}</span> <span>{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="router-page">
-      <div className="router-wrap">
+      <div className="router-wrap tight">
         <div className="router-narrow">
           <div className="router-topbar">
-            <Link to="/" className="router-brand">K<span>SPOT</span></Link>
+            <Link to="/"><BrandLogo /></Link>
             <div className="router-lang">
               {LANGS.map((l) => (
                 <button
                   key={l.code}
                   type="button"
                   className={lang === l.code ? "on" : ""}
-                  onClick={() => setLang(l.code)}
+                  onClick={() => changeLang(l.code)}
                 >
                   {l.label}
                 </button>
               ))}
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="router-hero">
+      {/* HERO — 풀블리드 이미지 (2026-07-23, 데스크톱 첫인상 보강: 랜딩페이지 히어로컷 재사용) */}
+      <div className="router-hero-media">
+        <img src={tourHeroImg} alt={t.heroAlt} />
+        <div className="router-hero-media-overlay" />
+        <div className="router-hero-media-text">
+          <div className="router-narrow">
             <span className="router-eyebrow">{t.eyebrow}</span>
-            <h1>{t.heroTitle}</h1>
+            <h1>{t.heroTitleLine1}<br />{t.heroTitleLine2}</h1>
             <p>{t.heroPre}<span className="kk">{t.heroKk}</span>{t.heroPost}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="router-wrap">
+        <div className="router-narrow">
+          {/* 결정 섹션 — 히어로와 분리된 카드로 묶어서 스크롤하며 지나치지 않게 함 (2026-07-23 섹션 분리) */}
+          <div className="router-sec">
+            <p className="router-sec-eyebrow">{SECTIONS[lang].decisionEyebrow}</p>
+            <h2 className="router-sec-title">{SECTIONS[lang].decisionTitle}</h2>
+            <p className="router-sec-lead">{SECTIONS[lang].decisionLead}</p>
+          </div>
+          <div className="router-decision">
+            <div className="router-action-panel">
+              <a
+                className="router-action-main"
+                href={FORM_URLS[lang]}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="router-action-icon" aria-hidden>📍</span>
+                <span className="router-action-body">
+                  <span className="router-action-title">{ACTION_CTA[lang].mainTitle}</span>
+                  <span className="router-action-sub">{ACTION_CTA[lang].mainSub}</span>
+                </span>
+              </a>
+              <Link className="router-action-secondary" to={`/tour/suwon?lang=${lang}`}>
+                <span className="router-action-icon" aria-hidden>🗺️</span>
+                <span className="router-action-body">
+                  <span className="router-action-title">{ACTION_CTA[lang].secondaryTitle}</span>
+                  <span className="router-action-sub">{ACTION_CTA[lang].secondarySub}</span>
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          {/* 코스 현황 섹션 — NOW OPEN + COMING SOON을 하나의 섹션으로 묶음 (2026-07-23 섹션 분리) */}
+          <div className="router-sec">
+            <p className="router-sec-eyebrow">{SECTIONS[lang].routesEyebrow}</p>
+            <h2 className="router-sec-title">{SECTIONS[lang].routesTitle}</h2>
+            <p className="router-sec-lead">{SECTIONS[lang].routesLead}</p>
           </div>
 
           <div className="router-divider">{t.nowOpen}</div>
@@ -263,9 +394,9 @@ export default function TourList() {
         {/* 준비 중인 지역 — 그리드로 "이만큼 준비돼 있다"를 한눈에 보여줌 (개별 순서 서사는 NOW OPEN 카드에서만 지킴) */}
         <div className="router-locked-grid">
           {cards.filter((c) => c.status !== "open").map((c) => (
-            <div className="router-card locked" key={c.id}>
+            <div className={`router-card locked ${c.status}`} key={c.id}>
               <div className="thumb">
-                <span className="ph">🔒</span>
+                <span className="ph">{c.status === "next" ? "🔜" : "🔒"}</span>
                 <span className={`router-badge ${c.status === "next" ? "next" : "wait"}`}>
                   {c.status === "next" ? t.nextBadge : `${c.order} · ${t.waitBadge}`}
                 </span>
@@ -288,16 +419,6 @@ export default function TourList() {
 
         <div className="router-narrow">
           <div className="router-foot">KSPOT · 진짜 한국으로 안내합니다</div>
-        </div>
-      </div>
-
-      {/* 하단 고정 CTA — 스크롤 내내 노출 */}
-      <div className="router-sticky-cta">
-        <div className="router-sticky-cta-inner">
-          <span className="msg"><b>{t.askH3}</b></span>
-          <button type="button" onClick={() => setFormModalOpen(true)}>
-            {t.stickyBtn}
-          </button>
         </div>
       </div>
 

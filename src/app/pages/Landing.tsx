@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import "@/styles/landing.css";
-import logoEmblem from "@/assets/logo.png";
-import logoWordmark from "@/assets/landing_img_1.png";
 import kspotBrandingVideo from "@/assets/kspot-branding.mp4";
 import LangFormModal from "@/app/components/LangFormModal";
+import BrandLogo from "@/app/components/BrandLogo";
 
 export default function Landing() {
   const [formModalOpen, setFormModalOpen] = useState(false);
@@ -110,8 +109,7 @@ export default function Landing() {
       {/* Navigation */}
       <nav className={`topnav ${scrolled ? "scrolled" : ""}`} id="topnav">
         <Link to="/" className="logo">
-          <img src={logoEmblem} alt="KSPOT Logo Emblem" className="logo-emblem" />
-          <img src={logoWordmark} alt="KSPOT" className="logo-wordmark" />
+          <BrandLogo />
         </Link>
         <Link to="/tour" className="cta-small">
           안심 코스 보기

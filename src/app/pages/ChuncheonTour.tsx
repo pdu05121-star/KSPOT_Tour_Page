@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Sparkles } from "lucide-react";
 import LangFormModal from "@/app/components/LangFormModal";
+import BrandLogo from "@/app/components/BrandLogo";
 
 // TODO: 실제 춘천 스팟/맛집/카페 사진으로 교체 필요. 현재는 임시 placeholder 이미지 사용.
 import chuncheonPlaceholderImg from "@/assets/chuncheon/placeholder.png";
@@ -140,12 +141,9 @@ export default function ChuncheonTour() {
             <ChevronLeft size={14} />
             <span className="hidden sm:inline">다른 투어 보기</span>
           </Link>
-          <span
-            className="text-xs sm:text-sm font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}
-          >
-            KSPOT<span className="hidden sm:inline"> Travelog</span>
-          </span>
+          <Link to="/">
+            <BrandLogo size={22} />
+          </Link>
           <div style={{ width: 60 }} />
         </div>
       </nav>

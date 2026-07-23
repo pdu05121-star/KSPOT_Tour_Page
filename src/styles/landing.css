@@ -52,8 +52,6 @@
   .topnav .logo{
     display:flex;align-items:center;
   }
-  .topnav .logo-emblem{height:44px;width:auto;display:block;}
-  .topnav .logo-wordmark{display:none;}
   .topnav .cta-small{
     font-size:13px;font-weight:600;color:white;
     background:var(--teal-deep);

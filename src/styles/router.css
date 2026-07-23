@@ -14,27 +14,43 @@
   min-height:100vh;
 }
 .router-page *{box-sizing:border-box}
-.router-wrap{max-width:440px;margin:0 auto;padding:0 16px 48px;min-height:100vh}
+.router-wrap{max-width:440px;margin:0 auto;padding:0 16px 48px}
+.router-wrap.tight{padding-bottom:0}
 .router-narrow{max-width:100%;margin:0 auto}
 
-/* 데스크톱: 바깥 wrap을 넓혀서 잠금카드 그리드가 3~4열로 펼쳐지게. 히어로/OPEN카드/하단은 좁은 컬럼 유지 */
+/* 데스크톱: 바깥 wrap을 넓혀서 잠금카드 그리드가 3~4열로 펼쳐지게. 액션패널/OPEN카드는 460→560으로 소폭 확장(2026-07-23 데스크톱 인상 보강) */
 @media (min-width: 860px){
   .router-wrap{max-width:1080px;padding:0 32px 64px}
-  .router-narrow{max-width:460px}
+  .router-wrap.tight{padding-bottom:0}
+  .router-narrow{max-width:560px}
 }
 
 .router-topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 4px 8px}
-.router-brand{font-weight:700;font-size:16px;letter-spacing:.5px;text-decoration:none;color:var(--ink)}
-.router-brand span{color:var(--accent)}
 .router-lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:3px}
 .router-lang button{border:none;background:none;font-size:11px;padding:4px 9px;border-radius:16px;cursor:pointer;color:var(--ink-soft);font-family:inherit}
 .router-lang button.on{background:var(--ink);color:#fff}
 
-.router-hero{text-align:center;padding:28px 12px 24px}
-.router-eyebrow{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--accent);background:var(--accent-soft);padding:5px 13px;border-radius:20px;margin-bottom:16px;font-weight:500}
-.router-hero h1{font-family:'Gowun Batang',serif;font-size:26px;line-height:1.42;font-weight:700;letter-spacing:-.5px;margin:0}
-.router-hero p{font-size:13.5px;color:var(--ink-soft);margin-top:14px;line-height:1.7;padding:0 6px}
-.router-hero .kk{color:var(--ink);font-weight:500}
+/* ---------- 히어로 풀블리드 이미지 (2026-07-23, 랜딩페이지 히어로컷 재사용 — 데스크톱 첫인상 보강) ---------- */
+.router-hero-media{position:relative;width:100%;overflow:hidden;aspect-ratio:1/1;max-height:64vh}
+.router-hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 62%;display:block}
+.router-hero-media-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(20,16,12,0.05) 0%, rgba(15,12,10,0.4) 58%, rgba(10,8,7,0.86) 100%);
+}
+.router-hero-media-text{position:absolute;left:0;right:0;bottom:0;padding:24px 16px 28px}
+.router-eyebrow{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--accent);background:var(--accent-soft);padding:6px 14px;border-radius:999px;margin-bottom:16px;font-weight:500}
+.router-hero-media-text .router-eyebrow{background:rgba(255,255,255,0.16);color:#fff;border:1px solid rgba(255,255,255,0.35)}
+.router-hero-media-text h1{font-family:'Gowun Batang',serif;font-size:24px;line-height:1.4;font-weight:700;letter-spacing:-.5px;margin:0;color:#fff}
+.router-hero-media-text p{font-size:13px;color:rgba(255,255,255,0.82);margin-top:12px;line-height:1.65}
+.router-hero-media-text .kk{color:#fff;font-weight:700}
+
+@media (min-width: 860px){
+  .router-hero-media{aspect-ratio:16/9;max-height:80vh}
+  .router-hero-media-text{padding:0 32px 48px}
+  .router-hero-media-text .router-narrow{max-width:680px}
+  .router-hero-media-text h1{font-size:32px}
+  .router-hero-media-text p{font-size:14.5px}
+}
 
 .router-divider{display:flex;align-items:center;gap:10px;margin:8px 4px 20px;color:var(--ink-faint);font-size:11px;letter-spacing:.5px}
 .router-divider::before,.router-divider::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -45,7 +61,8 @@
 .router-card .thumb{height:172px;background:var(--accent-soft);position:relative;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center}
 .router-card .thumb .ph{color:var(--accent);opacity:.5;font-size:13px}
 .router-badge{position:absolute;top:12px;left:12px;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.router-badge.next{background:#fff;color:var(--ink-soft);border:1px solid var(--line)}
+/* next(곧 오픈)는 wait보다만 살짝 구분되게 연한 포인트컬러 톤 — 진하게 채우면 실제 오픈된 NOW OPEN 카드보다 튀어서 톤다운 (2026-07-23) */
+.router-badge.next{background:var(--accent-soft);color:var(--accent);border:none;font-weight:700}
 .router-badge.wait{background:#fff;color:var(--ink-faint);border:1px solid var(--line)}
 
 .router-card .body{padding:16px}
@@ -53,14 +70,25 @@
 .router-ktag{font-size:12px;color:var(--accent);margin-top:8px;display:flex;align-items:center;gap:5px}
 .router-card h2{font-size:17px;font-weight:500;margin-top:5px;line-height:1.4}
 .router-card .desc{font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.65}
-.router-cta{display:block;margin-top:16px;background:var(--ink);color:#fff;text-align:center;padding:12px;border-radius:9px;font-size:14px;font-weight:500;text-decoration:none;font-family:inherit;border:none;width:100%;cursor:pointer}
+/* 액션패널의 "수원 코스 예시 보기"와 목적지가 같아, 아웃라인으로 낮춰 1차 CTA와 겹치지 않게 함 (2026-07-23 CTA 정리) */
+.router-cta{display:block;margin-top:16px;background:transparent;color:var(--ink);text-align:center;padding:11px;border-radius:9px;font-size:14px;font-weight:500;text-decoration:none;font-family:inherit;border:1px solid var(--line);width:100%;cursor:pointer}
+.router-cta:hover{border-color:var(--ink-faint)}
 
 .router-divider-wide{max-width:100%}
 
+/* 잠금카드는 하이라인 테두리만으로는 배경과 구분이 약해 리스트처럼 보여서 기본 그림자로 카드 경계를 명확히 함 (2026-07-23) */
+.router-card.locked{box-shadow:0 2px 8px rgba(20,16,12,.05)}
 .router-card.locked .thumb{height:100px;background:var(--locked);display:flex;align-items:center;justify-content:center;position:relative}
 .router-card.locked .thumb .ph{color:var(--ink-faint);opacity:.6;font-size:20px}
+/* next(곧 오픈) 카드는 썸네일 톤만 살짝 구분 — 테두리까지 포인트컬러로 주면 NOW OPEN보다 튀어서 제외 (2026-07-23) */
+.router-card.locked.next .thumb{background:var(--accent-soft)}
+.router-card.locked.next .thumb .ph{opacity:.9}
 .router-lockcol{padding:14px;display:flex;flex-direction:column;gap:4px}
-.router-lockcol h2{font-size:14px;font-weight:500;margin:2px 0 10px;line-height:1.4;color:var(--ink-soft)}
+/* 제목 길이가 카드마다 달라 높이가 들쭉날쭉해지는 것을 막아 카드 형태를 유지 (2026-07-23) */
+.router-lockcol h2{
+  font-size:14px;font-weight:500;margin:2px 0 10px;line-height:1.4;color:var(--ink-soft);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
 .router-notify{
   margin-top:auto;flex-shrink:0;background:var(--paper);border:1px solid var(--line);color:var(--ink);
   font-size:12px;padding:9px 13px;border-radius:9px;text-align:center;cursor:pointer;
@@ -68,20 +96,21 @@
 }
 .router-notify:hover{border-color:var(--ink-faint)}
 
+/* auto-fill/minmax(150px)는 좁은 화면(약 330px 미만)에서 1열로 무너져 리스트처럼 보였음 — 폭에 상관없이 최소 2열 고정 (2026-07-23) */
 .router-locked-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
-  gap:14px;
+  grid-template-columns:repeat(2, 1fr);
+  gap:10px;
   margin-bottom:26px;
 }
 .router-locked-grid .router-card{margin-bottom:0;display:flex;flex-direction:column}
 .router-locked-grid .router-lockcol{flex:1}
 
+@media (min-width: 640px) and (max-width: 859px){
+  .router-locked-grid{grid-template-columns:repeat(3, 1fr);gap:14px}
+}
 @media (min-width: 860px){
   .router-locked-grid{grid-template-columns:repeat(4, 1fr);gap:18px}
-}
-@media (min-width: 640px) and (max-width: 859px){
-  .router-locked-grid{grid-template-columns:repeat(3, 1fr)}
 }
 
 .router-askbox{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px 18px;text-align:center;margin-top:4px}
@@ -92,23 +121,54 @@
 
 .router-foot{text-align:center;font-size:11px;color:var(--ink-faint);margin-top:28px;line-height:1.8}
 
-/* ---------- 하단 고정 CTA 바 (스크롤 내내 노출) ---------- */
-.router-page{padding-bottom:76px} /* 고정바에 콘텐츠 안 가리게 여백 확보 */
-.router-sticky-cta{
-  position:fixed;bottom:0;left:0;right:0;z-index:50;
-  background:#fff;border-top:1px solid var(--line);
-  box-shadow:0 -6px 20px rgba(0,0,0,.06);
-  padding:12px 16px;
+/* ---------- 언어 선택 게이트 (최초 방문, 2026-07-23 흐름 개편) ---------- */
+.router-langgate{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:28px;padding:32px 20px;text-align:center;
 }
-.router-sticky-cta-inner{
-  max-width:1080px;margin:0 auto;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
+.router-langgate .caption{font-size:12px;color:var(--ink-faint);letter-spacing:.3px}
+.router-langgate-grid{display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px}
+.router-langgate-grid button{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font-size:15px;font-weight:500;padding:14px;border-radius:11px;cursor:pointer;font-family:inherit;
 }
-.router-sticky-cta .msg{font-size:12.5px;font-weight:500;color:var(--ink-soft);text-align:center}
-.router-sticky-cta .msg b{color:var(--ink);font-weight:700}
-.router-sticky-cta a,
-.router-sticky-cta button{
-  background:var(--accent);color:#fff;text-decoration:none;border:none;cursor:pointer;
-  font-size:13px;font-weight:500;padding:10px 24px;border-radius:9px;white-space:nowrap;
-  width:100%;max-width:400px;text-align:center;
+.router-langgate-grid button:hover{border-color:var(--ink-faint)}
+
+/* ---------- 섹션 헤더 (eyebrow/title/lead) — 랜딩페이지 공식 차용, 2026-07-23 섹션 분리 ---------- */
+.router-sec{margin:36px 4px 18px}
+.router-sec-eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;
 }
+.router-sec-title{
+  font-family:'Gowun Batang',serif;font-weight:700;font-size:22px;line-height:1.4;
+  color:var(--ink);letter-spacing:-.01em;margin:0 0 10px;
+}
+.router-sec-lead{font-size:13.5px;color:var(--ink-soft);line-height:1.7;margin:0}
+
+@media (min-width: 860px){
+  .router-sec-title{font-size:26px}
+}
+
+/* ---------- 결정 섹션 카드 (언어 선택 직후, 히어로와 분리된 카드) — 2026-07-23 섹션 분리 ---------- */
+.router-decision{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:20px 16px 22px;margin:0 4px 28px;
+  box-shadow:0 2px 12px rgba(20,16,12,.05);
+}
+
+.router-action-panel{display:flex;flex-direction:column;gap:10px}
+.router-action-main,.router-action-secondary{
+  display:flex;align-items:center;gap:12px;border-radius:12px;padding:14px 16px;
+  text-decoration:none;font-family:inherit;
+  box-shadow:0 2px 8px rgba(20,16,12,.08);
+  transition:transform .12s ease,box-shadow .12s ease;
+}
+.router-action-main:hover,.router-action-secondary:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(20,16,12,.12)}
+.router-action-icon{font-size:20px;flex-shrink:0;line-height:1}
+.router-action-body{display:flex;flex-direction:column;min-width:0}
+.router-action-main{background:var(--accent);color:#fff}
+.router-action-secondary{background:var(--paper);border:1px solid var(--line);color:var(--ink);box-shadow:none}
+.router-action-title{font-size:15px;font-weight:700}
+.router-action-sub{font-size:12px;margin-top:3px;opacity:.75}
