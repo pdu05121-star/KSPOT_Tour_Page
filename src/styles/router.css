@@ -31,13 +31,13 @@
 .router-lang button.on{background:var(--ink);color:#fff}
 
 /* ---------- 히어로 풀블리드 이미지 (2026-07-23, 랜딩페이지 히어로컷 재사용 — 데스크톱 첫인상 보강) ---------- */
-.router-hero-media{position:relative;width:100%;overflow:hidden;aspect-ratio:1/1;max-height:64vh}
-.router-hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 62%;display:block}
+.router-hero-media{position:relative;width:100%;overflow:hidden;aspect-ratio:5/4;max-height:52vh}
+.router-hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 100%;display:block}
 .router-hero-media-overlay{
   position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(20,16,12,0.05) 0%, rgba(15,12,10,0.4) 58%, rgba(10,8,7,0.86) 100%);
 }
-.router-hero-media-text{position:absolute;left:0;right:0;bottom:0;padding:24px 16px 28px}
+.router-hero-media-text{position:absolute;left:0;right:0;bottom:0;padding:24px 16px 40px}
 .router-eyebrow{display:inline-block;font-size:11px;letter-spacing:1px;color:var(--accent);background:var(--accent-soft);padding:6px 14px;border-radius:999px;margin-bottom:16px;font-weight:500}
 .router-hero-media-text .router-eyebrow{background:rgba(255,255,255,0.16);color:#fff;border:1px solid rgba(255,255,255,0.35)}
 .router-hero-media-text h1{font-family:'Gowun Batang',serif;font-size:24px;line-height:1.4;font-weight:700;letter-spacing:-.5px;margin:0;color:#fff}
@@ -45,8 +45,8 @@
 .router-hero-media-text .kk{color:#fff;font-weight:700}
 
 @media (min-width: 860px){
-  .router-hero-media{aspect-ratio:16/9;max-height:80vh}
-  .router-hero-media-text{padding:0 32px 48px}
+  .router-hero-media{aspect-ratio:16/9;max-height:66vh}
+  .router-hero-media-text{padding:0 32px 60px}
   .router-hero-media-text .router-narrow{max-width:680px}
   .router-hero-media-text h1{font-size:32px}
   .router-hero-media-text p{font-size:14.5px}
