@@ -396,7 +396,7 @@ export default function TourList() {
           {cards.filter((c) => c.status !== "open").map((c) => (
             <div className={`router-card locked ${c.status}`} key={c.id}>
               <div className="thumb">
-                <span className="ph">{c.status === "next" ? "🔜" : "🔒"}</span>
+                <span className="coming-label">{t.comingSoon}</span>
                 <span className={`router-badge ${c.status === "next" ? "next" : "wait"}`}>
                   {c.status === "next" ? t.nextBadge : `${c.order} · ${t.waitBadge}`}
                 </span>

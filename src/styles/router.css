@@ -78,11 +78,12 @@
 
 /* 잠금카드는 하이라인 테두리만으로는 배경과 구분이 약해 리스트처럼 보여서 기본 그림자로 카드 경계를 명확히 함 (2026-07-23) */
 .router-card.locked{box-shadow:0 2px 8px rgba(20,16,12,.05)}
-.router-card.locked .thumb{height:100px;background:var(--locked);display:flex;align-items:center;justify-content:center;position:relative}
-.router-card.locked .thumb .ph{color:var(--ink-faint);opacity:.6;font-size:20px}
+.router-card.locked .thumb{height:104px;background:var(--locked);display:flex;align-items:center;justify-content:center;position:relative}
+/* 아이콘 대신 담백한 텍스트로 — 그럴싸한 이미지·아이콘은 실사 콘텐츠 없는 상태에서 오히려 신뢰를 깎음 (2026-07-23 재결정) */
+.router-card.locked .thumb .coming-label{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
 /* next(곧 오픈) 카드는 썸네일 톤만 살짝 구분 — 테두리까지 포인트컬러로 주면 NOW OPEN보다 튀어서 제외 (2026-07-23) */
 .router-card.locked.next .thumb{background:var(--accent-soft)}
-.router-card.locked.next .thumb .ph{opacity:.9}
+.router-card.locked.next .thumb .coming-label{color:var(--accent)}
 .router-lockcol{padding:14px;display:flex;flex-direction:column;gap:4px}
 /* 제목 길이가 카드마다 달라 높이가 들쭉날쭉해지는 것을 막아 카드 형태를 유지 (2026-07-23) */
 .router-lockcol h2{
