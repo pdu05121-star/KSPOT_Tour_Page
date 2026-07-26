@@ -50,17 +50,7 @@ const SPOTS: SpotItem[] = [
     image: gangneungPlaceholderImg,
   },
   {
-    no: "02", emoji: "🚄", tag: "교통 허브", title: "강릉역 플랫폼",
-    subtitle: "실제 KTX역 · 교통 허브",
-    scene: "코스의 출발점이자 도착점이 되는 실제 운행 중인 KTX역.",
-    reality: "실제 운행 중인 KTX역이라 열차 시간표를 확인하고 방문하면 플랫폼 전경을 여유롭게 담을 수 있어요.",
-    coord: "강릉시 강릉대로 715 강릉역",
-    tip: "플랫폼 안내판과 함께 찍으면 '강릉' 지명이 또렷하게 나와 인증샷으로 딱이에요.",
-    caution: "실제 열차 운행 구역이므로 승하차 승객과 안전요원 안내에 유의해 주세요.",
-    image: gangneungPlaceholderImg,
-  },
-  {
-    no: "03", emoji: "🌿", tag: "로컬 힐링 포인트", title: "경포호 산책길",
+    no: "02", emoji: "🌿", tag: "로컬 힐링 포인트", title: "경포호 산책길",
     subtitle: "호수 둘레길",
     scene: "현지인들이 아침마다 즐기는 호수 둘레 힐링 산책 코스.",
     reality: "벚꽃, 소나무, 잔잔한 호수가 어우러진 산책로. 이른 아침에 걸으면 물안개까지 볼 수 있어요.",
@@ -70,7 +60,7 @@ const SPOTS: SpotItem[] = [
     image: gangneungPlaceholderImg,
   },
   {
-    no: "04", emoji: "🧱", tag: "문화유산", title: "오죽헌",
+    no: "03", emoji: "🧱", tag: "문화유산", title: "오죽헌",
     subtitle: "500년 고택",
     scene: "500년 된 검은 대나무 숲과 5만원권 신사임당의 생가가 함께하는 고즈넉한 한옥.",
     reality: "보물로 지정된 조선 초기 건축물. 대나무 숲길을 걷다 보면 신사임당·율곡 이이의 흔적을 곳곳에서 만날 수 있어요.",
@@ -111,11 +101,12 @@ const TIMETABLE: TimetableItem[] = [
   { time: "06:00", emoji: "🚄", label: `${HUB_STATION} 출발`, desc: "KTX-이음 탑승 (추정 — 실제 시간표 확인 필요)" },
   { time: "08:00", emoji: "🚄", label: "강릉역 도착", desc: "KTX 하차 → 버스·택시로 주문진 방파제까지 환승 이동 (추정 — 실제 환승 수단·소요시간 확인 필요)" },
   { time: "09:00", emoji: "🌊", label: "주문진 방파제", desc: "인파 몰리기 전 이른 아침, 도깨비 첫 만남 장소에서 사진 찍기" },
-  { time: "10:30", emoji: "🚄", label: "강릉역 플랫폼", desc: "실제 운행 중인 KTX역 플랫폼에서 인증샷 남기기" },
-  { time: "12:00", emoji: "🐟", label: "주문진 항구 물회", desc: "동해 앞바다 활어로 만든 새콤달콤 물회로 든든한 점심" },
-  { time: "14:00", emoji: "🌿", label: "경포호 산책길", desc: "잔잔한 호수를 따라 걷는 여유로운 힐링 산책" },
-  { time: "16:00", emoji: "🧱", label: "오죽헌 & 안목해변 커피거리", desc: "500년 대나무 숲 산책 후 바다 보며 커피 한 잔으로 마무리" },
-  { time: "20:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
+  { time: "11:00", emoji: "🐟", label: "주문진 항구 물회", desc: "방파제 바로 근처, 이동 없이 이어서 점심" },
+  { time: "13:00", emoji: "🌿", label: "경포호 산책길", desc: "주문진에서 강릉 시내 방향으로 이동해 잔잔한 호수 산책" },
+  { time: "14:30", emoji: "🧱", label: "오죽헌", desc: "500년 대나무 숲 산책" },
+  { time: "16:00", emoji: "☕", label: "안목해변 커피거리", desc: "바다 보며 커피 한 잔으로 마무리" },
+  { time: "17:30", emoji: "🚄", label: "강릉역 도착", desc: "귀환 KTX 환승 (추정 — 실제 이동시간 확인 필요)" },
+  { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
 ];
 
 export default function GangneungTour() {
@@ -207,7 +198,7 @@ export default function GangneungTour() {
               오늘 이 코스, 판정 확인 중이에요
             </div>
             <p className="text-[11px] font-semibold mt-1" style={{ color: PINE, opacity: 0.65 }}>
-              6개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
+              5개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
             </p>
           </div>
 

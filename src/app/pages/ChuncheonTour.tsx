@@ -81,16 +81,6 @@ const SPOTS: SpotItem[] = [
     caution: "회차별 정원과 출발 시간이 정해져 있으니 미리 온라인 예약을 추천드려요.",
     image: chuncheonPlaceholderImg,
   },
-  {
-    no: "05", emoji: "🌸", tag: "로컬 힐링 포인트", title: "아침고요수목원",
-    subtitle: "사계절 정원 산책",
-    scene: "사계절 내내 다른 얼굴을 보여주는 화려한 꽃 정원 산책.",
-    reality: "춘천 동선에 포함되는 가평의 대표 정원. 계절마다 테마 정원이 바뀌어 언제 가도 새로운 풍경을 만날 수 있어요.",
-    coord: "가평군 상면 수목원로 432 아침고요수목원",
-    tip: "정원 중앙 분수대를 배경으로 계절 꽃이 가득한 화단을 함께 담으면 화보 같은 사진이 나와요.",
-    caution: "야간 개장 시즌(오색별빛정원전)에는 조명 연출이 다르니 방문 전 운영 시간을 확인해 주세요.",
-    image: chuncheonPlaceholderImg,
-  },
 ];
 
 type EatItem = {
@@ -109,7 +99,7 @@ const EATS: EatItem[] = [
   {
     section: "cafe", emoji: "☕", category: "카페 · 마무리", title: "강촌 막국수 카페",
     coord: "춘천시 남산면 강촌로 일대",
-    tip: "여름철 성수기에는 대기 시간이 길 수 있어 오후 4시 이전 방문을 추천해요.",
+    tip: "여름철 성수기에는 대기 시간이 길 수 있어 이른 오후 방문을 추천해요.",
     view: "시원한 막국수와 감성 커피를 한 공간에서 즐기는 강촌의 이색 로컬 카페.",
     image: chuncheonPlaceholderImg,
   },
@@ -128,9 +118,9 @@ const TIMETABLE: TimetableItem[] = [
   { time: "12:00", emoji: "🍗", label: "명동닭갈비골목", desc: "매콤 달콤 원조 닭갈비로 든든한 점심" },
   { time: "14:00", emoji: "🌿", label: "소양강 스카이워크", desc: "유리 바닥 위를 걸으며 호수 전망 즐기기" },
   { time: "15:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
-  { time: "17:00", emoji: "🌸", label: "아침고요수목원 & 강촌 막국수 카페", desc: "꽃 정원 산책 후 막국수와 커피로 하루 마무리" },
-  { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
-  { time: "20:00", emoji: "🚇", label: "청량리역 → 서울역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
+  { time: "17:00", emoji: "☕", label: "강촌 막국수 카페", desc: "막국수와 커피로 하루 마무리" },
+  { time: "18:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
+  { time: "19:00", emoji: "🚇", label: "청량리역 → 서울역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
 ];
 
 export default function ChuncheonTour() {
@@ -222,7 +212,7 @@ export default function ChuncheonTour() {
               오늘 이 코스, 판정 확인 중이에요
             </div>
             <p className="text-[11px] font-semibold mt-1" style={{ color: PINE, opacity: 0.65 }}>
-              7개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
+              6개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
             </p>
           </div>
 
