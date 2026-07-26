@@ -97,10 +97,10 @@ const EATS: EatItem[] = [
     image: chuncheonPlaceholderImg,
   },
   {
-    section: "cafe", emoji: "☕", category: "카페 · 마무리", title: "강촌 막국수 카페",
-    coord: "춘천시 남산면 강촌로 일대",
-    tip: "여름철 성수기에는 대기 시간이 길 수 있어 이른 오후 방문을 추천해요.",
-    view: "시원한 막국수와 감성 커피를 한 공간에서 즐기는 강촌의 이색 로컬 카페.",
+    section: "cafe", emoji: "☕", category: "카페 · 마무리", title: "그리고,봄",
+    coord: "춘천시 남산면 강촌구곡길 171",
+    tip: "매주 수요일은 휴무이니 방문 요일을 미리 확인해 주세요.",
+    view: "창밖으로 강촌의 자연 풍경이 펼쳐지는 뷰 맛집 카페. 하루를 마무리하기 좋은 여유로운 분위기예요.",
     image: chuncheonPlaceholderImg,
   },
 ];
@@ -118,7 +118,7 @@ const TIMETABLE: TimetableItem[] = [
   { time: "12:00", emoji: "🍗", label: "명동닭갈비골목", desc: "매콤 달콤 원조 닭갈비로 든든한 점심" },
   { time: "14:00", emoji: "🌿", label: "소양강 스카이워크", desc: "유리 바닥 위를 걸으며 호수 전망 즐기기" },
   { time: "15:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
-  { time: "17:00", emoji: "☕", label: "강촌 막국수 카페", desc: "막국수와 커피로 하루 마무리" },
+  { time: "17:00", emoji: "☕", label: "그리고,봄", desc: "강촌 자연 풍경 보며 커피로 하루 마무리" },
   { time: "18:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
   { time: "19:00", emoji: "🚇", label: "청량리역 → 서울역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
 ];
