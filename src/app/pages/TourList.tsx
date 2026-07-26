@@ -348,6 +348,7 @@ export default function TourList() {
                 href={FORM_URLS[lang]}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => (window as any).gtag?.('event', 'form_click', { location: 'tour_list_main', lang })}
               >
                 <span className="router-action-icon" aria-hidden>📍</span>
                 <span className="router-action-body">
@@ -412,7 +413,10 @@ export default function TourList() {
                 <button
                   type="button"
                   className="router-notify"
-                  onClick={() => setFormModalOpen(true)}
+                  onClick={() => {
+                    (window as any).gtag?.('event', 'form_modal_open', { region: 'tour_list' });
+                    setFormModalOpen(true);
+                  }}
                 >
                   🔔 {t.notify}
                 </button>
@@ -426,7 +430,7 @@ export default function TourList() {
         </div>
       </div>
 
-      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} pageLang={lang} />
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} pageLang={lang} region="tour_list" />
     </div>
   );
 }

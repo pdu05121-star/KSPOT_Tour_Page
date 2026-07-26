@@ -29,6 +29,8 @@ interface Props {
   onClose: () => void;
   /** 페이지에서 현재 보고 있는 언어. 전달하면 브라우저 언어 대신 이 언어를 우선 사용 */
   pageLang?: FormLang;
+  /** 이 모달을 연 페이지 식별자 (GA4 form_submit_click 이벤트의 region 값) */
+  region?: string;
 }
 
 const PINE = "#20362F";
@@ -36,7 +38,7 @@ const PAPER = "#F5F0E6";
 const INK = "#3A342C";
 const HAIRLINE = "#DED2B8";
 
-export default function LangFormModal({ open, onClose, pageLang }: Props) {
+export default function LangFormModal({ open, onClose, pageLang, region }: Props) {
   const recommended = pageLang ?? detectFormLang();
   const [selected, setSelected] = useState<FormLang>(recommended);
   const firstRef = useRef<HTMLButtonElement>(null);
@@ -58,6 +60,7 @@ export default function LangFormModal({ open, onClose, pageLang }: Props) {
   if (!open) return null;
 
   function handleConfirm() {
+    (window as any).gtag?.('event', 'form_submit_click', { region, lang: selected });
     window.open(FORM_URLS[selected], "_blank", "noopener");
     onClose();
   }

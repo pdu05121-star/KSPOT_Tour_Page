@@ -1075,6 +1075,7 @@ export default function SuwonTour() {
               href={FORM_URLS[lang]}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => (window as any).gtag?.('event', 'form_click', { location: 'suwon_sticky', lang })}
               className="py-3 px-4 sm:px-5 rounded-xl font-bold text-[11px] sm:text-sm shadow-md transition-opacity hover:opacity-90 text-center whitespace-nowrap"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >

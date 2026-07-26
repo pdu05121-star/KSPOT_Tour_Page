@@ -423,7 +423,10 @@ export default function ChuncheonTour() {
         <div className="flex items-center justify-center">
           <button
             type="button"
-            onClick={() => setFormModalOpen(true)}
+            onClick={() => {
+              (window as any).gtag?.('event', 'form_modal_open', { region: 'chuncheon' });
+              setFormModalOpen(true);
+            }}
             className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
             style={{ backgroundColor: STAMP, color: "#fff" }}
           >
@@ -432,7 +435,7 @@ export default function ChuncheonTour() {
         </div>
       </div>
 
-      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} />
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} region="chuncheon" />
     </div>
   );
 }
