@@ -1,3 +1,6 @@
+useEffect(() => {
+  (window as any).gtag?.('event', 'tour_detail_view', { region: 'chuncheon' });
+}, []);
 import { useState } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Sparkles } from "lucide-react";
