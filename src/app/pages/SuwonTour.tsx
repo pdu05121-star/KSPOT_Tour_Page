@@ -1,8 +1,3 @@
-import { useEffect } from 'react';
-
-useEffect(() => {
-  (window as any).gtag?.('event', 'tour_detail_view', { region: 'suwon' });
-}, []);
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles } from "lucide-react";
