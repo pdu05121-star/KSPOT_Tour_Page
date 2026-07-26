@@ -78,17 +78,17 @@ type EatItem = {
 
 const EATS: EatItem[] = [
   {
-    section: "food", emoji: "🐟", category: "점심 · 물회", title: "주문진 항구 물회",
-    coord: "강릉 주문진읍 주문진항 일대",
-    tip: "주말 점심에는 웨이팅이 있으니 12시 이전 방문을 추천해요.",
+    section: "food", emoji: "🐟", category: "점심 · 물회", title: "사천항주문진물회",
+    coord: "강릉시 사천면 진리항구길 49",
+    tip: "라스트오더는 마감 30분 전, 브레이크타임은 없어요.",
     view: "방파제 산책으로 떨어진 당과 체력을 단번에 올려줄 새콤달콤 동해 활어 물회.",
     image: gangneungPlaceholderImg,
   },
   {
-    section: "cafe", emoji: "☕", category: "카페 · 오션뷰", title: "안목해변 커피거리",
-    coord: "강릉시 창해로 14 안목해변 일대",
+    section: "cafe", emoji: "☕", category: "카페 · 오션뷰", title: "보사노바 커피로스터스",
+    coord: "강릉시 창해로14번길 28",
     tip: "일몰 30분 전 도착하면 노을과 함께 커피를 즐길 수 있어요.",
-    view: "파도 소리를 들으며 즐기는 강릉 대표 커피 명소. 해변을 따라 늘어선 카페마다 색다른 오션뷰가 펼쳐져요.",
+    view: "라오스 자체 농장 원두를 직접 로스팅하는 안목해변 대표 커피 명소. 옥상에서 오션뷰를 즐길 수 있어요.",
     image: gangneungPlaceholderImg,
   },
 ];
@@ -101,10 +101,10 @@ const TIMETABLE: TimetableItem[] = [
   { time: "06:00", emoji: "🚄", label: `${HUB_STATION} 출발`, desc: "KTX-이음 탑승 (추정 — 실제 시간표 확인 필요)" },
   { time: "08:00", emoji: "🚄", label: "강릉역 도착", desc: "KTX 하차 → 버스·택시로 주문진 방파제까지 환승 이동 (추정 — 실제 환승 수단·소요시간 확인 필요)" },
   { time: "09:00", emoji: "🌊", label: "주문진 방파제", desc: "인파 몰리기 전 이른 아침, 도깨비 첫 만남 장소에서 사진 찍기" },
-  { time: "11:00", emoji: "🐟", label: "주문진 항구 물회", desc: "방파제 바로 근처, 이동 없이 이어서 점심" },
+  { time: "11:00", emoji: "🐟", label: "사천항주문진물회", desc: "방파제에서 이동해 새콤달콤 물회로 점심" },
   { time: "13:00", emoji: "🌿", label: "경포호 산책길", desc: "주문진에서 강릉 시내 방향으로 이동해 잔잔한 호수 산책" },
   { time: "14:30", emoji: "🧱", label: "오죽헌", desc: "500년 대나무 숲 산책" },
-  { time: "16:00", emoji: "☕", label: "안목해변 커피거리", desc: "바다 보며 커피 한 잔으로 마무리" },
+  { time: "16:00", emoji: "☕", label: "보사노바 커피로스터스", desc: "바다 보며 커피 한 잔으로 마무리" },
   { time: "17:30", emoji: "🚄", label: "강릉역 도착", desc: "귀환 KTX 환승 (추정 — 실제 이동시간 확인 필요)" },
   { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
 ];
