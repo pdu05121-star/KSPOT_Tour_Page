@@ -30,6 +30,8 @@ const WARN_AMBER = "#B8893A";
 // 왕복 판단 — 강릉은 아직 왕복 교통시간(KTX/버스)이 확정되지 않아 DRAFT 상태.
 // 실제 이동시간이 확정되면 이 값을 채우고 수원 페이지처럼 GO/CARE 판정을 계산하면 됩니다.
 const ROUND_TRIP_CONFIRMED = false;
+// 출발/귀환 허브 — 팀 결정: 서울역 (KTX-이음 기준). 왕복 소요시간·막차 시각은 아직 미확정.
+const HUB_STATION = "서울역";
 
 type SpotItem = {
   no: string; emoji: string; tag: string; title: string; subtitle: string;
@@ -48,9 +50,9 @@ const SPOTS: SpotItem[] = [
     image: gangneungPlaceholderImg,
   },
   {
-    no: "02", emoji: "🚄", tag: "드라마 스팟", title: "강릉역 플랫폼",
-    subtitle: "도깨비 촬영지",
-    scene: "지은탁이 KTX를 타고 강릉에 내리던 그 플랫폼 장면.",
+    no: "02", emoji: "🚄", tag: "교통 허브", title: "강릉역 플랫폼",
+    subtitle: "실제 KTX역 · 교통 허브",
+    scene: "코스의 출발점이자 도착점이 되는 실제 운행 중인 KTX역.",
     reality: "실제 운행 중인 KTX역이라 열차 시간표를 확인하고 방문하면 플랫폼 전경을 여유롭게 담을 수 있어요.",
     coord: "강릉시 강릉대로 715 강릉역",
     tip: "플랫폼 안내판과 함께 찍으면 '강릉' 지명이 또렷하게 나와 인증샷으로 딱이에요.",
@@ -104,12 +106,16 @@ const EATS: EatItem[] = [
 type TimetableItem = { time: string; emoji: string; label: string; desc: string };
 
 // 참고용 제안 동선 — 왕복 교통시간이 아직 확정되지 않아 "판정"이 아닌 "참고 일정"으로만 안내합니다.
+// 서울역 출발·도착 시각은 KTX-이음 대략 소요시간(약 2시간) 기준 역산한 추정치이며, 실제 시간표 확인 전까지 확정 아님.
 const TIMETABLE: TimetableItem[] = [
+  { time: "06:00", emoji: "🚄", label: `${HUB_STATION} 출발`, desc: "KTX-이음 탑승 (추정 — 실제 시간표 확인 필요)" },
+  { time: "08:00", emoji: "🚄", label: "강릉역 도착", desc: "KTX 하차 → 버스·택시로 주문진 방파제까지 환승 이동 (추정 — 실제 환승 수단·소요시간 확인 필요)" },
   { time: "09:00", emoji: "🌊", label: "주문진 방파제", desc: "인파 몰리기 전 이른 아침, 도깨비 첫 만남 장소에서 사진 찍기" },
-  { time: "10:30", emoji: "🚄", label: "강릉역 플랫폼", desc: "지은탁이 내리던 그 플랫폼에서 인증샷 남기기" },
+  { time: "10:30", emoji: "🚄", label: "강릉역 플랫폼", desc: "실제 운행 중인 KTX역 플랫폼에서 인증샷 남기기" },
   { time: "12:00", emoji: "🐟", label: "주문진 항구 물회", desc: "동해 앞바다 활어로 만든 새콤달콤 물회로 든든한 점심" },
   { time: "14:00", emoji: "🌿", label: "경포호 산책길", desc: "잔잔한 호수를 따라 걷는 여유로운 힐링 산책" },
   { time: "16:00", emoji: "🧱", label: "오죽헌 & 안목해변 커피거리", desc: "500년 대나무 숲 산책 후 바다 보며 커피 한 잔으로 마무리" },
+  { time: "20:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
 ];
 
 export default function GangneungTour() {
@@ -191,39 +197,46 @@ export default function GangneungTour() {
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 — 아직 DRAFT */}
+        {/* 왕복 판단 프레임 — 수원 페이지와 동일한 카드 구조, verdict는 DRAFT 고정 (실측 전 GO 절대 금지) */}
         <div
           className="rounded-md overflow-hidden mb-10"
           style={{ border: `1px solid ${HAIRLINE}` }}
         >
-          <div
-            className="px-4 py-3 text-sm font-black flex items-center gap-2"
-            style={{ backgroundColor: PAPER_DEEP, color: PINE }}
-          >
-            오늘 일정 한눈에
-          </div>
-          <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
-            <div className="pl-1 space-y-1">
-              {TIMETABLE.map((tt, idx) => (
-                <div key={idx} className="text-[12px]" style={{ color: INK, opacity: 0.7 }}>
-                  {tt.time} · {tt.emoji} {tt.label}
-                </div>
-              ))}
+          <div className="px-4 py-3" style={{ backgroundColor: PAPER_DEEP }}>
+            <div className="text-sm font-black flex items-center gap-2" style={{ color: PINE }}>
+              오늘 이 코스, 판정 확인 중이에요
             </div>
+            <p className="text-[11px] font-semibold mt-1" style={{ color: PINE, opacity: 0.65 }}>
+              6개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
+            </p>
           </div>
 
-          {/* 판정 결과 — 왕복 교통시간 미확정 */}
+          {/* 판정 결과 — 왕복 교통시간 미확정이라 GO/CARE 대신 DRAFT + 확인 필요 항목 노출 */}
           {!ROUND_TRIP_CONFIRMED && (
-            <div
-              className="px-4 py-2.5 flex items-center justify-between text-white"
-              style={{ backgroundColor: WARN_AMBER }}
-            >
-              <span className="text-sm font-black">◐ DRAFT</span>
-              <span className="text-[11px] font-semibold opacity-90">
-                왕복 교통시간(KTX·버스) 확인 전 — 위 일정은 참고용 제안이에요
-              </span>
+            <div className="px-4 py-2.5 text-white" style={{ backgroundColor: WARN_AMBER }}>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-black">◐ DRAFT</span>
+                <span className="text-[11px] font-semibold opacity-90">왕복 교통시간 확인 전이에요</span>
+              </div>
+              <div
+                className="text-[11px] font-semibold opacity-95 mt-1.5 pt-1.5 leading-relaxed"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
+              >
+                {HUB_STATION} ↔ 강릉 왕복 교통시간과 귀환 막차 시각이 아직 확인되지 않아 GO 판정을 보여드릴 수 없어요.
+              </div>
+              <p className="text-[11px] text-white/90 mt-1.5">○ {HUB_STATION} ↔ 강릉 왕복 교통시간 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1">○ 귀환 막차 시각 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1">○ 스팟 운영시간·휴무 확인 필요</p>
             </div>
           )}
+
+          {/* 가상 시나리오 디스클레이머 */}
+          <div
+            className="px-4 py-3 text-[11px] leading-relaxed"
+            style={{ backgroundColor: PAPER, borderTop: `1px solid ${HAIRLINE}`, color: INK, opacity: 0.55 }}
+          >
+            위 코스는 날짜를 정하지 않은 예시 시나리오예요. 왕복 교통시간이 확정되면 정식 판정(GO/GO WITH CARE 등)으로 업데이트됩니다.
+          </div>
         </div>
       </section>
 

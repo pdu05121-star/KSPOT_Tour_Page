@@ -30,6 +30,8 @@ const WARN_AMBER = "#B8893A";
 // 왕복 판단 — 춘천은 아직 왕복 교통시간(열차/버스)이 확정되지 않아 DRAFT 상태.
 // 실제 이동시간이 확정되면 이 값을 채우고 수원 페이지처럼 GO/CARE 판정을 계산하면 됩니다.
 const ROUND_TRIP_CONFIRMED = false;
+// 출발/귀환 허브 — 팀 결정: 서울역 (경춘선 ITX-청춘 기준). 왕복 소요시간·막차 시각은 아직 미확정.
+const HUB_STATION = "서울역";
 
 type SpotItem = {
   no: string; emoji: string; tag: string; title: string; subtitle: string;
@@ -48,9 +50,9 @@ const SPOTS: SpotItem[] = [
     image: chuncheonPlaceholderImg,
   },
   {
-    no: "02", emoji: "🏃‍♀️", tag: "드라마 스팟", title: "춘천대교 & 공지천",
-    subtitle: "스물다섯 스물하나 촬영지",
-    scene: "스물다섯 스물하나 나희도와 백이진이 함께 달리던 강변 러닝 코스.",
+    no: "02", emoji: "🏃‍♀️", tag: "로컬 힐링 포인트", title: "춘천대교 & 공지천",
+    subtitle: "강변 러닝 & 노을 산책",
+    scene: "노을이 물드는 강물을 따라 달리듯 걷는 낭만적인 강변 러닝 코스.",
     reality: "의암호를 따라 이어지는 산책·러닝 코스. 노을 질 무렵 강물에 비치는 다리 조명이 특히 아름다워요.",
     coord: "춘천시 근화동 공지천 산책로 일대",
     tip: "춘천대교를 배경으로 강변 산책로를 따라 달리는 듯한 역동적인 뒷모습 컷을 찍어보세요.",
@@ -114,13 +116,16 @@ const EATS: EatItem[] = [
 type TimetableItem = { time: string; emoji: string; label: string; desc: string };
 
 // 참고용 제안 동선 — 왕복 교통시간이 아직 확정되지 않아 "판정"이 아닌 "참고 일정"으로만 안내합니다.
+// 서울역 출발·도착 시각은 경춘선 ITX-청춘 대략 소요시간(약 1시간) 기준 역산한 추정치이며, 실제 시간표 확인 전까지 확정 아님.
 const TIMETABLE: TimetableItem[] = [
+  { time: "07:30", emoji: "🚆", label: `${HUB_STATION} 출발`, desc: "경춘선 ITX-청춘 탑승 (추정 — 실제 시간표 확인 필요)" },
   { time: "09:00", emoji: "🚲", label: "남이섬 메타세쿼이아길", desc: "인파 몰리기 전 이른 배편으로 입도해 가로수길 사진 찍기" },
-  { time: "10:30", emoji: "🏃‍♀️", label: "춘천대교 & 공지천", desc: "강변을 따라 걸으며 러닝 씬 인증샷 남기기" },
+  { time: "10:30", emoji: "🏃‍♀️", label: "춘천대교 & 공지천", desc: "강변을 따라 걸으며 노을 산책 인증샷 남기기" },
   { time: "12:00", emoji: "🍗", label: "명동닭갈비골목", desc: "매콤 달콤 원조 닭갈비로 든든한 점심" },
   { time: "14:00", emoji: "🌿", label: "소양강 스카이워크", desc: "유리 바닥 위를 걸으며 호수 전망 즐기기" },
   { time: "15:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
   { time: "17:00", emoji: "🌸", label: "아침고요수목원 & 강촌 막국수 카페", desc: "꽃 정원 산책 후 막국수와 커피로 하루 마무리" },
+  { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
 ];
 
 export default function ChuncheonTour() {
@@ -170,7 +175,7 @@ export default function ChuncheonTour() {
                 className="text-[28px] sm:text-[38px] leading-[1.25] font-black text-white"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
-                춘천에서 만나는<br />〈겨울연가〉·〈스물다섯 스물하나〉 로드맵
+                춘천에서 만나는<br />〈겨울연가〉 로드맵
               </h1>
             </div>
           </div>
@@ -202,39 +207,46 @@ export default function ChuncheonTour() {
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 — 아직 DRAFT */}
+        {/* 왕복 판단 프레임 — 수원 페이지와 동일한 카드 구조, verdict는 DRAFT 고정 (실측 전 GO 절대 금지) */}
         <div
           className="rounded-md overflow-hidden mb-10"
           style={{ border: `1px solid ${HAIRLINE}` }}
         >
-          <div
-            className="px-4 py-3 text-sm font-black flex items-center gap-2"
-            style={{ backgroundColor: PAPER_DEEP, color: PINE }}
-          >
-            오늘 일정 한눈에
-          </div>
-          <div className="px-4 py-3.5 text-[13px] leading-relaxed" style={{ color: INK }}>
-            <div className="pl-1 space-y-1">
-              {TIMETABLE.map((tt, idx) => (
-                <div key={idx} className="text-[12px]" style={{ color: INK, opacity: 0.7 }}>
-                  {tt.time} · {tt.emoji} {tt.label}
-                </div>
-              ))}
+          <div className="px-4 py-3" style={{ backgroundColor: PAPER_DEEP }}>
+            <div className="text-sm font-black flex items-center gap-2" style={{ color: PINE }}>
+              오늘 이 코스, 판정 확인 중이에요
             </div>
+            <p className="text-[11px] font-semibold mt-1" style={{ color: PINE, opacity: 0.65 }}>
+              7개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
+            </p>
           </div>
 
-          {/* 판정 결과 — 왕복 교통시간 미확정 */}
+          {/* 판정 결과 — 왕복 교통시간 미확정이라 GO/CARE 대신 DRAFT + 확인 필요 항목 노출 */}
           {!ROUND_TRIP_CONFIRMED && (
-            <div
-              className="px-4 py-2.5 flex items-center justify-between text-white"
-              style={{ backgroundColor: WARN_AMBER }}
-            >
-              <span className="text-sm font-black">◐ DRAFT</span>
-              <span className="text-[11px] font-semibold opacity-90">
-                왕복 교통시간(열차·버스) 확인 전 — 위 일정은 참고용 제안이에요
-              </span>
+            <div className="px-4 py-2.5 text-white" style={{ backgroundColor: WARN_AMBER }}>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-black">◐ DRAFT</span>
+                <span className="text-[11px] font-semibold opacity-90">왕복 교통시간 확인 전이에요</span>
+              </div>
+              <div
+                className="text-[11px] font-semibold opacity-95 mt-1.5 pt-1.5 leading-relaxed"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
+              >
+                {HUB_STATION} ↔ 춘천 왕복 교통시간과 귀환 막차 시각이 아직 확인되지 않아 GO 판정을 보여드릴 수 없어요.
+              </div>
+              <p className="text-[11px] text-white/90 mt-1.5">○ {HUB_STATION} ↔ 춘천 왕복 교통시간 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1">○ 귀환 막차 시각 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1">○ 스팟 운영시간·휴무 확인 필요</p>
             </div>
           )}
+
+          {/* 가상 시나리오 디스클레이머 */}
+          <div
+            className="px-4 py-3 text-[11px] leading-relaxed"
+            style={{ backgroundColor: PAPER, borderTop: `1px solid ${HAIRLINE}`, color: INK, opacity: 0.55 }}
+          >
+            위 코스는 날짜를 정하지 않은 예시 시나리오예요. 왕복 교통시간이 확정되면 정식 판정(GO/GO WITH CARE 등)으로 업데이트됩니다.
+          </div>
         </div>
       </section>
 
