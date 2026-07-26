@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { ChevronLeft, MapPin, Sparkles } from "lucide-react";
 import LangFormModal from "@/app/components/LangFormModal";
@@ -114,6 +114,11 @@ const TIMETABLE: TimetableItem[] = [
 
 export default function GangneungTour() {
   const [formModalOpen, setFormModalOpen] = useState(false);
+
+  useEffect(() => {
+    (window as any).gtag?.('event', 'tour_detail_view', { region: 'gangneung' });
+  }, []);
+
   return (
     <div
       className="min-h-screen"
