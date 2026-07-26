@@ -156,7 +156,7 @@ export default function GangneungTour() {
                 className="text-[28px] sm:text-[38px] leading-[1.25] font-black text-white"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
-                강릉에서 만나는<br />〈도깨비〉 10주년 로드맵
+                강릉에서 만나는<br />〈도깨비〉 그 바다, 그리고 로컬 하루
               </h1>
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function GangneungTour() {
       {/* INTRO */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
-          8년이 지나도 사라지지 않는 그 바다, 강릉 주문진 로드맵
+          도깨비 성지 1곳과 동해안 힐링을 함께 즐기는 강릉 당일치기 코스
         </p>
 
         <blockquote
@@ -184,7 +184,7 @@ export default function GangneungTour() {
             className="text-[15px] sm:text-lg leading-relaxed"
             style={{ fontFamily: "'Noto Serif KR', serif", color: PINE }}
           >
-            주문진 방파제부터 오죽헌까지 — 도깨비 성지와 동해안 힐링 스팟을 한 번에 도는 코스.
+            도깨비 그 방파제에서 시작해 오죽헌·안목해변까지 — 드라마 성지 한 곳과 강릉의 로컬 힐링 스팟을 함께 도는 코스.
           </p>
         </blockquote>
 

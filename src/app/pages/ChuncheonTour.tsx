@@ -170,7 +170,7 @@ export default function ChuncheonTour() {
                 className="text-[28px] sm:text-[38px] leading-[1.25] font-black text-white"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
-                춘천에서 만나는<br />〈겨울연가〉 로드맵
+                춘천에서 만나는<br />〈겨울연가〉 그 자리, 그리고 로컬 하루
               </h1>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function ChuncheonTour() {
       {/* INTRO */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
-          레트로와 청춘이 공존하는 춘천 당일치기 로드맵
+          겨울연가 성지 1곳과 로컬 힐링을 함께 즐기는 춘천 당일치기 코스
         </p>
 
         <blockquote
@@ -198,7 +198,7 @@ export default function ChuncheonTour() {
             className="text-[15px] sm:text-lg leading-relaxed"
             style={{ fontFamily: "'Noto Serif KR', serif", color: PINE }}
           >
-            남이섬 가로수길부터 소양강 스카이워크까지 — 드라마 성지와 로컬 힐링 스팟을 한 번에 도는 코스.
+            겨울연가 그 가로수길에서 시작해 소양강 스카이워크까지 — 드라마 성지 한 곳과 춘천의 로컬 힐링 스팟을 함께 도는 코스.
           </p>
         </blockquote>
 
