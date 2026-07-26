@@ -90,8 +90,8 @@ type EatItem = {
 
 const EATS: EatItem[] = [
   {
-    section: "food", emoji: "🍗", category: "점심 · 닭갈비", title: "춘천 명동닭갈비골목",
-    coord: "춘천시 명동길 닭갈비골목 일대",
+    section: "food", emoji: "🍗", category: "점심 · 닭갈비", title: "원조숯불닭불고기집",
+    coord: "강원도 춘천시 낙원길 28-4",
     tip: "주말 점심에는 웨이팅이 있으니 11시 30분 이전 방문을 추천해요.",
     view: "레일바이크 라이딩으로 떨어진 당과 체력을 단번에 올려줄 매콤 달콤 춘천 원조 닭갈비.",
     image: chuncheonPlaceholderImg,
@@ -115,7 +115,7 @@ const TIMETABLE: TimetableItem[] = [
   { time: "07:30", emoji: "🚆", label: `${HUB_STATION} 출발`, desc: "경춘선 ITX-청춘 탑승 (추정 — 실제 시간표 확인 필요)" },
   { time: "09:00", emoji: "🚲", label: "남이섬 메타세쿼이아길", desc: "인파 몰리기 전 이른 배편으로 입도해 가로수길 사진 찍기" },
   { time: "10:30", emoji: "🏃‍♀️", label: "춘천대교 & 공지천", desc: "강변을 따라 걸으며 노을 산책 인증샷 남기기" },
-  { time: "12:00", emoji: "🍗", label: "명동닭갈비골목", desc: "매콤 달콤 원조 닭갈비로 든든한 점심" },
+  { time: "12:00", emoji: "🍗", label: "원조숯불닭불고기집", desc: "매콤 달콤 원조 닭갈비로 든든한 점심" },
   { time: "14:00", emoji: "🌿", label: "소양강 스카이워크", desc: "유리 바닥 위를 걸으며 호수 전망 즐기기" },
   { time: "15:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
   { time: "17:00", emoji: "☕", label: "그리고,봄", desc: "강촌 자연 풍경 보며 커피로 하루 마무리" },
