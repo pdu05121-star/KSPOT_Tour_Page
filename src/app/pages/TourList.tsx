@@ -1,10 +1,4 @@
 import { useState, useEffect } from "react";
-
-// 컴포넌트 함수 안, return문 위에 추가
-useEffect(() => {
-  (window as any).gtag?.('event', 'tour_list_view');
-}, []);
-import { useState } from "react";
 import { Link } from "react-router";
 import "@/styles/router.css";
 import LangFormModal from "@/app/components/LangFormModal";
