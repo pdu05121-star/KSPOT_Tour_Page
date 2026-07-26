@@ -679,6 +679,10 @@ export default function SuwonTour() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [lang, setLang] = useState<Lang>(() => resolveInitialLang(searchParams));
 
+  useEffect(() => {
+    (window as any).gtag?.('event', 'tour_detail_view', { region: 'suwon' });
+  }, []);
+
   function changeLang(l: Lang) {
     setStoredLang(l);
     setLang(l);
