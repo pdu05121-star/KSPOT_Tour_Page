@@ -30,8 +30,10 @@ const WARN_AMBER = "#B8893A";
 // 왕복 판단 — 춘천은 아직 왕복 교통시간(열차/버스)이 확정되지 않아 DRAFT 상태.
 // 실제 이동시간이 확정되면 이 값을 채우고 수원 페이지처럼 GO/CARE 판정을 계산하면 됩니다.
 const ROUND_TRIP_CONFIRMED = false;
-// 출발/귀환 허브 — 팀 결정: 서울역 (경춘선 ITX-청춘 기준). 왕복 소요시간·막차 시각은 아직 미확정.
-const HUB_STATION = "서울역";
+// 출발/귀환 허브 — 청량리역 (2026-07-26 정정: ITX-청춘은 서울역을 경유하지 않음. 정차역은 용산·옥수·왕십리·청량리·상봉·퇴계원·사릉·평내호평·마석·청평·가평·강촌·남춘천).
+// 서울역에서 출발하는 유저는 지하철로 청량리역까지 먼저 이동해야 함 — 타임테이블 첫 구간에 반영.
+// 왕복 소요시간·막차 시각은 아직 미확정.
+const HUB_STATION = "청량리역";
 
 type SpotItem = {
   no: string; emoji: string; tag: string; title: string; subtitle: string;
@@ -116,8 +118,10 @@ const EATS: EatItem[] = [
 type TimetableItem = { time: string; emoji: string; label: string; desc: string };
 
 // 참고용 제안 동선 — 왕복 교통시간이 아직 확정되지 않아 "판정"이 아닌 "참고 일정"으로만 안내합니다.
-// 서울역 출발·도착 시각은 경춘선 ITX-청춘 대략 소요시간(약 1시간) 기준 역산한 추정치이며, 실제 시간표 확인 전까지 확정 아님.
+// 청량리역 출발·도착 시각은 경춘선 ITX-청춘 대략 소요시간(약 1시간) 기준 역산한 추정치이며, 실제 시간표 확인 전까지 확정 아님.
+// 서울역 기준 방문객을 위해 서울역→청량리역 지하철 환승 구간을 첫/마지막에 명시.
 const TIMETABLE: TimetableItem[] = [
+  { time: "06:50", emoji: "🚇", label: "서울역 → 청량리역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
   { time: "07:30", emoji: "🚆", label: `${HUB_STATION} 출발`, desc: "경춘선 ITX-청춘 탑승 (추정 — 실제 시간표 확인 필요)" },
   { time: "09:00", emoji: "🚲", label: "남이섬 메타세쿼이아길", desc: "인파 몰리기 전 이른 배편으로 입도해 가로수길 사진 찍기" },
   { time: "10:30", emoji: "🏃‍♀️", label: "춘천대교 & 공지천", desc: "강변을 따라 걸으며 노을 산책 인증샷 남기기" },
@@ -126,6 +130,7 @@ const TIMETABLE: TimetableItem[] = [
   { time: "15:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
   { time: "17:00", emoji: "🌸", label: "아침고요수목원 & 강촌 막국수 카페", desc: "꽃 정원 산책 후 막국수와 커피로 하루 마무리" },
   { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
+  { time: "20:00", emoji: "🚇", label: "청량리역 → 서울역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
 ];
 
 export default function ChuncheonTour() {
