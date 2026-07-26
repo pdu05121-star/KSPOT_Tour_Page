@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // 컴포넌트 함수 안, return문 위에 추가
 useEffect(() => {
