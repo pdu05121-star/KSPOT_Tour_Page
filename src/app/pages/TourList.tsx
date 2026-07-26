@@ -271,6 +271,10 @@ export default function TourList() {
   const t = COPY[lang];
   const cards = TOURS[lang];
 
+  useEffect(() => {
+    (window as any).gtag?.('event', 'tour_list_view');
+  }, []);
+
   function chooseLang(l: Lang) {
     setStoredLang(l);
     setLang(l);
