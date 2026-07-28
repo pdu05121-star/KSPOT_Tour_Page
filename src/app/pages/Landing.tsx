@@ -230,7 +230,7 @@ export default function Landing() {
               <div className="sf-caption">TourAPI · ODsay · 카카오모빌리티 데이터 기반 — 배차·도착 시간은 현지 사정에 따라 실제와 다를 수 있어요.</div>
             </div>
             <div className="phone-mock">
-              <div className="pm-hdr"><div class="pm-logo">KSPOT</div><div className="pm-lang">🌐 日本語 ▾</div></div>
+              <div className="pm-hdr"><div className="pm-logo">KSPOT</div><div className="pm-lang">🌐 日本語 ▾</div></div>
               <div className="pm-sub"><div className="pm-back">‹</div><div className="pm-title">AI 판단 결과</div></div>
               <div className="pm-body">
                 <div className="pm-verdict care">
@@ -358,7 +358,7 @@ export default function Landing() {
               <div className="howto-desc">가고 싶은 소도시를 골라요.</div>
             </div>
             <div className="howto-step">
-              <div className="howto-node"><span class="step-num">S2</span>📝</div>
+              <div className="howto-node"><span className="step-num">S2</span>📝</div>
               <div className="howto-title">여행 조건 입력</div>
               <div className="howto-desc">출발지, 시간, 여행 스타일을 입력해요.</div>
             </div>
