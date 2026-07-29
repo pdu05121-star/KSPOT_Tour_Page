@@ -353,11 +353,12 @@ export default function GangneungTour() {
                     className="absolute"
                     style={{
                       top: 36, right: 36,
-                      borderRadius: 24,
+                      borderRadius: 2,
                       border: "6px solid #fff",
-                      boxShadow: "0 12px 32px rgba(0,0,0,0.22)",
+                      boxShadow: "0 10px 30px rgba(20,51,43,0.18)",
                       overflow: "hidden",
                       width: "clamp(88px, 18vw, 120px)",
+                      transform: "rotate(-0.6deg)",
                       zIndex: 10,
                     }}
                   >
