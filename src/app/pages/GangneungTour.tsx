@@ -92,7 +92,7 @@ const WARN_AMBER = "#B8893A";
 // 5) ⚠️ 주소 불일치 발견: 배니닭강정 — 코드엔 "금성로13번길 3-1"인데 배니닭강정 공식 홈페이지
 //    (gsbaenni.modoo.at, baenni.com)엔 "금성로 13번길 5"로 표기됨. 어느 쪽이 최신 정보인지 팀 확인 필요
 //    (임의로 수정하지 않음 — 환각 방지 원칙).
-const ROUND_TRIP_CONFIRMED = false;
+const ROUND_TRIP_CONFIRMED = true;
 // 출발/귀환 허브 — 팀 결정: 서울역 (KTX-이음 기준). 출발 08:57(807편) / 귀환 20:30(824편) 확정(위 검증 참고).
 const HUB_STATION = "서울역";
 
