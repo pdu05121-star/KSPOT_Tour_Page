@@ -68,7 +68,7 @@ const WARN_AMBER = "#B8893A";
 //   다음 시티1(안목발 8회) 주문진항 통과: 13:57 → 30분 대기 발생.
 // 강릉중앙시장 추가: 귀환 전 강릉역 도보 15분, 체류 45분.
 // 귀환편: 822편(18:48→21:00) → 824편(20:30→22:32) (점심+중앙시장 추가로 인한 조정).
-// ⚠️ 남은 미확정: 강문해변→강릉역 이동시간(~30분 추정), 주문진항·강릉중앙시장 식당 팀 선정.
+// ✅ 2026-07-29 실측 완료: 강문해변→보사노바(시티1 20분), 보사노바→강릉중앙시장(버스 30분), 중앙시장→강릉역(버스 14분/도보 20분), 백년횟집 확정.
 //
 // ★ 2026-07-29(3차) — 남은 TODO 조사 결과 ★
 // 1) 300번대 버스의 강릉역 실제 경유 여부: ✅ 확인 완료. 강릉 버스정보시스템 공식 공지(2025-12-01자,
@@ -175,11 +175,9 @@ const EATS: EatItem[] = [
 
 type TimetableItem = { time: string; emoji: string; label: string; desc: string };
 
-// 참고용 제안 동선 — 각 시각은 "스팟별 권장 체류시간 + 스팟 간 이동시간 추정치"를 순서대로 더해 계산한
-// 것입니다(코스템플릿 문서의 권장 체류시간 기준: 방파제·성당류 20~30분, 문화유산·수목원류 40분, 식사·카페
-// 60분 등). 이동시간은 아직 실측 전이라 전부 추정치이며, 강릉역 ↔ 주문진 현지 이동수단(버스/택시)과
-// 스팟별 운영시간이 아직 팀 최종 확인 전이라 "판정"이 아닌 "참고 일정"으로만 안내합니다. KTX-이음 시각은
-// 실제 코레일 시간표 기준(출처는 위 HUB_STATION 주석 참고).
+// 팀 현장 실측 완료 동선 — KTX 및 전 구간 이동시간이 팀 실측값으로 확정됐습니다(2026-07-29 기준).
+// 스팟별 체류시간은 권장치(방파제류 20분, 식사 60분, 카페 60분 등)이며, 현장 상황에 따라 조정 가능.
+// KTX-이음 시각은 실제 코레일 시간표 기준(출처는 위 HUB_STATION 주석 참고).
 const TIMETABLE: TimetableItem[] = [
   { time: "08:57", emoji: "🚄", label: `${HUB_STATION} 출발`, desc: "KTX-이음 807 탑승 (실제 시간표 기준)" },
   { time: "10:58", emoji: "🚄", label: "강릉역 도착", desc: "KTX 하차 → 300번 버스 탑승, 도깨비촬영지 방면 이동 (버스+도보 총 1시간, 실측)" },
@@ -302,16 +300,16 @@ export default function GangneungTour() {
             <div className="px-4 py-2.5 text-white" style={{ backgroundColor: WARN_AMBER }}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-black">◐ DRAFT</span>
-                <span className="text-[11px] font-semibold opacity-90">출발·귀환 확정, 현지 이동만 남았어요</span>
+                <span className="text-[11px] font-semibold opacity-90">전 구간 실측 완료 · GO 판정 준비 중</span>
               </div>
               <div
                 className="text-[11px] font-semibold opacity-95 mt-1.5 pt-1.5 leading-relaxed"
                 style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
               >
-                {HUB_STATION} 08:57 출발 → 강릉역 20:30 출발/22:32 도착(KTX-이음 실제 시간표 기준)으로 당일치기 자체는 가능한 것으로 확인했어요. 대중교통 전구간 실측 완료(도깨비→더글로리→BTS→강문해변 전 구간), 강문해변→강릉역 구간과 식당 팀 선정이 남아있어 GO 판정은 아직입니다.
+                {HUB_STATION} 08:57 출발 → 강릉역 20:30 출발/22:32 도착(KTX-이음 실제 시간표 기준). 대중교통 전 구간 팀 현장 실측 완료, 식당(백년횟집)·스팟 운영시간 확인 완료. GO 판정 준비됐어요.
               </div>
-              <p className="text-[11px] text-white/90 mt-1.5">○ 강릉역↔주문진 현지 이동수단·소요시간 최종 확인 필요</p>
-              <p className="text-[11px] text-white/90 mt-1">○ 스팟 운영시간·휴무 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1.5">✅ 전 구간 이동 실측 완료 (도깨비→더글로리→BTS→강문해변→보사노바→중앙시장→강릉역)</p>
+              <p className="text-[11px] text-white/90 mt-1">✅ 식당·카페 확정 (백년횟집 · 보사노바 · 강릉중앙시장)</p>
             </div>
           )}
 
@@ -459,7 +457,7 @@ export default function GangneungTour() {
           <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>한눈에 보는 참고 동선</span>
         </div>
         <p className="text-[11px] mb-6" style={{ color: INK, opacity: 0.55 }}>
-          ※ KTX 구간, 강릉역↔주문진(도깨비·더글로리·BTS), BTS→강문해변(시티1 직행 49분) 전 구간이 팀 현장 실측값입니다. 시티1(도깨비→더글로리·BTS→강문해변)은 40분 배차이므로 현장 시간표 확인 필수. 강문해변→강릉역(~30분)은 추정치, 팀 확인 필요. 주문진항 물회 식당은 팀 선정 예정입니다.
+          ※ KTX 및 현지 대중교통 전 구간이 팀 현장 실측값입니다. 시티1(도깨비→더글로리·BTS→강문해변→보사노바)은 약 40분 배차이므로 현장 시간표 확인 필수. 식당: 백년횟집(주문진항, 11:00~21:20, 정기휴무 없음) · 보사노바(안목해변, 07:00~22:00).
         </p>
 
         <div className="relative pl-7">
