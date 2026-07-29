@@ -347,24 +347,22 @@ export default function GangneungTour() {
                   style={{ boxShadow: "0 10px 30px rgba(20,51,43,0.18)", border: `6px solid #fff` }}
                 >
                   <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
+                  {s.pip && (
+                    <div
+                      className="absolute"
+                      style={{
+                        top: 12, right: 12,
+                        borderRadius: 6,
+                        border: "6px solid #fff",
+                        overflow: "hidden",
+                        width: "42%",
+                        zIndex: 10,
+                      }}
+                    >
+                      <img src={s.pip} alt="" style={{ display: "block", width: "100%", height: "auto" }} />
+                    </div>
+                  )}
                 </div>
-                {s.pip && (
-                  <div
-                    className="absolute"
-                    style={{
-                      top: 36, right: 36,
-                      borderRadius: 2,
-                      border: "6px solid #fff",
-                      boxShadow: "0 10px 30px rgba(20,51,43,0.18)",
-                      overflow: "hidden",
-                      width: "42%",
-                      transform: "rotate(-0.6deg)",
-                      zIndex: 10,
-                    }}
-                  >
-                    <img src={s.pip} alt="" style={{ display: "block", width: "100%", height: "auto" }} />
-                  </div>
-                )}
                 <div
                   className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
                   style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
