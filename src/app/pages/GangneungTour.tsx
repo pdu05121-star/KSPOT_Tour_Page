@@ -7,6 +7,12 @@ import { trackEvent } from "@/app/analytics";
 
 // TODO: 나머지 강릉 스팟/맛집/카페 사진은 팀이 직접 촬영/제공 필요. 현재는 임시 placeholder 이미지 사용.
 import gangneungPlaceholderImg from "@/assets/gangneung/placeholder.png";
+import spotBtsImg from "@/assets/gangneung/spot_bts.jpg";
+import spotBtsPip from "@/assets/gangneung/spot_bts_pip.png";
+import spotDokkaebIPip from "@/assets/gangneung/spot_dokkaebi_pip.jpeg";
+import spotThegloryPip from "@/assets/gangneung/spot_theglory_pip.jpeg";
+// import spotGangmunImg from "@/assets/gangneung/spot_gangmun.png";   // 이미지 추가 후 주석 해제
+// import spotGangmunPip from "@/assets/gangneung/spot_gangmun_pip.png"; // 이미지 추가 후 주석 해제
 
 // ─────────────────────────────────────────────
 // 디자인 토큰 — "KSPOT Travelog" 서브 브랜드 팔레트 (SuwonTour.tsx와 동일 체계)
@@ -111,7 +117,7 @@ const SPOTS: SpotItem[] = [
     coord: "강원 강릉시 주문진읍 교항리 81-151",
     tip: "방파제 끝 등대를 배경으로 뒷모습을 담으면 드라마 포스터 감성 구도가 완성돼요.",
     caution: "방파제는 바람이 세고 파도가 튈 수 있으니 노란 안전선 안쪽에서만 촬영해 주세요.",
-    image: gangneungPlaceholderImg,
+    image: gangneungPlaceholderImg, pip: spotDokkaebIPip,
   },
   {
     no: "02", emoji: "🌙", tag: "OTT 드라마 스팟", title: "더글로리 촬영지",
@@ -121,7 +127,7 @@ const SPOTS: SpotItem[] = [
     coord: "강원 강릉시 주문진읍 주문리 791-47 (시티1 더글로리촬영지 정류장 하차)",
     tip: "빨간 등대를 프레임 안에 넣고 해질녘에 방문하면 드라마 속 밤바다 분위기와 가장 비슷해요.",
     caution: "방파제 특성상 바닥이 미끄럽고 파도가 튈 수 있으니 안전선 안쪽에서만 촬영해 주세요.",
-    image: gangneungPlaceholderImg,
+    image: gangneungPlaceholderImg, pip: spotThegloryPip,
   },
   {
     no: "03", emoji: "💜", tag: "K-POP 스팟", title: "BTS 버스정류장",
@@ -131,7 +137,7 @@ const SPOTS: SpotItem[] = [
     coord: "강원도 강릉시 주문진읍 향호리 8-55",
     tip: "정류장 표지판과 보라색 벤치를 함께 프레임에 담고, 더글로리 촬영지에서 해변가를 따라 도보로 이동하면 산책 코스로도 손색없어요.",
     caution: "실제 운행하는 버스정류장이 아니라 포토존 세트이니, 주변 도로 통행에 주의해 주세요.",
-    image: gangneungPlaceholderImg,
+    image: spotBtsImg, pip: spotBtsPip,
   },
   {
     no: "04", emoji: "🌅", tag: "드라마 스팟", title: "강문해변",
@@ -141,7 +147,7 @@ const SPOTS: SpotItem[] = [
     coord: "강원도 강릉시 창해로 352",
     tip: "솟대다리 위에서 노을 질 무렵 바다를 배경으로 찍으면 화보 같은 사진이 나와요.",
     caution: "안목해변으로 넘어가는 길목이라 해 질 무렵엔 산책객이 많으니 다리 위 통행에 주의해 주세요.",
-    image: gangneungPlaceholderImg,
+    image: gangneungPlaceholderImg, /* pip: spotGangmunPip, */
   },
 ];
 
