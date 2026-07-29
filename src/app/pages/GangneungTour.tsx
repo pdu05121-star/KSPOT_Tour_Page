@@ -353,7 +353,7 @@ export default function GangneungTour() {
                       style={{
                         top: 12, right: 12,
                         borderRadius: 6,
-                        border: "6px solid #fff",
+                        border: "3px solid #fff",
                         overflow: "hidden",
                         width: "42%",
                         zIndex: 10,
