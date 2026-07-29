@@ -198,8 +198,8 @@ const TIMETABLE: TimetableItem[] = [
   { time: "16:32", emoji: "☕", label: "보사노바 커피로스터스", desc: "안목해변 대표 카페, 오션뷰 커피로 하루 마무리 (체류 약 1시간)" },
   { time: "17:32", emoji: "🚌", label: "강릉중앙시장으로 이동", desc: "보사노바 앞 버스 탑승, 환승 포함 약 30분 (실측)" },
   { time: "18:02", emoji: "🏪", label: "강릉중앙시장", desc: "오징어순대·명태회·메밀부침 등 시장 골목 구경 (체류 약 45분)" },
-  { time: "18:47", emoji: "🚶", label: "강릉역으로 이동", desc: "시장에서 도보 약 15분" },
-  { time: "19:02", emoji: "🚄", label: "강릉역 도착", desc: "KTX 탑승 전 약 1시간 28분 여유" },
+  { time: "18:47", emoji: "🚌", label: "강릉역으로 이동", desc: "버스 14분 (실측) / 도보 20분 (실측)" },
+  { time: "19:01", emoji: "🚄", label: "강릉역 도착", desc: "KTX 탑승 전 약 1시간 29분 여유" },
   { time: "20:30", emoji: "🚄", label: `${HUB_STATION} 방향 출발`, desc: "KTX-이음 824 탑승 (실제 시간표 기준)" },
   { time: "22:32", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환" },
 ];
