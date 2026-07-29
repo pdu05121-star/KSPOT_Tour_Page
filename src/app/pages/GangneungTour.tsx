@@ -98,7 +98,8 @@ const HUB_STATION = "서울역";
 
 type SpotItem = {
   no: string; emoji: string; tag: string; title: string; subtitle: string;
-  scene: string; reality: string; coord: string; tip: string; caution: string; image: string;
+  scene: string; reality: string; coord: string; tip: string; caution: string;
+  image: string; pip?: string;
 };
 
 const SPOTS: SpotItem[] = [
@@ -146,7 +147,7 @@ const SPOTS: SpotItem[] = [
 
 type EatItem = {
   section: "food" | "cafe"; emoji: string; category: string; title: string;
-  coord: string; tip: string; view: string; image: string;
+  coord: string; tip: string; view: string; image: string; pip?: string;
 };
 
 const EATS: EatItem[] = [
@@ -341,6 +342,22 @@ export default function GangneungTour() {
                 >
                   <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
                 </div>
+                {s.pip && (
+                  <div
+                    className="absolute"
+                    style={{
+                      top: 36, right: 36,
+                      borderRadius: 24,
+                      border: "6px solid #fff",
+                      boxShadow: "0 12px 32px rgba(0,0,0,0.22)",
+                      overflow: "hidden",
+                      width: "clamp(88px, 18vw, 120px)",
+                      zIndex: 10,
+                    }}
+                  >
+                    <img src={s.pip} alt="" style={{ display: "block", width: "100%", height: "auto" }} />
+                  </div>
+                )}
                 <div
                   className="absolute -top-4 -left-3 sm:-left-5 w-16 h-16 rounded-full flex flex-col items-center justify-center rotate-[-8deg]"
                   style={{ backgroundColor: STAMP, color: "#fff", boxShadow: "0 6px 14px rgba(168,68,46,0.4)" }}
@@ -401,11 +418,29 @@ export default function GangneungTour() {
 
         {EATS.filter((e) => e.section === "food").map((e, idx) => (
           <div key={idx}>
-            <div
-              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
-              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
-            >
-              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+            <div className="relative mb-4">
+              <div
+                className="relative aspect-[16/9] overflow-hidden rounded-sm"
+                style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+              >
+                <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+              </div>
+              {e.pip && (
+                <div
+                  className="absolute"
+                  style={{
+                    top: 36, right: 36,
+                    borderRadius: 24,
+                    border: "6px solid #fff",
+                    boxShadow: "0 12px 32px rgba(0,0,0,0.22)",
+                    overflow: "hidden",
+                    width: "clamp(88px, 18vw, 120px)",
+                    zIndex: 10,
+                  }}
+                >
+                  <img src={e.pip} alt="" style={{ display: "block", width: "100%", height: "auto" }} />
+                </div>
+              )}
             </div>
             <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
             <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
@@ -430,11 +465,29 @@ export default function GangneungTour() {
 
         {EATS.filter((e) => e.section === "cafe").map((e, idx) => (
           <div key={idx}>
-            <div
-              className="relative aspect-[16/9] overflow-hidden rounded-sm mb-4"
-              style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
-            >
-              <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+            <div className="relative mb-4">
+              <div
+                className="relative aspect-[16/9] overflow-hidden rounded-sm"
+                style={{ boxShadow: "0 8px 20px rgba(20,51,43,0.15)", border: "6px solid #fff" }}
+              >
+                <img src={e.image} alt={e.title} className="w-full h-full object-cover" />
+              </div>
+              {e.pip && (
+                <div
+                  className="absolute"
+                  style={{
+                    top: 36, right: 36,
+                    borderRadius: 24,
+                    border: "6px solid #fff",
+                    boxShadow: "0 12px 32px rgba(0,0,0,0.22)",
+                    overflow: "hidden",
+                    width: "clamp(88px, 18vw, 120px)",
+                    zIndex: 10,
+                  }}
+                >
+                  <img src={e.pip} alt="" style={{ display: "block", width: "100%", height: "auto" }} />
+                </div>
+              )}
             </div>
             <p className="text-[10px] font-black tracking-[0.15em] uppercase mb-1.5" style={{ color: STAMP }}>{e.category}</p>
             <h4 className="text-lg font-black mb-2" style={{ color: PINE, fontFamily: "'Noto Serif KR', serif" }}>
