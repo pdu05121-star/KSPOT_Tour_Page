@@ -7,6 +7,7 @@ import { FormLang, FORM_URLS, getStoredLang, setStoredLang } from "@/app/surveyC
 import { trackEvent } from "@/app/analytics";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import tourHeroImg from "@/assets/tour/hero_traveler_hanok.jpg";
+import gangneungHeroImg from "@/assets/gangneung/경포해수욕장.jpg";
 
 type Lang = FormLang;
 
@@ -56,16 +57,51 @@ const OPEN_VI: TourCard = {
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
 
+const OPEN_GANGNEUNG_KO: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 강릉",
+  kTag: "◉ 도깨비 · 더 글로리 · BTS",
+  title: "동해 방파제와 보랏빛 버스정류장",
+  desc: "도깨비·더 글로리·BTS 성지 4곳 — KTX 타고 당일치기, 막차까지 여유 74분",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_EN: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG",
+  kTag: "◉ Goblin · The Glory · BTS",
+  title: "East Sea breakwaters & a purple bus stop",
+  desc: "4 pilgrimage spots across Goblin, The Glory, and BTS — a KTX day trip from Seoul",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_JA: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 江陵",
+  kTag: "◉ トッケビ · ザ・グローリー · BTS",
+  title: "東海の防波堤と紫色のバス停",
+  desc: "トッケビ・ザ・グローリー・BTSの聖地4か所 — KTXで行く日帰り旅",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_ZH: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 江陵",
+  kTag: "◉ 鬼怪 · 黑暗荣耀 · BTS",
+  title: "东海防波堤与紫色公交站",
+  desc: "鬼怪·黑暗荣耀·BTS圣地4处 — 坐KTX当天往返首尔",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_VI: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG Gangneung",
+  kTag: "◉ Goblin · The Glory · BTS",
+  title: "Đê chắn sóng & Trạm xe buýt màu tím",
+  desc: "4 điểm hành hương Goblin · The Glory · BTS — một ngày từ Seoul bằng KTX",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
-// 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
+// 춘천: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정.
 // 강릉 kTag는 2026-07-27 "지역+작품 1개" → "지역+검증된 콘텐츠 여러 개" 확장 결정에 따라 도깨비 외 BTS(버스정류장)·
 // 더 글로리(소돌 방파제)를 추가함 — 셋 다 공식/독립 출처로 각각 검증 완료(docs/worklog-2026-07-27.md 참고).
 // 다른 도시도 동일 기준(검증된 콘텐츠만, 임의 생성 금지)으로 추가 페어링 확장 가능.
 // 전주·포항·제주·부산: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22, 부산=쌈,마이웨이 팀 확인 완료) —
 // 태그 없는 나머지 4곳(경주·대구·여수·순천)은 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
-  { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가 · 선업튀 · BTS" },
-  { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비 · 미스터 션샤인 · BTS" },
+  { id: "chuncheon", order: "03", status: "next", kTag: "◉ 겨울연가 · 선업튀 · BTS" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
@@ -77,7 +113,6 @@ const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: 
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   chuncheon: { ko: "CHUNCHEON 춘천", en: "CHUNCHEON", ja: "CHUNCHEON 春川", zh: "CHUNCHEON 春川", vi: "CHUNCHEON Chuncheon" },
-  gangneung: { ko: "GANGNEUNG 강릉", en: "GANGNEUNG", ja: "GANGNEUNG 江陵", zh: "GANGNEUNG 江陵", vi: "GANGNEUNG Gangneung" },
   jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州", vi: "JEONJU Jeonju" },
   pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
@@ -89,7 +124,6 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
 // 여기서는 코스의 장면·분위기만 담아 궁금증을 유발 (2026-07-22 결정)
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
   chuncheon: { ko: "눈 내리던 가로수길과 우산 든 다리, 초록빛 이끼 정원", en: "The snowy tree-lined road, a bridge with an umbrella, and a mossy green garden", ja: "雪降る並木道と傘を差したあの橋、緑苔の庭", zh: "飘雪的林荫道、撑伞的那座桥，还有翠绿的苔藓庭园", vi: "Con đường hàng cây tuyết rơi, cây cầu cầm ô ấy, và khu vườn rêu xanh" },
-  gangneung: { ko: "파도치던 방파제와 보랏빛 정류장, 그 오래된 성당", en: "That breakwater, the purple bus stop, and an old stone chapel", ja: "波打つ防波堤と紫色のバス停、あの古い聖堂", zh: "浪花拍打的防波堤与紫色公交站，那座古老的圣堂", vi: "Con đê sóng vỗ, trạm xe buýt tím, và nhà thờ cổ kính ấy" },
   jeonju: { ko: "달빛 아래 그 궁궐 골목", en: "That palace alley under the moonlight", ja: "月明かりの下、あの宮殿の路地", zh: "月光下，那条宫殿小巷", vi: "Con hẻm cung điện dưới ánh trăng năm ấy" },
   pohang: { ko: "바닷마을 그 벤치, 방파제의 온기", en: "That seaside bench, warmth of the breakwater", ja: "海辺の村のあのベンチ、防波堤のぬくもり", zh: "海边小镇那张长椅，防波堤的温度", vi: "Chiếc ghế bên bờ biển, hơi ấm của con đê" },
   jeju: { ko: "섬마을 골목과 그 해안도로", en: "That island alley and coastal road", ja: "島の村の路地と、あの海岸道路", zh: "海岛小巷与那条海岸公路", vi: "Con hẻm làng đảo và con đường ven biển đó" },
@@ -110,11 +144,11 @@ function buildLockedCards(lang: Lang): TourCard[] {
 }
 
 const TOURS: Record<Lang, TourCard[]> = {
-  ko: [OPEN_KO, ...buildLockedCards("ko")],
-  en: [OPEN_EN, ...buildLockedCards("en")],
-  ja: [OPEN_JA, ...buildLockedCards("ja")],
-  zh: [OPEN_ZH, ...buildLockedCards("zh")],
-  vi: [OPEN_VI, ...buildLockedCards("vi")],
+  ko: [OPEN_KO, OPEN_GANGNEUNG_KO, ...buildLockedCards("ko")],
+  en: [OPEN_EN, OPEN_GANGNEUNG_EN, ...buildLockedCards("en")],
+  ja: [OPEN_JA, OPEN_GANGNEUNG_JA, ...buildLockedCards("ja")],
+  zh: [OPEN_ZH, OPEN_GANGNEUNG_ZH, ...buildLockedCards("zh")],
+  vi: [OPEN_VI, OPEN_GANGNEUNG_VI, ...buildLockedCards("vi")],
 };
 
 const COPY: Record<Lang, {
