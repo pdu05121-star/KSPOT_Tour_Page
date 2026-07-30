@@ -5,11 +5,11 @@ import LangFormModal from "@/app/components/LangFormModal";
 import BrandLogo from "@/app/components/BrandLogo";
 import { trackEvent } from "@/app/analytics";
 
-// TODO: 실제 춘천 스팟/맛집/카페 사진으로 교체 필요. 현재는 임시 placeholder 이미지 사용.
-import chuncheonPlaceholderImg from "@/assets/chuncheon/placeholder.png";
+// TODO: 실제 정동진 스팟/맛집/카페 사진으로 교체 필요. 현재는 임시 placeholder 이미지 사용.
+import jeongdongjinPlaceholderImg from "@/assets/jeongdongjin/placeholder.png";
 
 // ─────────────────────────────────────────────
-// 디자인 토큰 — "KSPOT Travelog" 서브 브랜드 팔레트 (SuwonTour.tsx와 동일 체계)
+// 디자인 토큰 — "KSPOT Travelog" 서브 브랜드 팔레트 (GangneungTour.tsx와 동일 체계)
 // ─────────────────────────────────────────────
 const TOUR_RUST = "#B5502F";
 const TOUR_INK_DEEP = "#20362F";
@@ -28,13 +28,15 @@ const HAIRLINE = TOUR_BORDER;
 
 const WARN_AMBER = "#B8893A";
 
-// 왕복 판단 — 춘천은 아직 왕복 교통시간(열차/버스)이 확정되지 않아 DRAFT 상태.
-// 실제 이동시간이 확정되면 이 값을 채우고 수원 페이지처럼 GO/CARE 판정을 계산하면 됩니다.
+// 왕복 판단 — 정동진은 아직 왕복 이동시간이 팀 최종 확정 전이라 DRAFT 상태.
+// 2026-07-28 조사: 서울역↔정동진역 KTX-이음 직통 시간표는 확인 완료(출처: train.asamaru.net, 2026-07-28 조회 —
+// 서울역 첫차 10:59 출발/13:07 도착 KTX-이음 843, 정동진역 막차 22:00 출발/00:12 도착 KTX-이음 848,
+// 하루 왕복 4회뿐). 남은 미확정: 심곡항↔헌화로 실제 도보 거리, 스팟별 운영시간·휴무.
+// ⚠️ 정동진 직통 KTX는 하루 4회뿐이라 첫차 도착이 13:07로 늦음 — 강릉역 경유(첫차 05:06)로 더 일찍 출발하는
+// 대안이 있는지는 팀이 별도 확인 필요.
 const ROUND_TRIP_CONFIRMED = false;
-// 출발/귀환 허브 — 청량리역 (2026-07-26 정정: ITX-청춘은 서울역을 경유하지 않음. 정차역은 용산·옥수·왕십리·청량리·상봉·퇴계원·사릉·평내호평·마석·청평·가평·강촌·남춘천).
-// 서울역에서 출발하는 유저는 지하철로 청량리역까지 먼저 이동해야 함 — 타임테이블 첫 구간에 반영.
-// 왕복 소요시간·막차 시각은 아직 미확정.
-const HUB_STATION = "청량리역";
+// 출발/귀환 허브 — 서울역 (KTX-이음 정동진역 직통 기준).
+const HUB_STATION = "서울역";
 
 type SpotItem = {
   no: string; emoji: string; tag: string; title: string; subtitle: string;
@@ -43,54 +45,34 @@ type SpotItem = {
 
 const SPOTS: SpotItem[] = [
   {
-    no: "01", emoji: "🚲", tag: "드라마 스팟", title: "남이섬 메타세쿼이아길",
-    subtitle: "겨울연가 촬영지",
-    scene: "겨울연가 배용준·최지우가 자전거를 타고 달리던 그 낭만적인 가로수길.",
-    reality: "사계절 내내 사랑받는 남이섬 대표 포토존. 겨울엔 눈꽃, 가을엔 단풍이 가로수길을 가득 채워요.",
-    coord: "춘천시 남산면 남이섬길 1 남이섬 내 메타세쿼이아길",
-    tip: "가로수 한가운데 서서 길게 뻗은 길을 따라 소실점 구도로 찍으면 드라마 장면과 똑같은 앵글이 나와요.",
-    caution: "남이섬은 배편 입장이라 마지막 배 시간을 미리 확인하고 여유 있게 이동해 주세요.",
-    image: chuncheonPlaceholderImg,
+    no: "01", emoji: "🌄", tag: "로컬 힐링 포인트", title: "정동진역 · 모래시계공원",
+    subtitle: "한국에서 해가 가장 먼저 뜨는 곳",
+    scene: "1995년 드라마 〈모래시계〉의 짧은 한 장면으로 전국구 관광지가 된 바닷가 간이역.",
+    reality: "기차역이 해변과 가장 가까운 곳으로 기네스에 오른 곳. 모래시계나무(일명 '고현정 소나무')와 시간박물관이 있어요. 도깨비·BTS만큼 해외 팬덤 인지도는 없어 드라마 태그 없이 로컬 명소로 소개해요.",
+    coord: "강원 강릉시 강동면 정동진리 (정동진역)",
+    tip: "역 플랫폼에서 바다 쪽으로 바로 나오면 소나무와 철길, 파도를 한 프레임에 담을 수 있어요.",
+    caution: "일출 시간대엔 사람이 몰리니, KTX 도착 직후 바로 방문하면 비교적 한산해요.",
+    image: jeongdongjinPlaceholderImg,
   },
   {
-    no: "02", emoji: "💜", tag: "K-POP 스팟", title: "제이드가든 (이끼원)",
-    subtitle: "BTS RM이 다녀간 수목원",
-    scene: "RM이 개인 SNS에 '이러고 삽니다'라며 공개한, 이국적인 나무들 사이로 계곡길이 흐르는 정원 '이끼원'.",
-    reality: "유럽식 테마정원 26곳으로 이루어진 사립 수목원. 남이섬과 같은 남산면에 있어 오전 코스로 이어서 돌기 좋아요. 매일 09:00~18:00 운영(입장 마감 17:00).",
-    coord: "강원특별자치도 춘천시 남산면 햇골길 80",
-    tip: "이끼원 계곡길 안쪽, 이국적인 수풀을 배경으로 서면 RM 사진과 비슷한 구도가 나와요.",
-    caution: "유료 입장(수목원 자체 요금 있음)이며, 산책로가 넓어 최소 1시간 이상 여유 있게 잡아주세요.",
-    image: chuncheonPlaceholderImg,
+    no: "02", emoji: "💌", tag: "드라마 스팟", title: "심곡항",
+    subtitle: "남자친구 촬영지",
+    scene: "송혜교·박보검 주연 tvN 〈남자친구〉 촬영지 — 강릉시 공식 관광포털 'TV속 강릉'에 등재된 촬영지.",
+    reality: "정동진 바로 아래, 헌화로 초입에 있는 작은 어촌 항구. 방영 당시 전 세계 100개국 넘게 선판매될 만큼 두 주연의 해외 인지도가 높은 작품이에요.",
+    coord: "강원 강릉시 강동면 헌화로 648-8",
+    tip: "항구 방파제 끝에서 헌화로 절벽길을 배경으로 담으면 드라마 속 로맨틱한 구도가 나와요.",
+    caution: "항구 특성상 바닥이 미끄러울 수 있고 어선 작업이 있을 수 있으니 통행에 주의해 주세요.",
+    image: jeongdongjinPlaceholderImg,
   },
   {
-    no: "03", emoji: "☂️", tag: "드라마 스팟", title: "춘천대교 & 공지천",
-    subtitle: "선재 업고 튀어 촬영지 · 강변 러닝",
-    scene: "선재와 임솔이 15년 전 묻은 타임캡슐을 열기로 약속한 뒤 다시 만나는 곳 — 우산을 든 선재가 임솔을 만나던 그 장면.",
-    reality: "강원영상위원회가 공식 확인한 실제 촬영지(2024년 1월 촬영). 의암호를 따라 이어지는 산책·러닝 코스이기도 해서, 노을 질 무렵 강물에 비치는 다리 조명이 특히 아름다워요.",
-    coord: "춘천시 근화동 공지천 산책로 일대",
-    tip: "춘천대교를 배경으로 강변 산책로를 따라 달리는 듯한 역동적인 뒷모습 컷을 찍어보세요.",
-    caution: "강변 산책로는 자전거·러너와 동선이 겹치니 사진 찍을 땐 잠시 가장자리로 비켜서 주세요.",
-    image: chuncheonPlaceholderImg,
-  },
-  {
-    no: "04", emoji: "🌿", tag: "로컬 힐링 포인트", title: "소양강 스카이워크",
-    subtitle: "유리 바닥 호수 산책",
-    scene: "수면 위 유리 바닥을 걸으며 즐기는 짜릿한 호수 산책.",
-    reality: "발밑으로 소양강이 그대로 내려다보이는 유리 다리. 짧지만 강렬한 포인트로 인기가 많아요.",
-    coord: "춘천시 근화동 소양강 스카이워크",
-    tip: "유리 바닥 위에 서서 발과 강물이 함께 나오게 아래쪽 앵글로 찍으면 스릴 넘치는 사진이 나와요.",
-    caution: "우천 시 바닥이 미끄러울 수 있어 슬리퍼보다는 운동화 착용을 추천드려요.",
-    image: chuncheonPlaceholderImg,
-  },
-  {
-    no: "05", emoji: "🚴", tag: "로컬 힐링 포인트", title: "김유정역 레일바이크",
-    subtitle: "폐선로 레트로 라이딩",
-    scene: "경춘선 옛 폐선로를 따라 페달을 밟으며 달리는 레트로 감성 라이딩.",
-    reality: "더 이상 기차가 다니지 않는 옛 철길을 레일바이크로 달리는 이색 체험. 터널 구간에서는 조명쇼도 즐길 수 있어요.",
-    coord: "춘천시 신동면 김유정역길 1 김유정역 레일바이크",
-    tip: "터널 진입 전, 옛 철길 표지판과 레일바이크를 함께 담으면 레트로한 감성 사진이 완성돼요.",
-    caution: "회차별 정원과 출발 시간이 정해져 있으니 미리 온라인 예약을 추천드려요.",
-    image: chuncheonPlaceholderImg,
+    no: "03", emoji: "🚗", tag: "드라마 스팟", title: "헌화로 (심곡항~금진해변)",
+    subtitle: "시그널 촬영지",
+    scene: "바다를 바로 옆에 끼고 내달리는 〈시그널〉 마지막 회 엔딩 장면 — 트래비 매거진 등 복수 매체로 확인된 촬영지.",
+    reality: "심곡항과 금진해변을 잇는, 바다와 가장 가까운 해안 드라이브 길로 꼽혀요. 이제훈·김혜수·조진웅 주연으로 일본·중국·태국에서 리메이크될 만큼 해외에서도 인정받은 작품이에요.",
+    coord: "강원 강릉시 강동면 헌화로 일대 (심곡항~금진해변 구간)",
+    tip: "도로 옆 정동심곡 바다부채길 전망대에서 내려다보면 드라마 속 앵글과 비슷한 해안선을 담을 수 있어요.",
+    caution: "차량 통행이 있는 실제 도로이니, 사진은 지정된 전망대·인도에서만 찍어 주세요.",
+    image: jeongdongjinPlaceholderImg,
   },
 ];
 
@@ -101,45 +83,43 @@ type EatItem = {
 
 const EATS: EatItem[] = [
   {
-    section: "food", emoji: "🍗", category: "점심 · 닭갈비", title: "원조숯불닭불고기집",
-    coord: "강원도 춘천시 낙원길 28-4",
-    tip: "주말 점심에는 웨이팅이 있으니 11시 30분 이전 방문을 추천해요.",
-    view: "레일바이크 라이딩으로 떨어진 당과 체력을 단번에 올려줄 매콤 달콤 춘천 원조 닭갈비.",
-    image: chuncheonPlaceholderImg,
+    section: "food", emoji: "🍲", category: "점심 · 순두부", title: "정동진초당순두부",
+    coord: "강원도 강릉시 강동면 헌화로 1096",
+    tip: "이른 새벽부터 늦은 밤까지 영업(연중무휴)하지만, 방문 전 전화(033-644-8853)로 재확인 권장.",
+    view: "정동진 해수욕장 바로 근처, 구수한 국물 맛으로 입소문난 시골 순두부 전문점.",
+    image: jeongdongjinPlaceholderImg,
   },
   {
-    section: "cafe", emoji: "☕", category: "카페 · 마무리", title: "그리고,봄",
-    coord: "춘천시 남산면 강촌구곡길 171",
-    tip: "매주 수요일은 휴무이니 방문 요일을 미리 확인해 주세요.",
-    view: "창밖으로 강촌의 자연 풍경이 펼쳐지는 뷰 맛집 카페. 하루를 마무리하기 좋은 여유로운 분위기예요.",
-    image: chuncheonPlaceholderImg,
+    section: "cafe", emoji: "🚢", category: "카페 · 오션뷰", title: "썬크루즈 스카이라운지",
+    coord: "강원도 강릉시 강동면 헌화로 950-39",
+    tip: "입장료(약 5,000원)의 절반은 음료 값으로 차감돼요. 회전식 라운지라 자리에서 바다 전망이 360도로 바뀌어요.",
+    view: "절벽 위에 크루즈선 모양으로 지어진 정동진의 랜드마크 리조트. 스카이라운지에서 동해를 한눈에 내려다볼 수 있어요.",
+    image: jeongdongjinPlaceholderImg,
   },
 ];
 
 type TimetableItem = { time: string; emoji: string; label: string; desc: string };
 
-// 참고용 제안 동선 — 왕복 교통시간이 아직 확정되지 않아 "판정"이 아닌 "참고 일정"으로만 안내합니다.
-// 청량리역 출발·도착 시각은 경춘선 ITX-청춘 대략 소요시간(약 1시간) 기준 역산한 추정치이며, 실제 시간표 확인 전까지 확정 아님.
-// 서울역 기준 방문객을 위해 서울역→청량리역 지하철 환승 구간을 첫/마지막에 명시.
+// 참고용 제안 동선 — 왕복 KTX 시간표는 실측 반영했지만, 스팟 간 이동시간·운영시간은 아직 팀 최종 확인 전이라
+// "판정"이 아닌 "참고 일정"으로만 안내합니다.
 const TIMETABLE: TimetableItem[] = [
-  { time: "06:50", emoji: "🚇", label: "서울역 → 청량리역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
-  { time: "07:30", emoji: "🚆", label: `${HUB_STATION} 출발`, desc: "경춘선 ITX-청춘 탑승 (추정 — 실제 시간표 확인 필요)" },
-  { time: "09:00", emoji: "🚲", label: "남이섬 메타세쿼이아길", desc: "인파 몰리기 전 이른 배편으로 입도해 가로수길 사진 찍기" },
-  { time: "11:00", emoji: "💜", label: "제이드가든 (이끼원)", desc: "남이섬과 같은 남산면, 이동해서 BTS RM이 다녀간 정원 산책" },
-  { time: "12:30", emoji: "🍗", label: "원조숯불닭불고기집", desc: "시내로 이동해 매콤 달콤 원조 닭갈비로 든든한 점심" },
-  { time: "14:00", emoji: "☂️", label: "춘천대교 & 공지천", desc: "선재 업고 튀어 재회 장면 포토존 + 강변 노을 산책" },
-  { time: "15:00", emoji: "🌿", label: "소양강 스카이워크", desc: "유리 바닥 위를 걸으며 호수 전망 즐기기" },
-  { time: "16:30", emoji: "🚴", label: "김유정역 레일바이크", desc: "폐선로 따라 달리는 레트로 라이딩" },
-  { time: "18:00", emoji: "☕", label: "그리고,봄", desc: "강촌 자연 풍경 보며 커피로 하루 마무리" },
-  { time: "19:30", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (추정 — 막차 시각 확인 전, 확정 아님)" },
-  { time: "20:00", emoji: "🚇", label: "청량리역 → 서울역", desc: "지하철 환승 (추정 약 20~30분 — 실제 경로 확인 필요)" },
+  { time: "10:59", emoji: "🚄", label: `${HUB_STATION} 출발`, desc: "KTX-이음 843 탑승 (실제 시간표 기준 — 정동진행 하루 4회 중 첫차)" },
+  { time: "13:07", emoji: "🚄", label: "정동진역 도착", desc: "역에서 바로 모래시계공원 도보 이동" },
+  { time: "13:20", emoji: "🌄", label: "정동진역 · 모래시계공원", desc: "역 바로 앞, 소나무·철길 사진 찍기" },
+  { time: "14:00", emoji: "🍲", label: "정동진초당순두부", desc: "순두부로 늦은 점심" },
+  { time: "15:00", emoji: "💌", label: "심곡항", desc: "헌화로 초입, 남자친구 촬영지 방파제 산책" },
+  { time: "16:00", emoji: "🚗", label: "헌화로 (심곡항~금진해변)", desc: "시그널 엔딩 촬영지, 바다부채길 전망대 드라이브" },
+  { time: "17:30", emoji: "🚢", label: "썬크루즈 스카이라운지", desc: "절벽 위 카페에서 동해 오션뷰로 마무리" },
+  { time: "19:00", emoji: "🚄", label: "정동진역 도착", desc: "도보·택시로 환승 이동" },
+  { time: "19:32", emoji: "🚄", label: `${HUB_STATION} 방향 출발`, desc: "KTX-이음 846 탑승 (실제 시간표 기준)" },
+  { time: "21:49", emoji: "🏠", label: `${HUB_STATION} 도착`, desc: "귀환 (KTX 시간은 실측 반영, 스팟 간 이동시간은 팀 확인 필요)" },
 ];
 
-export default function ChuncheonTour() {
+export default function JeongdongjinTour() {
   const [formModalOpen, setFormModalOpen] = useState(false);
 
   useEffect(() => {
-    trackEvent('tour_detail_view', { region: 'chuncheon' });
+    trackEvent('tour_detail_view', { region: 'jeongdongjin' });
   }, []);
 
   return (
@@ -168,7 +148,7 @@ export default function ChuncheonTour() {
       {/* HERO */}
       <header className="relative">
         <div className="relative aspect-[4/3] sm:aspect-[16/9] w-full overflow-hidden">
-          <img src={chuncheonPlaceholderImg} alt="춘천 남이섬 메타세쿼이아길" className="w-full h-full object-cover" />
+          <img src={jeongdongjinPlaceholderImg} alt="정동진 심곡항" className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(20,51,43,0.75), rgba(20,51,43,0.05) 55%)" }} />
           <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 pb-8 sm:pb-10">
             <div className="max-w-2xl mx-auto">
@@ -176,13 +156,13 @@ export default function ChuncheonTour() {
                 className="inline-block text-[11px] font-bold tracking-[0.15em] uppercase px-3 py-1 rounded-full mb-4"
                 style={{ backgroundColor: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.35)" }}
               >
-                📍 춘천 · 남이섬 · 당일치기 코스
+                📍 강릉 정동진 · 당일치기 코스
               </span>
               <h1
                 className="text-[28px] sm:text-[38px] leading-[1.25] font-black text-white"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
-                춘천에서 만나는<br />겨울연가·선업튀·BTS, 그리고 로컬 하루
+                정동진에서 만나는<br />남자친구·시그널, 그리고 그 해돋이
               </h1>
             </div>
           </div>
@@ -192,7 +172,7 @@ export default function ChuncheonTour() {
       {/* INTRO */}
       <section className="max-w-2xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14">
         <p className="text-sm sm:text-base font-bold mb-8" style={{ color: STAMP }}>
-          겨울연가·선업튀·BTS 성지 3곳과 로컬 힐링을 함께 즐기는 춘천 당일치기 코스
+          남자친구·시그널 성지 2곳과 정동진 해돋이 명소를 함께 즐기는 코스
         </p>
 
         <blockquote
@@ -210,11 +190,11 @@ export default function ChuncheonTour() {
             className="text-[15px] sm:text-lg leading-relaxed"
             style={{ fontFamily: "'Noto Serif KR', serif", color: PINE }}
           >
-            겨울연가 그 가로수길에서 시작해 BTS가 다녀간 제이드가든, 선재 업고 튀어의 춘천대교까지 — 세계적으로 잘 알려진 드라마·K팝 성지 3곳과 춘천의 로컬 힐링 스팟을 함께 도는 코스.
+            정동진역 그 해돋이 명소에서 시작해 남자친구의 심곡항, 시그널의 헌화로까지 — 해외에서도 널리 알려진 드라마 성지 2곳과 정동진의 풍경을 함께 도는 코스. 강릉 도심 코스와는 별도로 즐기는 정동진 전용 코스예요.
           </p>
         </blockquote>
 
-        {/* 왕복 판단 프레임 — 수원 페이지와 동일한 카드 구조, verdict는 DRAFT 고정 (실측 전 GO 절대 금지) */}
+        {/* 왕복 판단 프레임 — GangneungTour.tsx와 동일한 카드 구조, verdict는 DRAFT 고정 (실측 전 GO 절대 금지) */}
         <div
           className="rounded-md overflow-hidden mb-10"
           style={{ border: `1px solid ${HAIRLINE}` }}
@@ -224,26 +204,26 @@ export default function ChuncheonTour() {
               오늘 이 코스, 판정 확인 중이에요
             </div>
             <p className="text-[11px] font-semibold mt-1" style={{ color: PINE, opacity: 0.65 }}>
-              7개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
+              5개 스팟 · {HUB_STATION} 출발 당일치기 (참고 제안)
             </p>
           </div>
 
-          {/* 판정 결과 — 왕복 교통시간 미확정이라 GO/CARE 대신 DRAFT + 확인 필요 항목 노출 */}
+          {/* 판정 결과 — 스팟 간 이동시간·운영시간 미확정이라 GO/CARE 대신 DRAFT + 확인 필요 항목 노출 */}
           {!ROUND_TRIP_CONFIRMED && (
             <div className="px-4 py-2.5 text-white" style={{ backgroundColor: WARN_AMBER }}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-black">◐ DRAFT</span>
-                <span className="text-[11px] font-semibold opacity-90">왕복 교통시간 확인 전이에요</span>
+                <span className="text-[11px] font-semibold opacity-90">현지 이동시간 확인 전이에요</span>
               </div>
               <div
                 className="text-[11px] font-semibold opacity-95 mt-1.5 pt-1.5 leading-relaxed"
                 style={{ borderTop: "1px solid rgba(255,255,255,0.3)" }}
               >
-                {HUB_STATION} ↔ 춘천 왕복 교통시간과 귀환 막차 시각이 아직 확인되지 않아 GO 판정을 보여드릴 수 없어요.
+                {HUB_STATION} ↔ 정동진역 KTX 시간표는 확인했지만(하루 왕복 4회뿐), 심곡항·헌화로 구간 실제 이동시간과 스팟 운영시간이 아직 확인되지 않아 GO 판정을 보여드릴 수 없어요.
               </div>
-              <p className="text-[11px] text-white/90 mt-1.5">○ {HUB_STATION} ↔ 춘천 왕복 교통시간 확인 필요</p>
-              <p className="text-[11px] text-white/90 mt-1">○ 귀환 막차 시각 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1.5">○ 정동진역 ↔ 심곡항 ↔ 헌화로 실제 이동시간(도보/택시) 확인 필요</p>
               <p className="text-[11px] text-white/90 mt-1">○ 스팟 운영시간·휴무 확인 필요</p>
+              <p className="text-[11px] text-white/90 mt-1">○ 정동진역 직통 KTX가 하루 4회뿐이라, 강릉역 경유가 더 빠른지 팀 확인 필요</p>
             </div>
           )}
 
@@ -262,7 +242,7 @@ export default function ChuncheonTour() {
         <div className="flex items-center gap-3 mb-8">
           <span className="text-[11px] font-black tracking-[0.2em] uppercase" style={{ color: STAMP }}>Chapter 1</span>
           <div className="flex-1 h-px" style={{ backgroundColor: HAIRLINE }} />
-          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>드라마·K팝 성지 & 로컬 힐링 포인트</span>
+          <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>드라마 성지 & 해돋이 명소</span>
         </div>
 
         <div className="space-y-16 sm:space-y-20">
@@ -391,7 +371,7 @@ export default function ChuncheonTour() {
           <span className="text-[11px] font-bold" style={{ color: INK, opacity: 0.5 }}>한눈에 보는 참고 동선</span>
         </div>
         <p className="text-[11px] mb-6" style={{ color: INK, opacity: 0.55 }}>
-          ※ 왕복 교통시간이 아직 확정되지 않아, 아래 시간은 참고용 제안 동선입니다. 실제 왕복 판정은 이동시간 확정 후 업데이트됩니다.
+          ※ KTX 구간은 실제 시간표를 반영했지만, 현지 이동시간과 스팟 운영시간이 아직 확정 전이라 아래 시간은 참고용 제안 동선입니다. 실제 왕복 판정은 확정 후 업데이트됩니다.
         </p>
 
         <div className="relative pl-7">
@@ -443,7 +423,7 @@ export default function ChuncheonTour() {
           <button
             type="button"
             onClick={() => {
-              trackEvent('form_modal_open', { region: 'chuncheon' });
+              trackEvent('form_modal_open', { region: 'jeongdongjin' });
               setFormModalOpen(true);
             }}
             className="w-full max-w-md py-4 rounded-[14px] font-bold text-sm shadow-md transition-opacity hover:opacity-90 text-center"
@@ -454,7 +434,7 @@ export default function ChuncheonTour() {
         </div>
       </div>
 
-      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} region="chuncheon" />
+      <LangFormModal open={formModalOpen} onClose={() => setFormModalOpen(false)} region="jeongdongjin" />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router";
 import { ChevronLeft, MapPin, Car, Sparkles } from "lucide-react";
 import { FormLang, FORM_URLS, isFormLang, getStoredLang, setStoredLang } from "@/app/surveyConfig";
+import { trackEvent } from "@/app/analytics";
 
 // Local Image Imports (동일한 수원 에셋 재사용)
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
@@ -675,7 +676,7 @@ export default function SuwonTour() {
   const [lang, setLang] = useState<Lang>(() => resolveInitialLang(searchParams));
 
   useEffect(() => {
-    (window as any).gtag?.('event', 'tour_detail_view', { region: 'suwon' });
+    trackEvent('tour_detail_view', { region: 'suwon' });
   }, []);
 
   function changeLang(l: Lang) {
@@ -1075,7 +1076,7 @@ export default function SuwonTour() {
               href={FORM_URLS[lang]}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => (window as any).gtag?.('event', 'form_click', { location: 'suwon_sticky', lang })}
+              onClick={() => trackEvent('form_click', { location: 'suwon_sticky', lang })}
               className="py-3 px-4 sm:px-5 rounded-xl font-bold text-[11px] sm:text-sm shadow-md transition-opacity hover:opacity-90 text-center whitespace-nowrap"
               style={{ backgroundColor: STAMP, color: "#fff" }}
             >

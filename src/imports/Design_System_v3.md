@@ -74,6 +74,40 @@ status: active
 
 ---
 
+## 2-1. Color System — KSPOT Travelog (투어 콘텐츠 서브 브랜드)
+
+> 2026-07-17 제안 → 2026-07-22 병합. 원본 초안: [[design-system-addendum-tour-content]] (히스토리 보존용, 이제 여기가 정본)
+
+**적용 범위**
+- 적용: `/tour/[지역명]` 상세페이지 전체 (수원·강릉·춘천 등, `KSPOT_Tour_Page` 저장소)
+- 미적용: 위 2번의 S1~S5 판단 엔진 플로우, Storage, 홈 화면 — 거기는 `--teal` 체계 그대로 유지
+
+**왜 분리하는가**: 코어 앱(S1~S5)은 "불안 → 안심" 감정 전환이 핵심이라 차분한 teal 톤을 쓴다. `/tour/*` 상세페이지는 드라마 촬영지 성지순례 콘텐츠로 "과몰입 → 힐링"에 가깝고 유입 경로도 Instagram 캐러셀 → 투어 목록으로 별도다. 같은 teal을 쓰면 투어 콘텐츠가 판단 엔진 UI의 연장선처럼 읽혀 여행 에디토리얼 감성이 옅어지므로, 전용 팔레트를 둔다. (코어 `--teal` 값 자체는 변경하지 않음)
+
+```css
+/* Travelog 서브 브랜드 — 코어 --teal 체계와 분리 */
+--tour-rust:       #B5502F   /* 주요 CTA·포인트·스팟 넘버 배지. 여행 스탬프/필름 감성 */
+--tour-ink-deep:   #20362F   /* 헤드라인. 짙은 잉크그린 */
+--tour-body-ink:   #3A342C   /* 본문 텍스트. 완전 검정 아닌 따뜻한 다크 뉴트럴 */
+--tour-paper:      #F5F0E6   /* 배경. 따뜻한 파피루스 톤 */
+--tour-paper-deep: #EAE1CC   /* 하이라이트 박스(꿀팁 등) 배경 */
+--tour-border:     #DED2B8   /* 헤어라인 구분선 */
+
+/* 코어 브랜드와의 연결점 — 최소한으로만 사용 */
+--teal: #1D9E75   /* 하단 nav "다른 투어 보기" 등, KSPOT 소속임을 알리는 용도 한정 */
+```
+
+**사용 원칙**
+1. CTA 버튼은 `--tour-rust`. 코어 앱의 `--teal` CTA와 시각적으로 구분되어야 한다.
+2. 헤드라인/타이틀은 `--tour-ink-deep` + `Noto Serif KR`(헤드라인) / `Noto Sans KR`(본문) 폰트 조합.
+3. 스팟 사진은 흰 프레임(6px) + 살짝 기울인(rotate) 스크랩북 배치, 우상단에 `--tour-rust` 배경 원형 "SPOT 0N" 배지.
+4. `--teal`은 상단 nav "다른 투어 보기" 등 극히 제한된 지점에만 남겨 "KSPOT 소속 콘텐츠"라는 최소 연결점만 유지.
+5. 하단 고정 CTA 바는 코어 앱 CTA 치수 규칙(`border-radius:14px`, `padding:16px`)은 그대로 따르고 색상만 `--tour-rust`로 교체.
+
+**참고 구현**: `src/app/pages/SuwonTour.tsx`(완성), `ChuncheonTour.tsx`/`GangneungTour.tsx`(틀만 적용, DRAFT 단계) — 자세한 신규 도시 작업 절차는 `docs/새도시_페이지_추가_가이드.md` 참고.
+
+---
+
 ## 3. Typography
 
 ```css

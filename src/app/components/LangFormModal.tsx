@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FORM_URLS, FormLang, detectFormLang } from "@/app/surveyConfig";
+import { trackEvent } from "@/app/analytics";
 
 const LANG_OPTIONS: { code: FormLang; flag: string; label: string }[] = [
   { code: "ko", flag: "🇰🇷", label: "한국어" },
@@ -60,7 +61,7 @@ export default function LangFormModal({ open, onClose, pageLang, region }: Props
   if (!open) return null;
 
   function handleConfirm() {
-    (window as any).gtag?.('event', 'form_submit_click', { region, lang: selected });
+    trackEvent('form_submit_click', { region, lang: selected });
     window.open(FORM_URLS[selected], "_blank", "noopener");
     onClose();
   }

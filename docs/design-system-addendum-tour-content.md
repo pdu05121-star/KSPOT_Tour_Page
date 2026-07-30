@@ -1,13 +1,14 @@
 ---
 title: KSPOT Travelog (Tour Content) 서브 브랜드 컬러 — Design System v3 부록
 tags: [design-system, sub-brand, tour-content]
-status: proposed
+status: merged
 created: 2026-07-17
+merged: 2026-07-22
 related: [[Design_System_v3]]
 ---
 
-> 이 문서는 `Design_System_v3.md`에 새 섹션으로 추가할 것을 제안하는 초안입니다.
-> 검토 후 본 문서 원본에 병합해 주세요.
+> ✅ 2026-07-22 `Design_System_v3.md` 2-1절로 병합 완료. 이 파일은 히스토리 보존용이며,
+> 최신 내용은 반드시 `Design_System_v3.md` 2-1절을 정본으로 참고할 것.
 
 ## 배경 — 왜 서브 브랜드 컬러가 필요한가
 

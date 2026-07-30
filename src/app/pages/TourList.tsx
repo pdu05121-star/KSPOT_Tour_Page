@@ -4,6 +4,7 @@ import "@/styles/router.css";
 import LangFormModal from "@/app/components/LangFormModal";
 import BrandLogo from "@/app/components/BrandLogo";
 import { FormLang, FORM_URLS, getStoredLang, setStoredLang } from "@/app/surveyConfig";
+import { trackEvent } from "@/app/analytics";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import tourHeroImg from "@/assets/tour/hero_traveler_hanok.jpg";
 
@@ -57,15 +58,21 @@ const OPEN_VI: TourCard = {
 
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
 // 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
+// 강릉 kTag는 2026-07-27 "지역+작품 1개" → "지역+검증된 콘텐츠 여러 개" 확장 결정에 따라 도깨비 외 BTS(버스정류장)·
+// 더 글로리(소돌 방파제)를 추가함 — 셋 다 공식/독립 출처로 각각 검증 완료(docs/worklog-2026-07-27.md 참고).
+// 다른 도시도 동일 기준(검증된 콘텐츠만, 임의 생성 금지)으로 추가 페어링 확장 가능.
 // 전주·포항·제주·부산: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22, 부산=쌈,마이웨이 팀 확인 완료) —
 // 태그 없는 나머지 4곳(경주·대구·여수·순천)은 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
-  { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가" },
-  { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비" },
+  { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가 · 선업튀 · BTS" },
+  { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비 · 미스터 션샤인 · BTS" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
   { id: "busan", order: "07", status: "wait", kTag: "◉ 쌈, 마이웨이" },
+  // 정동진: 2026-07-28 강릉 코스에서 분리된 별도 코스. 남자친구·시그널(둘 다 해외 선판매·리메이크로 인지도 검증됨)이
+  // 강릉 도심(주문진·경포·원도심·안목) 동선과 지리적으로 겹치지 않는 강동면 권역이라 별도 코스로 분리(worklog-2026-07-27.md 참고).
+  { id: "jeongdongjin", order: "08", status: "next", kTag: "◉ 남자친구 · 시그널" },
 ];
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
@@ -75,17 +82,19 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
   busan: { ko: "BUSAN 부산", en: "BUSAN", ja: "BUSAN 釜山", zh: "BUSAN 釜山", vi: "BUSAN Busan" },
+  jeongdongjin: { ko: "JEONGDONGJIN 정동진", en: "JEONGDONGJIN", ja: "JEONGDONGJIN 正東津", zh: "JEONGDONGJIN 正东津", vi: "JEONGDONGJIN Jeongdongjin" },
 };
 
 // 미공개 코스 타이틀 — "곧 열려요/공개 준비 중" 같은 오픈 예고 문구는 status 배지가 이미 담당하므로
 // 여기서는 코스의 장면·분위기만 담아 궁금증을 유발 (2026-07-22 결정)
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
-  chuncheon: { ko: "눈 내리던 그 겨울, 호숫가 가로수길", en: "That lakeside road under falling winter snow", ja: "雪降るその冬、湖畔の並木道", zh: "那个飘雪的冬天，湖边林荫道", vi: "Con đường ven hồ mùa đông tuyết rơi năm ấy" },
-  gangneung: { ko: "파도 부서지던 그 방파제, 도깨비의 바다", en: "The breakwater where waves crash — Dokkaebi's sea", ja: "波が砕けるその防波堤、トッケビの海", zh: "浪花拍打的那道防波堤，鬼怪的大海", vi: "Con đê sóng vỗ, biển của Dokkaebi" },
+  chuncheon: { ko: "눈 내리던 가로수길과 우산 든 다리, 초록빛 이끼 정원", en: "The snowy tree-lined road, a bridge with an umbrella, and a mossy green garden", ja: "雪降る並木道と傘を差したあの橋、緑苔の庭", zh: "飘雪的林荫道、撑伞的那座桥，还有翠绿的苔藓庭园", vi: "Con đường hàng cây tuyết rơi, cây cầu cầm ô ấy, và khu vườn rêu xanh" },
+  gangneung: { ko: "파도치던 방파제와 보랏빛 정류장, 그 오래된 성당", en: "That breakwater, the purple bus stop, and an old stone chapel", ja: "波打つ防波堤と紫色のバス停、あの古い聖堂", zh: "浪花拍打的防波堤与紫色公交站，那座古老的圣堂", vi: "Con đê sóng vỗ, trạm xe buýt tím, và nhà thờ cổ kính ấy" },
   jeonju: { ko: "달빛 아래 그 궁궐 골목", en: "That palace alley under the moonlight", ja: "月明かりの下、あの宮殿の路地", zh: "月光下，那条宫殿小巷", vi: "Con hẻm cung điện dưới ánh trăng năm ấy" },
   pohang: { ko: "바닷마을 그 벤치, 방파제의 온기", en: "That seaside bench, warmth of the breakwater", ja: "海辺の村のあのベンチ、防波堤のぬくもり", zh: "海边小镇那张长椅，防波堤的温度", vi: "Chiếc ghế bên bờ biển, hơi ấm của con đê" },
   jeju: { ko: "섬마을 골목과 그 해안도로", en: "That island alley and coastal road", ja: "島の村の路地と、あの海岸道路", zh: "海岛小巷与那条海岸公路", vi: "Con hẻm làng đảo và con đường ven biển đó" },
   busan: { ko: "그 옥탑방 동네, 골목 계단 사이", en: "That rooftop neighborhood, between alley stairs", ja: "あの屋上部屋の町、路地の階段の間", zh: "那个屋顶房社区，巷子台阶之间", vi: "Khu xóm gác thượng đó, giữa những bậc thang trong hẻm" },
+  jeongdongjin: { ko: "그 작은 포구와, 바다를 내달리던 해안도로", en: "That small harbor, and the coastal road where it all raced to an end", ja: "あの小さな港と、海を駆け抜けたあの海岸道路", zh: "那个小小的港口，还有沿海奔驰的那条海岸公路", vi: "Bến cảng nhỏ ấy, và con đường ven biển từng lao vun vút" },
 };
 
 function buildLockedCards(lang: Lang): TourCard[] {
@@ -266,7 +275,7 @@ export default function TourList() {
   const cards = TOURS[lang];
 
   useEffect(() => {
-    (window as any).gtag?.('event', 'tour_list_view');
+    trackEvent('tour_list_view');
   }, []);
 
   function chooseLang(l: Lang) {
@@ -348,7 +357,7 @@ export default function TourList() {
                 href={FORM_URLS[lang]}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => (window as any).gtag?.('event', 'form_click', { location: 'tour_list_main', lang })}
+                onClick={() => trackEvent('form_click', { location: 'tour_list_main', lang })}
               >
                 <span className="router-action-icon" aria-hidden>📍</span>
                 <span className="router-action-body">
@@ -414,7 +423,7 @@ export default function TourList() {
                   type="button"
                   className="router-notify"
                   onClick={() => {
-                    (window as any).gtag?.('event', 'form_modal_open', { region: 'tour_list' });
+                    trackEvent('form_modal_open', { region: 'tour_list' });
                     setFormModalOpen(true);
                   }}
                 >
