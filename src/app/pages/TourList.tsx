@@ -7,6 +7,7 @@ import { FormLang, FORM_URLS, getStoredLang, setStoredLang } from "@/app/surveyC
 import { trackEvent } from "@/app/analytics";
 import janganmunNightImg from "@/assets/carousel/janganmun_night.jpg";
 import tourHeroImg from "@/assets/tour/hero_traveler_hanok.jpg";
+import gangneungHeroImg from "@/assets/gangneung/경포해수욕장.jpg";
 
 type Lang = FormLang;
 
@@ -56,6 +57,42 @@ const OPEN_VI: TourCard = {
   thumb: janganmunNightImg, link: "/tour/suwon",
 };
 
+const OPEN_GANGNEUNG_KO: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 강릉",
+  kTag: "◉ 도깨비 · 더 글로리 · BTS",
+  title: "동해 방파제와 보랏빛 버스정류장",
+  desc: "도깨비·더 글로리·BTS 성지 4곳 — KTX 타고 당일치기, 막차까지 여유 74분",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_EN: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG",
+  kTag: "◉ Goblin · The Glory · BTS",
+  title: "East Sea Breakwater & Purple Bus Stop",
+  desc: "4 K-content spots — day trip by KTX, 74 min to spare before the last train",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_JA: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 江陵",
+  kTag: "◉ トッケビ · ザ・グローリー · BTS",
+  title: "東海の防波堤と紫色のバス停",
+  desc: "K-コンテンツ聖地4ヵ所 — KTX日帰り、終電まで74分の余裕",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_ZH: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG 江陵",
+  kTag: "◉ 鬼怪 · 黑暗荣耀 · BTS",
+  title: "东海防波堤与紫色公交站",
+  desc: "4处K内容圣地 — 乘KTX当天往返，末班车前还有74分钟余裕",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+const OPEN_GANGNEUNG_VI: TourCard = {
+  id: "gangneung", status: "open", order: "02", cityline: "GANGNEUNG Gangneung",
+  kTag: "◉ Goblin · The Glory · BTS",
+  title: "Đê biển Đông và trạm xe buýt màu tím",
+  desc: "4 thánh địa K-content — đi về trong ngày bằng KTX, dư 74 phút trước chuyến tàu cuối",
+  thumb: gangneungHeroImg, link: "/tour/gangneung",
+};
+
 // 잠금 카드 공통 정보 (도시명 표기만 언어별로 다름, 순서/태그/상태는 공통)
 // 춘천·강릉: 7/21 팀장 언급대로 7월 내 오픈 목표라 "곧 오픈" + 드라마 태그 확정(춘천=겨울연가, 강릉=도깨비).
 // 강릉 kTag는 2026-07-27 "지역+작품 1개" → "지역+검증된 콘텐츠 여러 개" 확장 결정에 따라 도깨비 외 BTS(버스정류장)·
@@ -64,8 +101,7 @@ const OPEN_VI: TourCard = {
 // 전주·포항·제주·부산: 드라마 태그 확정된 곳만 노출(기획 결정, 2026-07-22, 부산=쌈,마이웨이 팀 확인 완료) —
 // 태그 없는 나머지 4곳(경주·대구·여수·순천)은 드라마 페어링 미확정이라 CLAUDE.md 원칙상 AI가 임의로 못 붙여서 목록에서 제외.
 const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: string }[] = [
-  { id: "chuncheon", order: "02", status: "next", kTag: "◉ 겨울연가 · 선업튀 · BTS" },
-  { id: "gangneung", order: "03", status: "next", kTag: "◉ 도깨비 · 미스터 션샤인 · BTS" },
+  { id: "chuncheon", order: "03", status: "next", kTag: "◉ 겨울연가 · 선업튀 · BTS" },
   { id: "jeonju", order: "04", status: "wait", kTag: "◉ 구르미 그린 달빛" },
   { id: "pohang", order: "05", status: "wait", kTag: "◉ 갯마을 차차차" },
   { id: "jeju", order: "06", status: "wait", kTag: "◉ 웰컴투 삼달리" },
@@ -77,7 +113,6 @@ const LOCKED_META: { id: string; order: string; status: "next" | "wait"; kTag?: 
 
 const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
   chuncheon: { ko: "CHUNCHEON 춘천", en: "CHUNCHEON", ja: "CHUNCHEON 春川", zh: "CHUNCHEON 春川", vi: "CHUNCHEON Chuncheon" },
-  gangneung: { ko: "GANGNEUNG 강릉", en: "GANGNEUNG", ja: "GANGNEUNG 江陵", zh: "GANGNEUNG 江陵", vi: "GANGNEUNG Gangneung" },
   jeonju: { ko: "JEONJU 전주", en: "JEONJU", ja: "JEONJU 全州", zh: "JEONJU 全州", vi: "JEONJU Jeonju" },
   pohang: { ko: "POHANG 포항", en: "POHANG", ja: "POHANG 浦項", zh: "POHANG 浦项", vi: "POHANG Pohang" },
   jeju: { ko: "JEJU 제주", en: "JEJU", ja: "JEJU 済州", zh: "JEJU 济州", vi: "JEJU Jeju" },
@@ -89,7 +124,6 @@ const LOCKED_CITYLINE: Record<string, Record<Lang, string>> = {
 // 여기서는 코스의 장면·분위기만 담아 궁금증을 유발 (2026-07-22 결정)
 const LOCKED_TITLE: Record<string, Record<Lang, string>> = {
   chuncheon: { ko: "눈 내리던 가로수길과 우산 든 다리, 초록빛 이끼 정원", en: "The snowy tree-lined road, a bridge with an umbrella, and a mossy green garden", ja: "雪降る並木道と傘を差したあの橋、緑苔の庭", zh: "飘雪的林荫道、撑伞的那座桥，还有翠绿的苔藓庭园", vi: "Con đường hàng cây tuyết rơi, cây cầu cầm ô ấy, và khu vườn rêu xanh" },
-  gangneung: { ko: "파도치던 방파제와 보랏빛 정류장, 그 오래된 성당", en: "That breakwater, the purple bus stop, and an old stone chapel", ja: "波打つ防波堤と紫色のバス停、あの古い聖堂", zh: "浪花拍打的防波堤与紫色公交站，那座古老的圣堂", vi: "Con đê sóng vỗ, trạm xe buýt tím, và nhà thờ cổ kính ấy" },
   jeonju: { ko: "달빛 아래 그 궁궐 골목", en: "That palace alley under the moonlight", ja: "月明かりの下、あの宮殿の路地", zh: "月光下，那条宫殿小巷", vi: "Con hẻm cung điện dưới ánh trăng năm ấy" },
   pohang: { ko: "바닷마을 그 벤치, 방파제의 온기", en: "That seaside bench, warmth of the breakwater", ja: "海辺の村のあのベンチ、防波堤のぬくもり", zh: "海边小镇那张长椅，防波堤的温度", vi: "Chiếc ghế bên bờ biển, hơi ấm của con đê" },
   jeju: { ko: "섬마을 골목과 그 해안도로", en: "That island alley and coastal road", ja: "島の村の路地と、あの海岸道路", zh: "海岛小巷与那条海岸公路", vi: "Con hẻm làng đảo và con đường ven biển đó" },
@@ -110,11 +144,11 @@ function buildLockedCards(lang: Lang): TourCard[] {
 }
 
 const TOURS: Record<Lang, TourCard[]> = {
-  ko: [OPEN_KO, ...buildLockedCards("ko")],
-  en: [OPEN_EN, ...buildLockedCards("en")],
-  ja: [OPEN_JA, ...buildLockedCards("ja")],
-  zh: [OPEN_ZH, ...buildLockedCards("zh")],
-  vi: [OPEN_VI, ...buildLockedCards("vi")],
+  ko: [OPEN_KO, OPEN_GANGNEUNG_KO, ...buildLockedCards("ko")],
+  en: [OPEN_EN, OPEN_GANGNEUNG_EN, ...buildLockedCards("en")],
+  ja: [OPEN_JA, OPEN_GANGNEUNG_JA, ...buildLockedCards("ja")],
+  zh: [OPEN_ZH, OPEN_GANGNEUNG_ZH, ...buildLockedCards("zh")],
+  vi: [OPEN_VI, OPEN_GANGNEUNG_VI, ...buildLockedCards("vi")],
 };
 
 const COPY: Record<Lang, {
@@ -212,11 +246,11 @@ const LANG_GATE_OPTIONS: { code: Lang; flag: string; label: string }[] = [
 
 // 언어 선택 직후 같은 페이지에 표시하는 "행동 선택" 2버튼 — A(메인: 구글폼) / B(보조: 수원 코스 예시)
 const ACTION_CTA: Record<Lang, { mainTitle: string; mainSub: string; secondaryTitle: string; secondarySub: string }> = {
-  ko: { mainTitle: "내 최애 장소, 다음 코스로 만들기", mainSub: "약 2분 · 많이 찾는 곳부터 열려요", secondaryTitle: "화면 속 그 골목, 수원에서 하루", secondarySub: "막차까지 완벽 계산 끝난 진짜 코스" },
-  en: { mainTitle: "Turn your bias's spot into the next course", mainSub: "About 2 min · Most-requested opens first", secondaryTitle: "That alley from the screen — a day in Suwon", secondarySub: "A real course, calculated down to the last train home" },
-  ja: { mainTitle: "推しの聖地を、次のコースにする", mainSub: "約2分・リクエストの多い街から先に公開", secondaryTitle: "画面で見たあの路地、水原で過ごす一日", secondarySub: "終電まで計算し尽くした、本物のコース" },
-  zh: { mainTitle: "把你的本命取景地，变成下一条路线", mainSub: "约2分钟 · 需求最多的地区优先开放", secondaryTitle: "屏幕里的那条小巷，水原的一天", secondarySub: "连末班车都算好的真实路线" },
-  vi: { mainTitle: "Biến địa điểm bias của bạn thành lộ trình tiếp theo", mainSub: "Khoảng 2 phút · Khu vực được yêu cầu nhiều nhất sẽ mở trước", secondaryTitle: "Con hẻm bạn thấy trên màn ảnh — một ngày ở Suwon", secondarySub: "Lộ trình thực tế, đã tính toán đến tận chuyến tàu cuối" },
+  ko: { mainTitle: "내 최애 장소, 다음 코스로 만들기", mainSub: "약 2분 · 많이 찾는 곳부터 열려요", secondaryTitle: "열린 코스 보기 — 수원 편", secondarySub: "막차까지 완벽 계산 끝난 진짜 코스" },
+  en: { mainTitle: "Turn your bias's spot into the next course", mainSub: "About 2 min · Most-requested opens first", secondaryTitle: "See a live course — Suwon edition", secondarySub: "A real course, calculated down to the last train home" },
+  ja: { mainTitle: "推しの聖地を、次のコースにする", mainSub: "約2分・リクエストの多い街から先に公開", secondaryTitle: "コース例を見る — 水原編", secondarySub: "終電まで計算し尽くした、本物のコース" },
+  zh: { mainTitle: "把你的本命取景地，变成下一条路线", mainSub: "约2分钟 · 需求最多的地区优先开放", secondaryTitle: "查看路线示例 — 水原篇", secondarySub: "连末班车都算好的真实路线" },
+  vi: { mainTitle: "Biến địa điểm bias của bạn thành lộ trình tiếp theo", mainSub: "Khoảng 2 phút · Khu vực được yêu cầu nhiều nhất sẽ mở trước", secondaryTitle: "Xem lộ trình mẫu — Suwon", secondarySub: "Lộ trình thực tế, đã tính toán đến tận chuyến tàu cuối" },
 };
 
 // 섹션 헤더 — 랜딩페이지의 eyebrow(영문 키워드 — 한글 설명) + title + lead 공식을 그대로 차용 (2026-07-23 섹션 분리)
@@ -227,41 +261,41 @@ const SECTIONS: Record<Lang, {
   ko: {
     decisionEyebrow: "START — 무엇부터 시작할까요",
     decisionTitle: "먼저, 하나만 골라주세요",
-    decisionLead: "당신이 찾는 '그곳'이 다음 코스가 될 수 있어요. 아니면 이미 검증된 수원부터 먼저 만나보세요.",
+    decisionLead: "당신이 찾는 '그곳'이 다음 코스가 될 수 있어요. 수원·강릉, 두 코스가 이미 열려 있어요.",
     routesEyebrow: "ROUTES — 지역별 오픈 현황",
-    routesTitle: "수원 다음은, 어디일까요?",
+    routesTitle: "다음은, 어디일까요?",
     routesLead: "정답은 당신이 정해요. 지금 열려 있는 곳부터, 곧 열릴 곳들까지 보여드릴게요.",
   },
   en: {
     decisionEyebrow: "START — Where to begin",
     decisionTitle: "Pick one to get started",
-    decisionLead: "That place you're dying to see could be our next course. Or meet Suwon first — it's already verified and ready.",
+    decisionLead: "That place you're dying to see could be our next course. Suwon and Gangneung are already open — see both below.",
     routesEyebrow: "ROUTES — Region rollout status",
-    routesTitle: "What comes after Suwon?",
+    routesTitle: "What's next?",
     routesLead: "You decide the answer. Here's what's open now, and what's opening next.",
   },
   ja: {
     decisionEyebrow: "START — まず何から始めますか",
     decisionTitle: "まず一つだけ選んでください",
-    decisionLead: "あなたの「あの場所」が、次のコースになるかもしれません。まずは、もう検証済みの水原から。",
+    decisionLead: "あなたの「あの場所」が、次のコースになるかもしれません。水原・江陵、2つのコースがすでに公開中です。",
     routesEyebrow: "ROUTES — 地域別公開状況",
-    routesTitle: "水原の次は、どこでしょう?",
+    routesTitle: "次は、どこでしょう?",
     routesLead: "答えを決めるのは、あなたです。今開いている場所と、次に開く場所です。",
   },
   zh: {
     decisionEyebrow: "START — 先从哪里开始",
     decisionTitle: "先选一个开始吧",
-    decisionLead: "你心心念念的\"那个地方\"，可能就是下一条路线。不如先从已验证的水原开始。",
+    decisionLead: "你心心念念的\"那个地方\"，可能就是下一条路线。水原·江陵两条路线已经开放，请向下查看。",
     routesEyebrow: "ROUTES — 各地区开放状态",
-    routesTitle: "水原之后，会是哪里？",
+    routesTitle: "下一个，会是哪里？",
     routesLead: "答案由你决定。这里是现在开放的路线，和即将开放的路线。",
   },
   vi: {
     decisionEyebrow: "START — Bắt đầu từ đâu",
     decisionTitle: "Hãy chọn một cái để bắt đầu",
-    decisionLead: "Nơi bạn hằng mong ước có thể là lộ trình tiếp theo. Hoặc gặp Suwon trước — đã được kiểm chứng và sẵn sàng.",
+    decisionLead: "Nơi bạn hằng mong ước có thể là lộ trình tiếp theo. Suwon và Gangneung đã mở — xem cả hai bên dưới.",
     routesEyebrow: "ROUTES — Tình trạng mở theo khu vực",
-    routesTitle: "Sau Suwon, sẽ là nơi nào?",
+    routesTitle: "Tiếp theo, sẽ là nơi nào?",
     routesLead: "Câu trả lời do bạn quyết định. Đây là những nơi đang mở, và những nơi sắp mở.",
   },
 };

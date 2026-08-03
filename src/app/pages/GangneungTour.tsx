@@ -11,7 +11,7 @@ import spotBtsImg from "@/assets/gangneung/spot_bts.jpg";
 import spotBtsPip from "@/assets/gangneung/spot_bts_pip.png";
 import spotDokkaebIImg from "@/assets/gangneung/spot_dokkaebi.png";
 import spotDokkaebIPip from "@/assets/gangneung/spot_dokkaebi_pip.jpeg";
-import spotThegloryImg from "@/assets/gangneung/spot_theglory.jpg";
+import spotThegloryImg from "@/assets/gangneung/spot_theglory.png";
 import spotThegloryPip from "@/assets/gangneung/spot_theglory_pip.jpeg";
 import spotGangmunImg from "@/assets/gangneung/spot_gangmun.png";
 import spotGangmunPip from "@/assets/gangneung/spot_gangmun_pip.png";
